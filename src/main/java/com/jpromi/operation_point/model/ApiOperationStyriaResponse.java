@@ -28,7 +28,7 @@ public class ApiOperationStyriaResponse {
             @JsonProperty("Datum")
             private String datum;
 
-            @JsonProperty("Im Einsatz Seit")
+            @JsonProperty("Im Einsatz seit")
             private String imEinsatzSeit;
 
             @JsonProperty("Feuerwehr")

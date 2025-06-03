@@ -23,4 +23,5 @@ public class Unit {
     private UUID uuid = UUID.randomUUID();
 
     private String name;
+    private String friendlyName;
 }

@@ -8,6 +8,7 @@ import com.jpromi.operation_point.enitiy.Operation;
 import com.jpromi.operation_point.enitiy.OperationFiredepartment;
 import com.jpromi.operation_point.enitiy.OperationUnit;
 import com.jpromi.operation_point.model.ApiOperationBurgenlandResponse;
+import com.jpromi.operation_point.model.ApiOperationStyriaResponse;
 import com.jpromi.operation_point.model.ApiOperationUpperAustriaResponse;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationRepository;
@@ -108,7 +109,35 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
     @Override
     public List<Operation> getOperationListStyria() {
-        return null;
+        try {
+            // get data from API
+            WebClient webClient = WebClient.create();
+            String json = webClient.get()
+                    .uri("https://einsatzuebersicht.lfv.steiermark.at/einsatzkarte/data/public_current.json")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            ApiOperationStyriaResponse result = objectMapper.readValue(json, ApiOperationStyriaResponse.class);
+
+            // build operation
+            List<Operation> operationList = new ArrayList<>();
+
+            result.getFeatures().forEach( operation -> {
+                Operation _operation = updateSavedOperationStyria(operation);
+                if (_operation != null) {
+                    operationList.add(_operation);
+                }
+            });
+
+            checkVanishedOperations(operationList, ServiceOriginEnum.BL_LSZ_PUB);
+
+            return operationList;
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+        }
     }
 
     @Override
@@ -299,8 +328,87 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         }
     }
 
+    private Operation updateSavedOperationStyria(ApiOperationStyriaResponse.ApiOperationStyriaResponseFeature response) {
+        Optional<Operation> _opertaion = operationRepository.findByStId(response.getProperties().getInstanznummer());
+
+        if(_opertaion.isPresent()) {
+            String alarmSplit = response.getProperties().getTyp().split("-")[0];
+            Operation operation = _opertaion.get();
+            operation.setAlarmType(operationVariableService.getAlarmType(alarmSplit));
+            operation.setAlarmLevel(operationVariableService.getAlarmLevel(alarmSplit));
+            operation.setAlarmText(response.getProperties().getArt());
+            operation.setLat(response.getGeometry().getCoordinates().get(1));
+            operation.setLng(response.getGeometry().getCoordinates().get(0));
+
+            // main firedepartment
+            Firedepartment mainFiredepartment = createFiredepartmentIfNotExists(
+                    Firedepartment.builder().name(response.getProperties().getFeuerwehr()).build()
+            );
+            List<OperationFiredepartment> firedepartments = operation.getFiredepartments();
+            if (firedepartments == null) {
+                firedepartments = new ArrayList<>();
+            }
+            // check if firedepartment already exists
+            boolean exists = firedepartments.stream()
+                    .anyMatch(opFd -> opFd.getFiredepartment().getName().equals(mainFiredepartment.getName()));
+            if (!exists) {
+                OperationFiredepartment mainOpFd = OperationFiredepartment.builder()
+                        .firedepartment(mainFiredepartment)
+                        .operation(operation)
+                        .build();
+                firedepartments.add(mainOpFd);
+            }
+
+            operation.setFiredepartments(firedepartments);
+
+            // end operation
+            if (response.getProperties().getWehrenImEinsatz().equals("Abgeschlossen")) {
+                operation.setEndTime(OffsetDateTime.now());
+            }
+
+            return operationRepository.save(operation);
+        } else {
+            String alarmSplit = response.getProperties().getTyp().split("-")[0];
+            Operation operation = Operation.builder()
+                    .stId(response.getProperties().getInstanznummer())
+                    .alarmType(operationVariableService.getAlarmType(alarmSplit))
+                    .alarmLevel(operationVariableService.getAlarmLevel(alarmSplit))
+                    .alarmText(response.getProperties().getArt())
+                    .startTime(OffsetDateTime.now())
+                    .lat(response.getGeometry().getCoordinates().get(1))
+                    .lng(response.getGeometry().getCoordinates().get(0))
+                    .build();
+
+            // firedepartments
+            List<OperationFiredepartment> firedepartments = new ArrayList<>();
+
+            // add primary
+            Firedepartment mainFiredepartment = createFiredepartmentIfNotExists(
+                    Firedepartment.builder().name(response.getProperties().getFeuerwehr()).build()
+            );
+
+            OperationFiredepartment mainOpFd = OperationFiredepartment.builder()
+                    .firedepartment(mainFiredepartment)
+                    .operation(operation)
+                    .build();
+            firedepartments.add(mainOpFd);
+
+            operation.setFiredepartments(firedepartments);
+
+            // end operation
+            if (response.getProperties().getWehrenImEinsatz().equals("Abgeschlossen")) {
+                operation.setEndTime(OffsetDateTime.now());
+            }
+
+            return operationRepository.save(operation);
+        }
+    }
+
 
     private Firedepartment createFiredepartmentIfNotExists(Firedepartment firedepartment) {
+        if (firedepartment.getFriendlyName() == null || firedepartment.getFriendlyName().isEmpty()) {
+            firedepartment.setFriendlyName(firedepartment.getName());
+        }
         Optional<Firedepartment> existing = firedepartmentRepository.findByName(firedepartment.getName());
         return existing.orElseGet(() -> firedepartmentRepository.save(firedepartment));
     }
