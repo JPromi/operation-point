@@ -1,20 +1,20 @@
 package com.jpromi.operation_point.service.impl;
 
-import aj.org.objectweb.asm.TypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpromi.operation_point.ServiceOriginEnum;
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.Operation;
-import com.jpromi.operation_point.enitiy.OperationFiredepartment;
-import com.jpromi.operation_point.enitiy.OperationUnit;
+import com.jpromi.operation_point.enitiy.*;
 import com.jpromi.operation_point.model.ApiOperationBurgenlandResponse;
 import com.jpromi.operation_point.model.ApiOperationStyriaResponse;
+import com.jpromi.operation_point.model.ApiOperationTyrolResponse;
 import com.jpromi.operation_point.model.ApiOperationUpperAustriaResponse;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationRepository;
+import com.jpromi.operation_point.repository.UnitRepository;
 import com.jpromi.operation_point.service.ApiOperationService;
 import com.jpromi.operation_point.service.OperationVariableService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,13 +24,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ApiOperationServiceImpl implements ApiOperationService {
+
+    @Value("${com.jpromi.operation_point.crawler.tyrol.authentication}")
+    private String crawlerTyrolAuthentication;
 
     @Autowired
     private OperationVariableService operationVariableService;
@@ -40,6 +40,9 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
     @Autowired
     private FiredepartmentRepository firedepartmentRepository;
+
+    @Autowired
+    private UnitRepository unitRepository;
 
     @Override
     public List<Operation> getOperationListBurgenland() {
@@ -132,7 +135,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 }
             });
 
-            checkVanishedOperations(operationList, ServiceOriginEnum.BL_LSZ_PUB);
+            checkVanishedOperations(operationList, ServiceOriginEnum.ST_LFV_PUB);
 
             return operationList;
         } catch (Exception e) {
@@ -142,7 +145,38 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
     @Override
     public List<Operation> getOperationListTyrol() {
-        return null;
+        try {
+            String authentication = "Basic " + Base64.getEncoder().encodeToString(crawlerTyrolAuthentication.getBytes());
+            // get data from API
+            WebClient webClient = WebClient.create();
+            String json = webClient.get()
+                    .uri("https://ffw-einsatzmonitor.at/lfs/proxytirol.php")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .header("Authorization", authentication)
+                    .header("X-Requested-With", "xmlhttprequest")
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            ObjectMapper mapper = new ObjectMapper();
+            List<ApiOperationTyrolResponse> result = mapper.readValue(json, new TypeReference<List<ApiOperationTyrolResponse>>() {});
+
+            // build operation
+            List<Operation> operationList = new ArrayList<>();
+
+            result.forEach( operation -> {
+                Operation _operation = updateSavedOperationTyrol(operation);
+                if (_operation != null) {
+                    operationList.add(_operation);
+                }
+            });
+
+            checkVanishedOperations(operationList, ServiceOriginEnum.TYROL_LFS_APP);
+
+            return operationList;
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+        }
     }
 
     private Operation updateSavedOperationBurgenland(ApiOperationBurgenlandResponse.ApiOperationBurgenlandResponseOperation response) {
@@ -377,6 +411,8 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .startTime(OffsetDateTime.now())
                     .lat(response.getGeometry().getCoordinates().get(1))
                     .lng(response.getGeometry().getCoordinates().get(0))
+                    .serviceOrigin(ServiceOriginEnum.ST_LFV_PUB)
+                    .federalState("Styria")
                     .build();
 
             // firedepartments
@@ -404,6 +440,114 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         }
     }
 
+    private Operation updateSavedOperationTyrol(ApiOperationTyrolResponse response) {
+        Optional<Operation> _operation = operationRepository.findByTyEventId(response.getEventnum());
+
+        if(_operation.isPresent()) {
+            Operation operation = _operation.get();
+            operation.setAlarmText(response.getRemark());
+            operation.setCity(response.getCity());
+            operation.setZipCode(response.getZipcode());
+            operation.setLocation(response.getCity());
+            operation.setLat(response.getLat());
+            operation.setLng(response.getLon());
+            operation.setUpdatedAt(OffsetDateTime.now());
+
+            // firedepartments
+            List<String> firedepartments = getFiredepartmentsTyrol(response.getNameAtAlarmTime());
+            List<OperationFiredepartment> operationFiredepartments = operation.getFiredepartments();
+
+            firedepartments.forEach(fd -> {
+                Firedepartment firedepartment = createFiredepartmentIfNotExists(
+                        Firedepartment.builder().name(fd).build()
+                );
+
+                // check if firedepartment already exists
+                boolean exists = operationFiredepartments.stream()
+                        .anyMatch(opFd -> opFd.getFiredepartment().getName().equals(firedepartment.getName()));
+                if (!exists) {
+                    OperationFiredepartment opFd = OperationFiredepartment.builder()
+                            .firedepartment(firedepartment)
+                            .operation(operation)
+                            .build();
+                    operationFiredepartments.add(opFd);
+                }
+            });
+
+            operation.setFiredepartments(operationFiredepartments);
+
+            // units
+            List<String> unitNames = getUnitsTyrol(response.getNameAtAlarmTime());
+            List<OperationUnit> operationUnits = operation.getUnits();
+            unitNames.forEach(fd -> {
+                Unit unit = createUnitIfNotExists(
+                        Unit.builder().name(fd).build()
+                );
+
+                // check if unit already exists
+                boolean exists = operationUnits.stream()
+                        .anyMatch(opFd -> opFd.getUnit().getName().equals(unit.getName()));
+                if (!exists) {
+                    OperationUnit opUn = OperationUnit.builder()
+                            .unit(unit)
+                            .operation(operation)
+                            .build();
+                    operationUnits.add(opUn);
+                }
+            });
+
+            operation.setUnits(operationUnits);
+
+            // end operation
+            if (response.getStatus().equals("finished")) {
+                operation.setEndTime(OffsetDateTime.now());
+            }
+
+            return operationRepository.save(operation);
+        } else {
+            Operation operation = Operation.builder()
+                    .tyEventId(response.getEventnum())
+                    .alarmText(response.getRemark())
+                    .city(response.getCity())
+                    .zipCode(response.getZipcode())
+                    .location(response.getCity())
+                    .lat(response.getLat())
+                    .lng(response.getLon())
+                    .startTime(OffsetDateTime.now())
+                    .serviceOrigin(ServiceOriginEnum.TYROL_LFS_APP)
+                    .federalState("Tyrol")
+                    .build();
+            // firedepartments
+            List<OperationFiredepartment> firedepartments = new ArrayList<>();
+            List<String> firedepartmentNames = getFiredepartmentsTyrol(response.getNameAtAlarmTime());
+            firedepartmentNames.forEach(firedepartmentName -> {
+                Firedepartment firedepartment = createFiredepartmentIfNotExists(
+                        Firedepartment.builder().name(firedepartmentName).build()
+                );
+
+                OperationFiredepartment opFd = OperationFiredepartment.builder()
+                        .firedepartment(firedepartment)
+                        .operation(operation)
+                        .build();
+                firedepartments.add(opFd);
+            });
+            operation.setFiredepartments(firedepartments);
+
+            // units
+            List<OperationUnit> units = new ArrayList<>();
+            List<String> unitNames = getUnitsTyrol(response.getNameAtAlarmTime());
+            unitNames.forEach(unitName -> {
+                OperationUnit unit = OperationUnit.builder()
+                        .operation(operation)
+                        .unit(createUnitIfNotExists(Unit.builder().name(unitName).build()))
+                        .build();
+                units.add(unit);
+            });
+            operation.setUnits(units);
+            return operationRepository.save(operation);
+        }
+    }
+
 
     private Firedepartment createFiredepartmentIfNotExists(Firedepartment firedepartment) {
         if (firedepartment.getFriendlyName() == null || firedepartment.getFriendlyName().isEmpty()) {
@@ -411,6 +555,14 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         }
         Optional<Firedepartment> existing = firedepartmentRepository.findByName(firedepartment.getName());
         return existing.orElseGet(() -> firedepartmentRepository.save(firedepartment));
+    }
+
+    private Unit createUnitIfNotExists(Unit unit) {
+        if (unit.getFriendlyName() == null || unit.getFriendlyName().isEmpty()) {
+            unit.setFriendlyName(unit.getName());
+        }
+        Optional<Unit> existing = unitRepository.findByName(unit.getName());
+        return existing.orElseGet(() -> unitRepository.save(unit));
     }
 
     private void checkVanishedOperations(List<Operation> operations, ServiceOriginEnum service) {
@@ -428,6 +580,29 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 }
             }
         }
+    }
+
+    private List<String> getFiredepartmentsTyrol(List<String> names) {
+        List<String> firedepartments = new ArrayList<>();
+        for (String name : names) {
+            if (name.endsWith("Florian")) {
+                String cleanedName = name.substring(0, name.length() - 8).trim();
+                firedepartments.add(name);
+            }
+        }
+
+        return firedepartments;
+    }
+
+    private List<String> getUnitsTyrol(List<String> names) {
+        List<String> units = new ArrayList<>();
+        for (String name : names) {
+            if (!name.startsWith("FF")) {
+                units.add(name);
+            }
+        }
+
+        return units;
     }
 
 }

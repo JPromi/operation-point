@@ -19,7 +19,7 @@ public class OperationUnit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Unit unit;
 
     @ManyToOne(fetch = FetchType.LAZY)
