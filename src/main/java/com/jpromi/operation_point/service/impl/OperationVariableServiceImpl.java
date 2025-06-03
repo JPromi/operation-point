@@ -15,11 +15,18 @@ public class OperationVariableServiceImpl implements OperationVariableService {
 
     @Override
     public String getAlarmType(String alarmType) {
+        if (alarmType != null) {
+            return alarmType.replaceAll("\\d", "").trim();
+        }
         return null;
     }
 
     @Override
     public Long getAlarmLevel(String code) {
+        if (code != null && !code.isEmpty()) {
+            String numericPart = code.replaceAll("\\D", "");
+            return numericPart.isEmpty() ? null : Long.parseLong(numericPart);
+        }
         return null;
     }
 
