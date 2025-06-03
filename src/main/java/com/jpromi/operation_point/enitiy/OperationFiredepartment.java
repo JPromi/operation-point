@@ -19,7 +19,7 @@ public class OperationFiredepartment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true)
     private Firedepartment firedepartment;
 

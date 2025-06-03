@@ -8,6 +8,7 @@ import com.jpromi.operation_point.enitiy.Operation;
 import com.jpromi.operation_point.enitiy.OperationFiredepartment;
 import com.jpromi.operation_point.enitiy.OperationUnit;
 import com.jpromi.operation_point.model.ApiOperationBurgenlandResponse;
+import com.jpromi.operation_point.model.ApiOperationUpperAustriaResponse;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationRepository;
 import com.jpromi.operation_point.service.ApiOperationService;
@@ -21,6 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,7 +77,33 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
     @Override
     public List<Operation> getOperationListUpperAustria() {
-        return null;
+        try {
+            // get data from API
+            WebClient webClient = WebClient.create();
+            String json = webClient.get()
+                    .uri("https://cf-einsaetze.ooelfv.at/webext2/rss/json_laufend.txt")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            ApiOperationUpperAustriaResponse result = objectMapper.readValue(json, ApiOperationUpperAustriaResponse.class);
+
+            // build operation
+            List<Operation> operationList = new ArrayList<>();
+
+            for (ApiOperationUpperAustriaResponse.ApiOperationUpperAustriaResponseOperationWrapper wrapper : result.getEinsaetze().values()) {
+                ApiOperationUpperAustriaResponse.ApiOperationUpperAustriaResponseOperation operation = wrapper.getEinsatz();
+                operationList.add(updateSavedOperationUpperAustria(operation));
+            }
+
+            checkVanishedOperations(operationList, ServiceOriginEnum.UA_LFV_PUB);
+
+            return operationList;
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+        }
     }
 
     @Override
@@ -190,6 +218,87 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         return null;
     }
 
+    private Operation updateSavedOperationUpperAustria(ApiOperationUpperAustriaResponse.ApiOperationUpperAustriaResponseOperation response) {
+        Optional<Operation> _operation = operationRepository.findByUaId(response.getNum1());
+
+        if(_operation.isPresent()) {
+            Operation operation = _operation.get();
+            operation.setAlarmLevel(Long.parseLong(response.getAlarmstufe()));
+            operation.setUaAlarmTypeType(response.getEinsatztyp().getId());
+            operation.setUaAlarmTypeId(response.getEinsatztyp().getId());
+            operation.setAlarmText(response.getEinsatztyp().getText());
+            operation.setLocation(response.getAdresse().getEarea());
+            operation.setCity(response.getAdresse().getEarea());
+
+            operation.setUpdatedAt(OffsetDateTime.now());
+
+            // firedepartments
+            List<OperationFiredepartment> firedepartments = operation.getFiredepartments();
+            List<OperationFiredepartment> finalFiredepartments = firedepartments;
+            for (ApiOperationUpperAustriaResponse.ApiOperationUpperAustriaResponseOperation.ApiOperationUpperAustriaResponseOperationFeuerwehrArray firedepartment : response.getFeuerwehrenarray().values()) {
+                Firedepartment _firedepartment = createFiredepartmentIfNotExists(
+                        Firedepartment.builder()
+                                .name(firedepartment.getFwname())
+                                .atFireDepartmentId(firedepartment.getFwnr().toString())
+                                .build()
+                );
+
+                // check if firedepartment already exists
+                boolean exists = finalFiredepartments.stream()
+                        .anyMatch(opFd -> opFd.getFiredepartment().getName().equals(firedepartment.getFwname()));
+                if (!exists) {
+                    OperationFiredepartment opFd = OperationFiredepartment.builder()
+                            .firedepartment(_firedepartment)
+                            .operation(operation)
+                            .build();
+                    firedepartments.add(opFd);
+                }
+            }
+            operation.setFiredepartments(firedepartments);
+
+            return operationRepository.save(operation);
+        } else {
+            Operation operation = Operation.builder()
+                    .uaId(response.getNum1())
+                    .alarmLevel(Long.parseLong(response.getAlarmstufe()))
+                    .uaAlarmTypeType(response.getEinsatztyp().getId())
+                    .uaAlarmTypeId(response.getEinsatztyp().getId())
+                    .alarmText(response.getEinsatztyp().getText())
+                    .location(response.getAdresse().getEarea())
+                    .city(response.getAdresse().getEarea())
+                    .federalState("Upper Austria")
+                    .serviceOrigin(ServiceOriginEnum.UA_LFV_PUB)
+                    .startTime(OffsetDateTime.parse(response.getStartzeit(), DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z")))
+                    .build();
+
+            // firedepartments
+            List<OperationFiredepartment> firedepartments = new ArrayList<>();
+            for (ApiOperationUpperAustriaResponse.ApiOperationUpperAustriaResponseOperation.ApiOperationUpperAustriaResponseOperationFeuerwehrArray firedepartment : response.getFeuerwehrenarray().values()) {
+                Firedepartment _firedepartment = createFiredepartmentIfNotExists(
+                        Firedepartment.builder()
+                                .name(firedepartment.getFwname())
+                                .atFireDepartmentId(firedepartment.getFwnr().toString())
+                                .build()
+                );
+
+                // check if firedepartment already exists
+                boolean exists = firedepartments.stream()
+                        .anyMatch(opFd -> opFd.getFiredepartment().getAtFireDepartmentId().equals(_firedepartment.getAtFireDepartmentId()));
+                if (!exists) {
+                    OperationFiredepartment opFd = OperationFiredepartment.builder()
+                            .firedepartment(_firedepartment)
+                            .operation(operation)
+                            .build();
+                    firedepartments.add(opFd);
+                }
+            }
+
+            operation.setFiredepartments(firedepartments);
+
+            return operationRepository.save(operation);
+        }
+    }
+
 
     private Firedepartment createFiredepartmentIfNotExists(Firedepartment firedepartment) {
         Optional<Firedepartment> existing = firedepartmentRepository.findByName(firedepartment.getName());
@@ -201,7 +310,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         if (savedOperations != null && !savedOperations.isEmpty()) {
             for (Operation savedOperation : savedOperations) {
                 boolean found = operations.stream()
-                        .anyMatch(op -> op.getBlId() != null && op.getBlId().equals(savedOperation.getBlId()));
+                        .anyMatch(op -> op.getId() != null && op.getId().equals(savedOperation.getId()));
                 if (!found) {
                     savedOperation.setLastSeen(OffsetDateTime.now());
                     if(savedOperation.getEndTime() == null) {

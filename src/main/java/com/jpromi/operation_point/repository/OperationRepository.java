@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface OperationRepository extends JpaRepository<Operation, Long> {
     Optional<Operation> findByBlId(String blId);
+    Optional<Operation> findByUaId(String uaId);
 
     List<Operation> findByServiceOriginAndLastSeenNull(ServiceOriginEnum serviceOrigin);
 }
