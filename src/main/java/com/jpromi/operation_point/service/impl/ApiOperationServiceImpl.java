@@ -2,7 +2,7 @@ package com.jpromi.operation_point.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jpromi.operation_point.ServiceOriginEnum;
+import com.jpromi.operation_point.enums.ServiceOriginEnum;
 import com.jpromi.operation_point.enitiy.*;
 import com.jpromi.operation_point.model.*;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Instant;

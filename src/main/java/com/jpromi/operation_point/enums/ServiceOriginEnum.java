@@ -1,4 +1,4 @@
-package com.jpromi.operation_point;
+package com.jpromi.operation_point.enums;
 
 public enum ServiceOriginEnum {
     BL_LSZ_PUB,     // Burgenland

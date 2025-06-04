@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.model;
 
-import com.jpromi.operation_point.ServiceOriginEnum;
+import com.jpromi.operation_point.enums.ServiceOriginEnum;
 import lombok.*;
 
 import java.time.OffsetDateTime;

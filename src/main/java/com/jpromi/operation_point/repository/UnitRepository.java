@@ -1,13 +1,9 @@
 package com.jpromi.operation_point.repository;
 
-import com.jpromi.operation_point.ServiceOriginEnum;
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.Operation;
 import com.jpromi.operation_point.enitiy.Unit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

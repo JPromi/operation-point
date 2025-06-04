@@ -1,11 +1,9 @@
 package com.jpromi.operation_point.enitiy;
 
-import com.jpromi.operation_point.ServiceOriginEnum;
+import com.jpromi.operation_point.enums.ServiceOriginEnum;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
