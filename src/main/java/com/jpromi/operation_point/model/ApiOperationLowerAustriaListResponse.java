@@ -13,7 +13,7 @@ public class ApiOperationLowerAustriaListResponse {
     private List<ApiOperationLowerAustriaListResponseOperation> einsatz;
 
     @Data
-    private static class ApiOperationLowerAustriaListResponseOperation {
+    public static class ApiOperationLowerAustriaListResponseOperation {
         private String m;
         private String a;
         private String n;

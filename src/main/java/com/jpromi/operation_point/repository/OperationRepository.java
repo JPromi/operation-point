@@ -14,6 +14,9 @@ public interface OperationRepository extends JpaRepository<Operation, Long> {
     Optional<Operation> findByUaId(String uaId);
     Optional<Operation> findByStId(String stId);
     Optional<Operation> findByTyEventId(String tyEventId);
+    Optional<Operation> findByLaSysId(String laSysId);
 
     List<Operation> findByServiceOriginAndLastSeenNull(ServiceOriginEnum serviceOrigin);
+
+    List<Operation> findByEndTimeNull();
 }

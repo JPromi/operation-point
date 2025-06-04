@@ -23,6 +23,7 @@ public class ApiOperationLowerAustriaResponse {
 
     @Data
     public static class ApiOperationLowerAustriaResponseDispo {
+        private String n;
         private String d;
         private String s;
         private String dt;

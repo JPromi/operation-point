@@ -1,5 +1,9 @@
 package com.jpromi.operation_point.service;
 
-public interface OperationService {
+import com.jpromi.operation_point.enitiy.Operation;
 
+import java.util.List;
+
+public interface OperationService {
+    public List<Operation> getActiveOperations();
 }

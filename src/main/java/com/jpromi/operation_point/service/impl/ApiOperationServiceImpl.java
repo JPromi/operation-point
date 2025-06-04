@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpromi.operation_point.ServiceOriginEnum;
 import com.jpromi.operation_point.enitiy.*;
-import com.jpromi.operation_point.model.ApiOperationBurgenlandResponse;
-import com.jpromi.operation_point.model.ApiOperationStyriaResponse;
-import com.jpromi.operation_point.model.ApiOperationTyrolResponse;
-import com.jpromi.operation_point.model.ApiOperationUpperAustriaResponse;
+import com.jpromi.operation_point.model.*;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationRepository;
 import com.jpromi.operation_point.repository.UnitRepository;
@@ -76,7 +73,38 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
     @Override
     public List<Operation> getOperationListLowerAustria() {
-        return null;
+        try {
+            // get data from API
+            WebClient webClient = WebClient.create();
+            ApiOperationLowerAustriaListResponse result = webClient.get()
+                    .uri("https://infoscreen.florian10.info/OWS/wastlMobile/getEinsatzAktiv.ashx")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(ApiOperationLowerAustriaListResponse.class)
+                    .block();
+
+            // build operation
+            List<Operation> operationList = new ArrayList<>();
+
+            result.getEinsatz().forEach( operationListEntry -> {
+                try {
+                    ApiOperationLowerAustriaResponse operation = getOperationByWastlPubIdLowerAustria(operationListEntry.getI());
+                    Operation _operation = updateSavedOperationLowerAustria(operation, operationListEntry.getI());
+                    if (_operation != null) {
+                        operationList.add(_operation);
+                    }
+
+                } catch (Exception e) {
+                    System.err.println("Error processing operation: " + operationListEntry.getI() + " - " + e.getMessage());
+                }
+            });
+
+            checkVanishedOperations(operationList, ServiceOriginEnum.LA_WASTL_PUB);
+
+            return operationList;
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+        }
     }
 
     @Override
@@ -548,6 +576,186 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         }
     }
 
+    private Operation updateSavedOperationLowerAustria(ApiOperationLowerAustriaResponse response, String laSysId) {
+        Optional<Operation> _operation = operationRepository.findByLaSysId(response.getId());
+
+        if(_operation.isPresent()) {
+            Operation operation = _operation.get();
+            operation.setAlarmType(operationVariableService.getAlarmType(response.getA()));
+            operation.setAlarmLevel(operationVariableService.getAlarmLevel(response.getA()));
+            operation.setAlarmText(response.getM());
+            operation.setStartTime(operationVariableService.getTimeFromDateAndTime(response.getD(), response.getT()));
+            operation.setLocation(response.getO());
+            operation.setCity(response.getO());
+            operation.setZipCode(response.getP());
+
+            // firedepartments / units, and check if they already exist
+            List<OperationFiredepartment> firedepartments = operation.getFiredepartments();
+            List<OperationUnit> units = operation.getUnits();
+            if (firedepartments == null) {
+                firedepartments = new ArrayList<>();
+            } else {
+                firedepartments = operation.getFiredepartments();
+            }
+            if (units == null) {
+                units = new ArrayList<>();
+            }
+            List<OperationUnit> finalUnits = units;
+            List<OperationFiredepartment> finalFiredepartments = firedepartments;
+            response.getDispo().forEach(dispo -> {
+                if(isUnitLowerAustria(dispo.getN())) {
+                    // unit
+                    Unit unit = createUnitIfNotExists(
+                            Unit.builder().name(dispo.getN()).build()
+                    );
+                    // check if unit already exists
+                    boolean exists = finalUnits.stream()
+                            .anyMatch(opUn -> opUn.getUnit().getName().equals(unit.getName()));
+                    if (!exists) {
+                        OperationUnit operationUnit = OperationUnit.builder()
+                                .unit(unit)
+                                .operation(operation)
+                                .dispoTime(operationVariableService.getFromAnonymousTime(dispo.getDt()))
+                                .alarmTime(operationVariableService.getFromAnonymousTime(dispo.getAt()))
+                                .outTime(operationVariableService.getFromAnonymousTime(dispo.getOt()))
+                                .inTime(operationVariableService.getFromAnonymousTime(dispo.getIt()))
+                                .build();
+                        finalUnits.add(operationUnit);
+                    } else {
+                        // update existing unit
+                        OperationUnit existingUnit = finalUnits.stream()
+                                .filter(opUn -> opUn.getUnit().getName().equals(unit.getName()))
+                                .findFirst()
+                                .orElse(null);
+                        if (existingUnit != null) {
+                            existingUnit.setDispoTime(operationVariableService.getFromAnonymousTime(dispo.getDt()));
+                            existingUnit.setAlarmTime(operationVariableService.getFromAnonymousTime(dispo.getAt()));
+                            existingUnit.setOutTime(operationVariableService.getFromAnonymousTime(dispo.getOt()));
+                            existingUnit.setInTime(operationVariableService.getFromAnonymousTime(dispo.getIt()));
+                        }
+                    }
+                } else {
+                    // firedepartment
+                    Firedepartment firedepartment = createFiredepartmentIfNotExists(
+                            Firedepartment.builder().name(dispo.getN()).build()
+                    );
+                    // check if unit already exists
+                    boolean exists = finalUnits.stream()
+                            .anyMatch(opUn -> opUn.getUnit().getName().equals(firedepartment.getName()));
+                    if (!exists) {
+                        OperationFiredepartment operationFiredepartment = OperationFiredepartment.builder()
+                                .firedepartment(firedepartment)
+                                .operation(operation)
+                                .dispoTime(operationVariableService.getFromAnonymousTime(dispo.getDt()))
+                                .alarmTime(operationVariableService.getFromAnonymousTime(dispo.getAt()))
+                                .outTime(operationVariableService.getFromAnonymousTime(dispo.getOt()))
+                                .inTime(operationVariableService.getFromAnonymousTime(dispo.getIt()))
+                                .build();
+                        finalFiredepartments.add(operationFiredepartment);
+                    } else {
+                        // update existing firedepartment
+                        OperationFiredepartment existingUnit = finalFiredepartments.stream()
+                                .filter(opUn -> opUn.getFiredepartment().getName().equals(firedepartment.getName()))
+                                .findFirst()
+                                .orElse(null);
+                        if (existingUnit != null) {
+                            existingUnit.setDispoTime(operationVariableService.getFromAnonymousTime(dispo.getDt()));
+                            existingUnit.setAlarmTime(operationVariableService.getFromAnonymousTime(dispo.getAt()));
+                            existingUnit.setOutTime(operationVariableService.getFromAnonymousTime(dispo.getOt()));
+                            existingUnit.setInTime(operationVariableService.getFromAnonymousTime(dispo.getIt()));
+                        }
+                    }
+                }
+            });
+
+            operation.setFiredepartments(finalFiredepartments);
+            operation.setUnits(finalUnits);
+
+            operation.setUpdatedAt(OffsetDateTime.now());
+
+            return operationRepository.save(operation);
+        } else {
+            Operation operation = Operation.builder()
+                    .laSysId(response.getN())
+                    .laWastlPubId(laSysId)
+                    .laId(response.getId())
+
+                    .alarmText(response.getM())
+                    .alarmType(operationVariableService.getAlarmType(response.getA()))
+                    .alarmLevel(operationVariableService.getAlarmLevel(response.getA()))
+                    .startTime(operationVariableService.getTimeFromDateAndTime(response.getD(), response.getT()))
+                    .location(response.getO())
+                    .city(response.getO())
+                    .zipCode(response.getP())
+                    .federalState("Lower Austria")
+                    .serviceOrigin(ServiceOriginEnum.LA_WASTL_PUB)
+                    .build();
+
+            // firedepartments / units
+            List<OperationFiredepartment> firedepartments = new ArrayList<>();
+            List<OperationUnit> units = new ArrayList<>();
+
+            response.getDispo().forEach(dispo -> {
+                if(isUnitLowerAustria(dispo.getN())) {
+                    // unit
+                    Unit unit = createUnitIfNotExists(
+                            Unit.builder().name(dispo.getN()).build()
+                    );
+                    OperationUnit operationUnit = OperationUnit.builder()
+                            .unit(unit)
+                            .operation(operation)
+                            .dispoTime(operationVariableService.getFromAnonymousTime(dispo.getDt()))
+                            .alarmTime(operationVariableService.getFromAnonymousTime(dispo.getAt()))
+                            .outTime(operationVariableService.getFromAnonymousTime(dispo.getOt()))
+                            .inTime(operationVariableService.getFromAnonymousTime(dispo.getIt()))
+                            .build();
+                    units.add(operationUnit);
+                } else {
+                    // firedepartment
+                    Firedepartment firedepartment = createFiredepartmentIfNotExists(
+                            Firedepartment.builder().name(dispo.getN()).build()
+                    );
+
+                    OperationFiredepartment opFd = OperationFiredepartment.builder()
+                            .firedepartment(firedepartment)
+                            .operation(operation)
+                            .dispoTime(operationVariableService.getFromAnonymousTime(dispo.getDt()))
+                            .alarmTime(operationVariableService.getFromAnonymousTime(dispo.getAt()))
+                            .outTime(operationVariableService.getFromAnonymousTime(dispo.getOt()))
+                            .inTime(operationVariableService.getFromAnonymousTime(dispo.getIt()))
+                            .build();
+                    firedepartments.add(opFd);
+                }
+            });
+            operation.setFiredepartments(firedepartments);
+            operation.setUnits(units);
+
+            return operationRepository.save(operation);
+        }
+    }
+
+    private ApiOperationLowerAustriaResponse getOperationByWastlPubIdLowerAustria(String laWastlPubId) {
+        if(laWastlPubId != null) {
+            try {
+                // get data from API
+                WebClient webClient = WebClient.create();
+                ResponseEntity<ApiOperationLowerAustriaResponse> response = webClient.get()
+                        .uri("https://infoscreen.florian10.info/OWS/wastlMobile/geteinsatzdata.ashx?id=" + laWastlPubId)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .retrieve()
+                        .toEntity(ApiOperationLowerAustriaResponse.class)
+                        .block();
+
+                return response.getBody();
+            } catch (Exception e) {
+                throw new RuntimeException("Error fetching operation by ID from Lower Austria API", e);
+            }
+        } else {
+            throw new IllegalArgumentException("laWastlPubId cannot be null");
+        }
+
+    }
+
 
     private Firedepartment createFiredepartmentIfNotExists(Firedepartment firedepartment) {
         if (firedepartment.getFriendlyName() == null || firedepartment.getFriendlyName().isEmpty()) {
@@ -603,6 +811,15 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         }
 
         return units;
+    }
+
+    private Boolean isUnitLowerAustria(String name) {
+        if (name.contains("(") && name.contains(")")) {
+            String unitName = name.substring(name.indexOf("(") + 1, name.indexOf(")")).trim();
+            return !(unitName.equals("FF") || unitName.equals("FW"));
+        } else {
+            return false;
+        }
     }
 
 }
