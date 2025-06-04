@@ -1,6 +1,7 @@
 package com.jpromi.operation_point.model;
 
 import com.jpromi.operation_point.enums.ServiceOriginEnum;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.*;
 
 import java.time.OffsetDateTime;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@XmlRootElement
 public class OperationResponse {
     private UUID uuid;
     @Builder.Default

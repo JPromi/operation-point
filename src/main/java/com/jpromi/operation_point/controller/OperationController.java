@@ -29,7 +29,7 @@ public class OperationController {
     @Autowired
     private OperationResponseMapper operationResponseMapper;
 
-    @GetMapping("")
+    @GetMapping(value = "", produces = {"application/json", "application/xml"})
     public ResponseEntity<List<OperationResponse>> getList() {
         List<Operation> operations = operationService.getActiveOperations();
         List<OperationResponse> operationResponses = new ArrayList<>();
