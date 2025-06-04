@@ -18,5 +18,6 @@ public interface OperationRepository extends JpaRepository<Operation, Long> {
 
     List<Operation> findByServiceOriginAndLastSeenNull(ServiceOriginEnum serviceOrigin);
 
-    List<Operation> findByEndTimeNull();
+    List<Operation> findByEndTimeNullOrderByStartTime();
+    List<Operation> findByEndTimeNullAndFederalStateOrderByStartTime(String federalState);
 }

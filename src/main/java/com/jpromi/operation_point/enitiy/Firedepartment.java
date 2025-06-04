@@ -33,11 +33,11 @@ public class Firedepartment {
     @Builder.Default
     private Boolean isVolunteer = true;
 
-    private String address_city;
-    private String address_street;
-    private String address_zipcode;
-    private String address_country;
-    private String address_federalState;
+    private String addressCity;
+    private String addressStreet;
+    private String addressZipcode;
+    private String addressCountry;
+    private String addressFederalState;
     private String website;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

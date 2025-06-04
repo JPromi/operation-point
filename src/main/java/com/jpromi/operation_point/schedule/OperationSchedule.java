@@ -13,7 +13,7 @@ public class OperationSchedule {
     @Autowired
     private ApiOperationService apiOperationService;
 
-    @Scheduled(fixedRate = 60000) // 60 seconds
+    @Scheduled(fixedRate = 120000) // 120 seconds
     @Transactional
     public void runUpdateOperations() {
         updateUpperAustria();
