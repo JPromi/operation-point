@@ -40,7 +40,7 @@ public class OperationController {
         return ResponseEntity.ok(operationResponses);
     }
 
-    @GetMapping("/{federalState}")
+    @GetMapping(value = "/{federalState}", produces = {"application/json", "application/xml"})
     public ResponseEntity<List<OperationResponse>> getListByFederalState(@PathVariable String federalState) {
         List<Operation> operations = operationService.getActiveOperationsByFederalState(federalState);
         List<OperationResponse> operationResponses = new ArrayList<>();
