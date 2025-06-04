@@ -29,7 +29,7 @@ public class OperationController {
     @Autowired
     private OperationResponseMapper operationResponseMapper;
 
-    @GetMapping(value = "", produces = {"application/json", "application/xml"})
+    @GetMapping(value = "", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getList() {
         List<Operation> operations = operationService.getActiveOperations();
         List<OperationResponse> operationResponses = new ArrayList<>();
@@ -40,7 +40,7 @@ public class OperationController {
         return ResponseEntity.ok(operationResponses);
     }
 
-    @GetMapping(value = "/{federalState}", produces = {"application/json", "application/xml"})
+    @GetMapping(value = "/{federalState}", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getListByFederalState(@PathVariable String federalState) {
         List<Operation> operations = operationService.getActiveOperationsByFederalState(federalState);
         List<OperationResponse> operationResponses = new ArrayList<>();
