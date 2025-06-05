@@ -29,7 +29,7 @@ public class OperationController {
     @Autowired
     private OperationResponseMapper operationResponseMapper;
 
-    @GetMapping(value = "", produces = {"application/json"})
+    @GetMapping(value = "list", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getList() {
         List<Operation> operations = operationService.getActiveOperations();
         List<OperationResponse> operationResponses = new ArrayList<>();
@@ -40,7 +40,13 @@ public class OperationController {
         return ResponseEntity.ok(operationResponses);
     }
 
-    @GetMapping(value = "/{federalState}", produces = {"application/json"})
+    @GetMapping(value = "list/count", produces = {"application/json"})
+    public ResponseEntity<Long> getCount() {
+        Long count = operationService.getActiveOperationCount();
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping(value = "list/{federalState}", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getListByFederalState(@PathVariable String federalState) {
         List<Operation> operations = operationService.getActiveOperationsByFederalState(federalState);
         List<OperationResponse> operationResponses = new ArrayList<>();
@@ -49,5 +55,11 @@ public class OperationController {
             operationResponses.add(response);
         }
         return ResponseEntity.ok(operationResponses);
+    }
+
+    @GetMapping(value = "list/{federalState}/count", produces = {"application/json"})
+    public ResponseEntity<Long> getCountByFederalState(@PathVariable String federalState) {
+        Long count = operationService.getActiveOperationsByFederalStateCount(federalState);
+        return ResponseEntity.ok(count);
     }
 }

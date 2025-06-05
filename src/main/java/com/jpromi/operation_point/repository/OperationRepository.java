@@ -20,4 +20,7 @@ public interface OperationRepository extends JpaRepository<Operation, Long> {
 
     List<Operation> findByEndTimeNullOrderByStartTime();
     List<Operation> findByEndTimeNullAndFederalStateOrderByStartTime(String federalState);
+
+    Long countByEndTimeNullOrderByStartTime();
+    Long countByEndTimeNullAndFederalStateOrderByStartTime(String federalState);
 }

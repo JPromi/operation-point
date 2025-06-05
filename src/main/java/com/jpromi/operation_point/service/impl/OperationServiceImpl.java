@@ -23,23 +23,36 @@ public class OperationServiceImpl implements OperationService {
     public List<Operation> getActiveOperationsByFederalState(String federalState) {
         federalState = federalState.toLowerCase();
         federalState = federalState.replaceAll(" ", "-");
+        federalState = getFederalState(federalState);
+        return operationRepository.findByEndTimeNullAndFederalStateOrderByStartTime(federalState);
+    }
+
+    @Override
+    public Long getActiveOperationCount() {
+        return operationRepository.countByEndTimeNullOrderByStartTime();
+    }
+
+    @Override
+    public Long getActiveOperationsByFederalStateCount(String federalState) {
+        return operationRepository.countByEndTimeNullAndFederalStateOrderByStartTime(getFederalState(federalState));
+    }
+
+    private String getFederalState(String federalState) {
+        federalState = federalState.toLowerCase();
+        federalState = federalState.replaceAll(" ", "-");
         switch (federalState) {
             case "ua", "upper-austria":
-                federalState = "Upper Austria";
-                break;
+                return "Upper Austria";
             case "st", "styria":
-                federalState = "Styria";
-                break;
+                return "Styria";
             case "ty", "tyrol":
-                federalState = "tyrol";
-                break;
+                return "Tyrol";
             case "la", "lower-austria":
-                federalState = "Lower Austria";
-                break;
+                return "Lower Austria";
             case "bg", "burgenland", "bl":
-                federalState = "Burgenland";
-                break;
+                return "Burgenland";
+            default:
+                return federalState;
         }
-        return operationRepository.findByEndTimeNullAndFederalStateOrderByStartTime(federalState);
     }
 }

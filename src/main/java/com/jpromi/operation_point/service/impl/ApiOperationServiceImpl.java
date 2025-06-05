@@ -575,8 +575,8 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         }
     }
 
-    private Operation updateSavedOperationLowerAustria(ApiOperationLowerAustriaResponse response, String laSysId) {
-        Optional<Operation> _operation = operationRepository.findByLaSysId(response.getId());
+    private Operation updateSavedOperationLowerAustria(ApiOperationLowerAustriaResponse response, String laWastlPubId) {
+        Optional<Operation> _operation = operationRepository.findByLaSysId(response.getN());
 
         if(_operation.isPresent()) {
             Operation operation = _operation.get();
@@ -676,7 +676,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         } else {
             Operation operation = Operation.builder()
                     .laSysId(response.getN())
-                    .laWastlPubId(laSysId)
+                    .laWastlPubId(laWastlPubId)
                     .laId(response.getId())
 
                     .alarmText(response.getM())
