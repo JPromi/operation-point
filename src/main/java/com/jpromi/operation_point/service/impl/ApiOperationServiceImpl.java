@@ -639,8 +639,8 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                             Firedepartment.builder().name(dispo.getN()).build()
                     );
                     // check if unit already exists
-                    boolean exists = finalUnits.stream()
-                            .anyMatch(opUn -> opUn.getUnit().getName().equals(firedepartment.getName()));
+                    boolean exists = finalFiredepartments.stream()
+                            .anyMatch(opUn -> opUn.getFiredepartment().getName().equals(firedepartment.getName()));
                     if (!exists) {
                         OperationFiredepartment operationFiredepartment = OperationFiredepartment.builder()
                                 .firedepartment(firedepartment)
