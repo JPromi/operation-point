@@ -51,6 +51,9 @@ public class OperationResponse {
         private String message;
         private String upperAustriaId;
         private String upperAustriaType;
+        private String tyrolOrganization;
+        private String tyrolOutOrder;
+        private String tyrolCategory;
     }
 
     @Data

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class OperationVariableServiceImpl implements OperationVariableService {
@@ -42,5 +43,30 @@ public class OperationVariableServiceImpl implements OperationVariableService {
                 OffsetDateTime.now().getOffset()
         );
 
+    }
+
+    @Override
+    public String getAlarmOrganizationTyrol(String alarm) {
+        return alarm.split("-")[0];
+    }
+
+    @Override
+    public String getAlarmOutOrderTyrol(String alarm) {
+        String[] parts = alarm.split("-");
+        if(parts.length == 3) {
+            return parts[1];
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public String getAlarmCategoryTyrol(String alarm) {
+        String[] parts = alarm.split("-");
+        if(parts.length == 3) {
+            return parts[2];
+        } else {
+            return null;
+        }
     }
 }

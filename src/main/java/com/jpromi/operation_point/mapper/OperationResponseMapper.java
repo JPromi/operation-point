@@ -24,6 +24,9 @@ public class OperationResponseMapper {
         response.getAlarm().setMessage(operation.getAlarmText());
         response.getAlarm().setUpperAustriaId(operation.getUaAlarmTypeId());
         response.getAlarm().setUpperAustriaType(operation.getUaAlarmTypeType());
+        response.getAlarm().setTyrolOrganization(operation.getTyAlarmOrganization());
+        response.getAlarm().setTyrolOutOrder(operation.getTyAlarmOutOrder());
+        response.getAlarm().setTyrolCategory(operation.getTyAlarmCategory());
 
         response.getExternalIds().setUpperAustriaId(operation.getUaId());
         response.getExternalIds().setTyrolEventId(operation.getTyEventId());

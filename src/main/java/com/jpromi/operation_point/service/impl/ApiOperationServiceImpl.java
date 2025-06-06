@@ -479,6 +479,9 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setLat(response.getLat());
             operation.setLng(response.getLon());
             operation.setUpdatedAt(OffsetDateTime.now());
+            operation.setTyAlarmCategory(operationVariableService.getAlarmCategoryTyrol(response.getName()));
+            operation.setTyAlarmOrganization(operationVariableService.getAlarmOrganizationTyrol(response.getName()));
+            operation.setTyAlarmOutOrder(operationVariableService.getAlarmOutOrderTyrol(response.getName()));
 
             // firedepartments
             List<String> firedepartments = getFiredepartmentsTyrol(response.getNameAtAlarmTime());
@@ -535,6 +538,9 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             Operation operation = Operation.builder()
                     .tyEventId(response.getEventnum())
                     .alarmText(response.getRemark())
+                    .tyAlarmCategory(operationVariableService.getAlarmCategoryTyrol(response.getName()))
+                    .tyAlarmOrganization(operationVariableService.getAlarmOrganizationTyrol(response.getName()))
+                    .tyAlarmOutOrder(operationVariableService.getAlarmOutOrderTyrol(response.getName()))
                     .city(response.getCity())
                     .zipCode(response.getZipcode())
                     .location(response.getCity())

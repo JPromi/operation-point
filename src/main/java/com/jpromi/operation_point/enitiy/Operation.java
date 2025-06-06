@@ -32,6 +32,9 @@ public class Operation {
     private String alarmText;
     private String uaAlarmTypeId; // only Upper Austria
     private String uaAlarmTypeType; // only Upper Austria
+    private String tyAlarmOrganization; // only Tyrol
+    private String tyAlarmOutOrder; // only Tyrol
+    private String tyAlarmCategory; // only Tyrol
     private OffsetDateTime startTime;
     private OffsetDateTime endTime;
     private String status;
