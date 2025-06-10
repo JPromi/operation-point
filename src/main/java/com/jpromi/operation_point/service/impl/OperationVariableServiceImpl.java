@@ -20,7 +20,12 @@ public class OperationVariableServiceImpl implements OperationVariableService {
     public String getAlarmType(String alarmType) {
         if (alarmType == null) return null;
         var matcher = java.util.regex.Pattern.compile("^[A-Z]+(?=\\d)").matcher(alarmType);
-        return matcher.find() ? matcher.group() : null;
+        if (matcher.find()) {
+            return matcher.group();
+        } else if (alarmType.matches("^[A-Z]+$")) {
+            return alarmType; // nur Großbuchstaben, keine Zahl → direkt zurückgeben
+        }
+        return null;
     }
 
     @Override
