@@ -65,4 +65,5 @@ Die Swagger-Dokumentation kann unter [`/swagger-ui/index.html`](http://localhost
 | Steiermark       | st, styria         |
 | Tirol            | ty, tyrol          |
 | Burgenland       | bl, bg, burgenland |
+
 Diese Abkürzungen werden für `/operation/list/{federalState}` verwendet.
