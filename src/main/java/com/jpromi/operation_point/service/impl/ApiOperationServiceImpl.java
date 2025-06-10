@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -88,7 +91,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             result.getEinsatz().forEach( operationListEntry -> {
                 try {
                     ApiOperationLowerAustriaResponse operation = getOperationByWastlPubIdLowerAustria(operationListEntry.getI());
-                    Operation _operation = updateSavedOperationLowerAustria(operation, operationListEntry.getI());
+                    Operation _operation = updateSavedOperationLowerAustria(operation, operationListEntry.getI(), operationListEntry.getB());
                     if (_operation != null) {
                         operationList.add(_operation);
                     }
@@ -598,7 +601,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         }
     }
 
-    private Operation updateSavedOperationLowerAustria(ApiOperationLowerAustriaResponse response, String laWastlPubId) {
+    private Operation updateSavedOperationLowerAustria(ApiOperationLowerAustriaResponse response, String laWastlPubId, String districtId) {
         Optional<Operation> _operation = operationRepository.findByLaSysId(response.getN());
 
         if(_operation.isPresent()) {
@@ -609,6 +612,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setStartTime(operationVariableService.getTimeFromDateAndTime(response.getD(), response.getT()));
             operation.setLocation(response.getO());
             operation.setCity(response.getO());
+            operation.setDistrict(getDistrictLowerAustria(districtId));
             operation.setZipCode(response.getP());
 
             // firedepartments / units, and check if they already exist
@@ -708,6 +712,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .startTime(operationVariableService.getTimeFromDateAndTime(response.getD(), response.getT()))
                     .location(response.getO())
                     .city(response.getO())
+                    .district(getDistrictLowerAustria(districtId))
                     .zipCode(response.getP())
                     .federalState("Lower Austria")
                     .serviceOrigin(ServiceOriginEnum.LA_WASTL_PUB)
@@ -855,6 +860,27 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     return false;
                 }
             }
+        }
+    }
+
+    private String getDistrictLowerAustria(String bazId) {
+        // load json mapping/LA_WASTL_PUB-districts.json
+        ObjectMapper mapper = new ObjectMapper();
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("mapping/LA_WASTL_PUB-districts.json")) {
+            if (is == null) {
+                throw new IllegalStateException("File not found: mapping/LA_WASTL_PUB-districts.json");
+            }
+
+            // get districts
+            Map<String, String> districts = mapper.readValue(
+                    is,
+                    new TypeReference<Map<String, String>>() {}
+            );
+
+            // return district by bazId
+            return districts.getOrDefault(bazId, null);
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading LA_WASTL_PUB-districts.json", e);
         }
     }
 
