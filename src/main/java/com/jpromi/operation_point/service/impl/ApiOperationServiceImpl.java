@@ -217,6 +217,8 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 operation.setAlarmLevelAddition(operationVariableService.getAlarmLevelAddition(response.getCode()));
                 operation.setAlarmText(response.getCodeDesc());
 
+                operation.setDistrict(response.getDistrict());
+
                 // units
                 int unitCount = Integer.parseInt(response.getNumVehicles());
                 // only add units if they are not already present
@@ -272,6 +274,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                         .alarmText(response.getCodeDesc())
                         .startTime(Instant.ofEpochSecond(operationStart).atOffset(OffsetDateTime.now().getOffset()))
                         .location(response.getPlaceOfOperation())
+                        .district(response.getDistrict())
                         .federalState("Burgenland")
                         .serviceOrigin(ServiceOriginEnum.BL_LSZ_PUB)
                         .build();
@@ -325,6 +328,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setAlarmText(response.getEinsatztyp().getText());
             operation.setLocation(response.getAdresse().getEarea());
             operation.setCity(response.getAdresse().getEarea());
+            operation.setDistrict(response.getBezirk().getText());
 
 
             operation.setUpdatedAt(OffsetDateTime.now());
@@ -366,6 +370,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .alarmText(response.getEinsatztyp().getText())
                     .location(response.getAdresse().getEarea())
                     .city(response.getAdresse().getEarea())
+                    .district(response.getBezirk().getText())
                     .federalState("Upper Austria")
                     .serviceOrigin(ServiceOriginEnum.UA_LFV_PUB)
                     .startTime(OffsetDateTime.parse(response.getStartzeit(), DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z")))
