@@ -214,6 +214,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 Operation operation = _operation.get();
                 operation.setAlarmLevel(operationVariableService.getAlarmLevel(response.getCode()));
                 operation.setAlarmType(operationVariableService.getAlarmType(response.getCode()));
+                operation.setAlarmLevelAddition(operationVariableService.getAlarmLevelAddition(response.getCode()));
                 operation.setAlarmText(response.getCodeDesc());
 
                 // units
@@ -267,6 +268,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                         .blId(response.getOperationId())
                         .alarmLevel(operationVariableService.getAlarmLevel(response.getCode()))
                         .alarmType(operationVariableService.getAlarmType(response.getCode()))
+                        .alarmLevelAddition(operationVariableService.getAlarmLevelAddition(response.getCode()))
                         .alarmText(response.getCodeDesc())
                         .startTime(Instant.ofEpochSecond(operationStart).atOffset(OffsetDateTime.now().getOffset()))
                         .location(response.getPlaceOfOperation())
@@ -397,6 +399,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             Operation operation = _opertaion.get();
             operation.setAlarmType(operationVariableService.getAlarmType(alarmSplit));
             operation.setAlarmLevel(operationVariableService.getAlarmLevel(alarmSplit));
+            operation.setAlarmLevelAddition(operationVariableService.getAlarmLevelAddition(alarmSplit));
             operation.setAlarmText(response.getProperties().getArt());
             operation.setLat(response.getGeometry().getCoordinates().get(1));
             operation.setLng(response.getGeometry().getCoordinates().get(0));

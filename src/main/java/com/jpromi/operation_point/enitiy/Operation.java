@@ -29,6 +29,7 @@ public class Operation {
     private String district;
     private String alarmType;
     private Long alarmLevel;
+    private String alarmLevelAddition;
     private String alarmText;
     private String uaAlarmTypeId; // only Upper Austria
     private String uaAlarmTypeType; // only Upper Austria
@@ -37,7 +38,6 @@ public class Operation {
     private String tyAlarmCategory; // only Tyrol
     private OffsetDateTime startTime;
     private OffsetDateTime endTime;
-    private String status;
     private String location;
     private Double lat;
     private Double lng;

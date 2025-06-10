@@ -48,6 +48,7 @@ public class OperationResponse {
     public static class OperationResponseAlarm {
         private String type;
         private Long level;
+        private String levelAddition;
         private String message;
         private String upperAustriaId;
         private String upperAustriaType;

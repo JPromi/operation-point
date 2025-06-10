@@ -21,6 +21,7 @@ public class OperationResponseMapper {
 
         response.getAlarm().setLevel(operation.getAlarmLevel());
         response.getAlarm().setType(operation.getAlarmType());
+        response.getAlarm().setLevelAddition(operation.getAlarmLevelAddition());
         response.getAlarm().setMessage(operation.getAlarmText());
         response.getAlarm().setUpperAustriaId(operation.getUaAlarmTypeId());
         response.getAlarm().setUpperAustriaType(operation.getUaAlarmTypeType());

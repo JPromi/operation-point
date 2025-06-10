@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface OperationRepository extends JpaRepository<Operation, Long> {
@@ -23,4 +24,6 @@ public interface OperationRepository extends JpaRepository<Operation, Long> {
 
     Long countByEndTimeNullOrderByStartTime();
     Long countByEndTimeNullAndFederalStateOrderByStartTime(String federalState);
+
+    Optional<Operation> findByUuid(UUID uuid);
 }

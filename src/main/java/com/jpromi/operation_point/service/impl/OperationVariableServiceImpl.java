@@ -18,10 +18,9 @@ public class OperationVariableServiceImpl implements OperationVariableService {
 
     @Override
     public String getAlarmType(String alarmType) {
-        if (alarmType != null) {
-            return alarmType.replaceAll("\\d", "").trim();
-        }
-        return null;
+        if (alarmType == null) return null;
+        var matcher = java.util.regex.Pattern.compile("^[A-Z]+(?=\\d)").matcher(alarmType);
+        return matcher.find() ? matcher.group() : null;
     }
 
     @Override
@@ -31,6 +30,13 @@ public class OperationVariableServiceImpl implements OperationVariableService {
             return numericPart.isEmpty() ? null : Long.parseLong(numericPart);
         }
         return null;
+    }
+
+    @Override
+    public String getAlarmLevelAddition(String alarmType) {
+        if (alarmType == null) return null;
+        var matcher = java.util.regex.Pattern.compile("(?<=\\d)[A-Z]+$").matcher(alarmType);
+        return matcher.find() ? matcher.group() : null;
     }
 
     @Override

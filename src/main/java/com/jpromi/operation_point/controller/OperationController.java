@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController("OperationController")
 @RequestMapping("/operation")
@@ -61,5 +62,16 @@ public class OperationController {
     public ResponseEntity<Long> getCountByFederalState(@PathVariable String federalState) {
         Long count = operationService.getActiveOperationsByFederalStateCount(federalState);
         return ResponseEntity.ok(count);
+    }
+
+    @GetMapping(value = "{uuid}", produces = {"application/json"})
+    public ResponseEntity<OperationResponse> getOperationByUuid(@PathVariable String uuid) {
+        Operation operation = operationService.getOperationByUuid(UUID.fromString(uuid));
+        if (operation == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            OperationResponse response = operationResponseMapper.fromOperation(operation);
+            return ResponseEntity.ok(response);
+        }
     }
 }

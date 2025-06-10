@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class OperationServiceImpl implements OperationService {
@@ -35,6 +37,12 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public Long getActiveOperationsByFederalStateCount(String federalState) {
         return operationRepository.countByEndTimeNullAndFederalStateOrderByStartTime(getFederalState(federalState));
+    }
+
+    @Override
+    public Operation getOperationByUuid(UUID uuid) {
+        Optional<Operation> operation = operationRepository.findByUuid(uuid);
+        return operation.orElse(null);
     }
 
     private String getFederalState(String federalState) {
