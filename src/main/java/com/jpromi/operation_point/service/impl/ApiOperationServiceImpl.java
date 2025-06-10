@@ -420,6 +420,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setAlarmText(response.getProperties().getArt());
             operation.setLat(response.getGeometry().getCoordinates().get(1));
             operation.setLng(response.getGeometry().getCoordinates().get(0));
+            operation.setDistrict(getDistrictStyria(response.getProperties().getBereich()));
 
             // main firedepartment
             Firedepartment mainFiredepartment = createFiredepartmentIfNotExists(
@@ -458,6 +459,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .startTime(OffsetDateTime.now())
                     .lat(response.getGeometry().getCoordinates().get(1))
                     .lng(response.getGeometry().getCoordinates().get(0))
+                    .district(getDistrictStyria(response.getProperties().getBereich()))
                     .serviceOrigin(ServiceOriginEnum.ST_LFV_PUB)
                     .federalState("Styria")
                     .build();
@@ -881,6 +883,27 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             return districts.getOrDefault(bazId, null);
         } catch (IOException e) {
             throw new RuntimeException("Error reading LA_WASTL_PUB-districts.json", e);
+        }
+    }
+
+    private String getDistrictStyria(String districtId) {
+        // load json mapping/ST_LFV_PUB-districts.json
+        ObjectMapper mapper = new ObjectMapper();
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("mapping/ST_LFV_PUB-districts.json")) {
+            if (is == null) {
+                throw new IllegalStateException("File not found: mapping/ST_LFV_PUB-districts.json");
+            }
+
+            // get districts
+            Map<String, String> districts = mapper.readValue(
+                    is,
+                    new TypeReference<Map<String, String>>() {}
+            );
+
+            // return district by id
+            return districts.getOrDefault(districtId, null);
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading ST_LFV_PUB-districts.json", e);
         }
     }
 
