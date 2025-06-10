@@ -822,11 +822,25 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     }
 
     private Boolean isUnitLowerAustria(String name) {
-        if (name.contains("(") && name.contains(")")) {
-            String unitName = name.substring(name.indexOf("(") + 1, name.indexOf(")")).trim();
-            return !(unitName.equals("FF") || unitName.equals("FW"));
+        Optional<Unit> unit = unitRepository.findByName(name);
+
+        // check if exists as unit
+        if (unit.isPresent()) {
+            return true;
         } else {
-            return false;
+            Optional<Firedepartment> firedepartment = firedepartmentRepository.findByName(name);
+            // check if exists as firedepartment
+            if (firedepartment.isPresent()) {
+                return false;
+            } else {
+                // check with name pattern
+                if (name.contains("(") && name.contains(")")) {
+                    String unitName = name.substring(name.indexOf("(") + 1, name.indexOf(")")).trim();
+                    return !(unitName.equals("FF") || unitName.equals("FW"));
+                } else {
+                    return false;
+                }
+            }
         }
     }
 
