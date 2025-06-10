@@ -313,14 +313,19 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     private Operation updateSavedOperationUpperAustria(ApiOperationUpperAustriaResponse.ApiOperationUpperAustriaResponseOperation response) {
         Optional<Operation> _operation = operationRepository.findByUaId(response.getNum1());
 
+        String alarmSplit = response.getEinsatztyp().getId().split("-")[0];
+
         if(_operation.isPresent()) {
             Operation operation = _operation.get();
             operation.setAlarmLevel(Long.parseLong(response.getAlarmstufe()));
             operation.setUaAlarmTypeType(response.getEinsatztyp().getId());
             operation.setUaAlarmTypeId(response.getEinsatztyp().getId());
+            operation.setAlarmType(operationVariableService.getAlarmType(alarmSplit));
+            operation.setAlarmLevel(operationVariableService.getAlarmLevel(alarmSplit));
             operation.setAlarmText(response.getEinsatztyp().getText());
             operation.setLocation(response.getAdresse().getEarea());
             operation.setCity(response.getAdresse().getEarea());
+
 
             operation.setUpdatedAt(OffsetDateTime.now());
 
@@ -355,6 +360,8 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .alarmLevel(Long.parseLong(response.getAlarmstufe()))
                     .uaAlarmTypeType(response.getEinsatztyp().getId())
                     .uaAlarmTypeId(response.getEinsatztyp().getId())
+                    .alarmType(operationVariableService.getAlarmType(alarmSplit))
+                    .alarmLevel(operationVariableService.getAlarmLevel(alarmSplit))
                     .alarmText(response.getEinsatztyp().getText())
                     .location(response.getAdresse().getEarea())
                     .city(response.getAdresse().getEarea())
