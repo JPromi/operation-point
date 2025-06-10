@@ -243,7 +243,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 List<OperationFiredepartment> finalFiredepartments = firedepartments;
                 response.getFwLocations().forEach(fwName -> {
                     Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                            Firedepartment.builder().name(fwName).build()
+                            Firedepartment.builder().name(fwName).addressFederalState("Burgenland").build()
                     );
 
                     // check if firedepartment already exists
@@ -280,7 +280,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 List<OperationFiredepartment> firedepartments = new ArrayList<>();
                 response.getFwLocations().forEach(fwName -> {
                     Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                            Firedepartment.builder().name(fwName).build()
+                            Firedepartment.builder().name(fwName).addressFederalState("Burgenland").build()
                     );
 
                     OperationFiredepartment opFd = OperationFiredepartment.builder()
@@ -337,6 +337,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                         Firedepartment.builder()
                                 .name(firedepartment.getFwname())
                                 .atFireDepartmentId(firedepartment.getFwnr().toString())
+                                .addressFederalState("Upper Austria")
                                 .build()
                 );
 
@@ -377,6 +378,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                         Firedepartment.builder()
                                 .name(firedepartment.getFwname())
                                 .atFireDepartmentId(firedepartment.getFwnr().toString())
+                                .addressFederalState("Upper Austria")
                                 .build()
                 );
 
@@ -413,7 +415,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             // main firedepartment
             Firedepartment mainFiredepartment = createFiredepartmentIfNotExists(
-                    Firedepartment.builder().name(response.getProperties().getFeuerwehr()).build()
+                    Firedepartment.builder().name(response.getProperties().getFeuerwehr()).addressFederalState("Styria").build()
             );
             List<OperationFiredepartment> firedepartments = operation.getFiredepartments();
             if (firedepartments == null) {
@@ -457,7 +459,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             // add primary
             Firedepartment mainFiredepartment = createFiredepartmentIfNotExists(
-                    Firedepartment.builder().name(response.getProperties().getFeuerwehr()).build()
+                    Firedepartment.builder().name(response.getProperties().getFeuerwehr()).addressFederalState("Styria").build()
             );
 
             OperationFiredepartment mainOpFd = OperationFiredepartment.builder()
@@ -499,7 +501,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             firedepartments.forEach(fd -> {
                 Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                        Firedepartment.builder().name(fd).build()
+                        Firedepartment.builder().name(fd).addressFederalState("Tyrol").build()
                 );
 
                 // check if firedepartment already exists
@@ -565,7 +567,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             List<String> firedepartmentNames = getFiredepartmentsTyrol(response.getNameAtAlarmTime());
             firedepartmentNames.forEach(firedepartmentName -> {
                 Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                        Firedepartment.builder().name(firedepartmentName).build()
+                        Firedepartment.builder().name(firedepartmentName).addressFederalState("Tyrol").build()
                 );
 
                 OperationFiredepartment opFd = OperationFiredepartment.builder()
@@ -652,7 +654,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 } else {
                     // firedepartment
                     Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                            Firedepartment.builder().name(dispo.getN()).build()
+                            Firedepartment.builder().name(dispo.getN()).addressFederalState("Lower Austria").build()
                     );
                     // check if unit already exists
                     boolean exists = finalFiredepartments.stream()
@@ -728,7 +730,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 } else {
                     // firedepartment
                     Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                            Firedepartment.builder().name(dispo.getN()).build()
+                            Firedepartment.builder().name(dispo.getN()).addressFederalState("Lower Austria").build()
                     );
 
                     OperationFiredepartment opFd = OperationFiredepartment.builder()
