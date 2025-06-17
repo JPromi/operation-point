@@ -13,7 +13,14 @@ public class OperationVariableServiceImpl implements OperationVariableService {
 
     @Override
     public OffsetDateTime getTimeFromDateAndTime(String date, String time) {
-        return null;
+        if (date == null || time == null || date.isEmpty() || time.isEmpty()) {
+            return null;
+        }
+        String datetime = date + " " + time;
+        return OffsetDateTime.of(
+                LocalDateTime.parse(datetime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")),
+                OffsetDateTime.now().getOffset()
+        );
     }
 
     @Override
