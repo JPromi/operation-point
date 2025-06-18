@@ -1,0 +1,210 @@
+[
+  {
+    "id": "amstetten",
+    "name": "Amstetten"
+  },
+  {
+    "id": "baden",
+    "name": "Baden"
+  },
+  {
+    "id": "braunau",
+    "name": "Braunau"
+  },
+  {
+    "id": "bruck-muerzzuschlag",
+    "name": "Bruck-Mürzzuschlag"
+  },
+  {
+    "id": "bruck-an-der-leitha",
+    "name": "Bruck/Leitha"
+  },
+  {
+    "id": "deutschlandsberg",
+    "name": "Deutschlandsberg"
+  },
+  {
+    "id": "eferding",
+    "name": "Eferding"
+  },
+  {
+    "id": "eisenstadt",
+    "name": "Eisenstadt"
+  },
+  {
+    "id": "freistadt",
+    "name": "Freistadt"
+  },
+  {
+    "id": "gaenserndorf",
+    "name": "Gänserndorf"
+  },
+  {
+    "id": "gmuend",
+    "name": "Gmünd"
+  },
+  {
+    "id": "gmunden",
+    "name": "Gmunden"
+  },
+  {
+    "id": "graz",
+    "name": "Graz"
+  },
+  {
+    "id": "graz-umgebung",
+    "name": "Graz-Umgebung"
+  },
+  {
+    "id": "grieskirchen",
+    "name": "Grieskirchen"
+  },
+  {
+    "id": "guessing",
+    "name": "Guessing"
+  },
+  {
+    "id": "hollabrunn",
+    "name": "Hollabrunn"
+  },
+  {
+    "id": "horn",
+    "name": "Horn"
+  },
+  {
+    "id": "jennersdorf",
+    "name": "Jennersdorf"
+  },
+  {
+    "id": "kirchdorf",
+    "name": "Kirchdorf"
+  },
+  {
+    "id": "krems-an-der-donau",
+    "name": "Krems/Donau"
+  },
+  {
+    "id": "leibnitz",
+    "name": "Leibnitz"
+  },
+  {
+    "id": "liezen",
+    "name": "Liezen"
+  },
+  {
+    "id": "lilienfeld",
+    "name": "Lilienfeld"
+  },
+  {
+    "id": "linz-land",
+    "name": "Linz-Land"
+  },
+  {
+    "id": "mattersburg",
+    "name": "Mattersburg"
+  },
+  {
+    "id": "melk",
+    "name": "Melk"
+  },
+  {
+    "id": "mistelbach",
+    "name": "Mistelbach"
+  },
+  {
+    "id": "moedling",
+    "name": "Mödling"
+  },
+  {
+    "id": "murau",
+    "name": "Murau"
+  },
+  {
+    "id": "neunkirchen",
+    "name": "Neunkirchen"
+  },
+  {
+    "id": "neusiedl",
+    "name": "Neusiedl"
+  },
+  {
+    "id": "oberpullendorf",
+    "name": "Oberpullendorf"
+  },
+  {
+    "id": "oberwart",
+    "name": "Oberwart"
+  },
+  {
+    "id": "perg",
+    "name": "Perg"
+  },
+  {
+    "id": "ried-im-innkreis",
+    "name": "Ried im Innkreis"
+  },
+  {
+    "id": "rohrbach",
+    "name": "Rohrbach"
+  },
+  {
+    "id": "schaerding",
+    "name": "Schärding"
+  },
+  {
+    "id": "scheibbs",
+    "name": "Scheibbs"
+  },
+  {
+    "id": "st-poelten",
+    "name": "St. Pölten"
+  },
+  {
+    "id": "steyr-land",
+    "name": "Steyr-Land"
+  },
+  {
+    "id": "steyr-stadt",
+    "name": "Steyr-Stadt"
+  },
+  {
+    "id": "stockerau",
+    "name": "Stockerau"
+  },
+  {
+    "id": "tulln",
+    "name": "Tulln"
+  },
+  {
+    "id": "urfahr-umgebung",
+    "name": "Urfahr-Umgebung"
+  },
+  {
+    "id": "voecklabruck",
+    "name": "Vöcklabruck"
+  },
+  {
+    "id": "voitsberg",
+    "name": "Voitsberg"
+  },
+  {
+    "id": "waidhofen-an-der-thaya",
+    "name": "Waidhofen/Thaya"
+  },
+  {
+    "id": "weiz",
+    "name": "Weiz"
+  },
+  {
+    "id": "wels-land",
+    "name": "Wels-Land"
+  },
+  {
+    "id": "wr-neustadt",
+    "name": "Wr. Neustadt"
+  },
+  {
+    "id": "zwettl",
+    "name": "Zwettl"
+  }
+]
