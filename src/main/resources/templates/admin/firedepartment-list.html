@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/admin-layout :: layout (~{::title}, ~{::body})">
+<head>
+    <title>Feuerwehren</title>
+    <link rel="stylesheet" th:href="@{/css/firedepartment-list.css}">
+</head>
+<body>
+    <h2>Feuerwehren</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Feuerwehr ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="firedepartment : ${firedepartments}">
+                <td>
+                    <a 
+                        th:href="@{./dashboard/firedepartment/{uuid}(uuid=${firedepartment.uuid})}"
+                        th:text="${firedepartment.friendlyName}"></a>
+                </td>
+                <td th:text="${firedepartment.atFireDepartmentId}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

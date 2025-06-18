@@ -1,0 +1,144 @@
+body {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: center;
+}
+
+main {
+    margin: 0 auto;
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    max-width: 900px;
+    min-height: 50%;
+    margin-left: 20vw;
+}
+
+main > div {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1rem;
+    height: 100%;
+}
+
+main > div:nth-child(1) {
+    border-right: 1px solid #7a7a7a;
+}
+
+main > div.info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+main > div.info h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: .5rem;
+}
+
+main > div.info h3 {
+    font-size: 1.25rem;
+    font-weight: 400;
+}
+
+main > div.login-form {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: center;
+}
+
+main > div.login-form form {
+    max-width: 23rem;
+}
+
+/* login form */
+main > div.login-form > form > label {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+main > div.login-form > form > label > p {
+    font-weight: 400;
+    font-size: .8rem;
+    opacity: .5;
+    text-transform: uppercase;
+}
+
+main > div.login-form > form > label > .input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #525d6d;
+    border: 1px solid #3a475a;
+    border-radius: .25rem;
+    width: 100%;
+    overflow: hidden;
+    transition: border 250ms ease-in-out;
+}
+
+main > div.login-form > form > label > .input:focus-within {
+    border: 1px solid #3b7cdd;
+}
+
+main > div.login-form > form > label > .input input {
+    flex: 1;
+    padding: .5rem .75em;
+    border: none;
+    background-color: transparent;
+    color: #fff;
+    outline: none;
+    height: 2.5rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+main > div.login-form > form > label > .input button {
+    width: 2.5rem;
+    height: 2.5rem;
+    box-sizing: border-box;
+    border: none;
+    background-color: transparent;
+    color: #fff;
+    cursor: pointer;
+}
+
+main > div.login-form > form > label > .input button:not(.js) {
+    display: none;
+}
+
+main > div.login-form > form > label > .input button span {
+    display: none;
+}
+
+main > div.login-form > form > label > .input button.active span.show {
+    display: flex;
+}
+
+main > div.login-form > form > label > .input button:not(.active) span.hidden {
+    display: flex;
+}
+
+main > div.login-form > form > button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #3b7cdd;
+    border: none;
+    border-radius: .25rem;
+    padding: .5rem 1rem;
+    height: 2.5rem;
+    box-sizing: border-box;
+    color: #fff;
+    width: 100%;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+}

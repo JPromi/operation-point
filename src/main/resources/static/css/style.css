@@ -1,0 +1,14 @@
+/* DEFAULT */
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Montserrat', 'Poppins', 'Arial', 'Roboto', 'Open Sans', sans-serif;
+    background: linear-gradient(125deg, #1f2937, #374151);
+    background-attachment: fixed;
+    color: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}

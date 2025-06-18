@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(title, body)">
+    <head>
+        <meta charset="UTF-8">
+        <title th:replace="${title} ?: ''"></title>
+        <base href="/admin/">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,900&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div>
+                    <h1>Operation Point - Admin</h1>
+                </div>
+
+                <div>
+                    <ul>
+                        <li>
+                            <a th:href="@{./dashboard/firedepartment}">Feuerwehren</a>
+                        <li>
+                            <a th:href="@{./dashboard/unit}">Einheiten</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <div th:replace="${body}"></div>
+        </main>
+    </body>
+</html>
