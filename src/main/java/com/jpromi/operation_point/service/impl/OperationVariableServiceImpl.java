@@ -1,12 +1,17 @@
 package com.jpromi.operation_point.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpromi.operation_point.service.OperationVariableService;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OperationVariableServiceImpl implements OperationVariableService {
@@ -85,6 +90,80 @@ public class OperationVariableServiceImpl implements OperationVariableService {
             return parts[2];
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public String getFederalState(String federalState) {
+        federalState = federalState.toLowerCase();
+        federalState = federalState.replaceAll(" ", "-");
+        switch (federalState) {
+            case "ua", "upper-austria":
+                return "Upper Austria";
+            case "st", "styria":
+                return "Styria";
+            case "ty", "tyrol":
+                return "Tyrol";
+            case "la", "lower-austria":
+                return "Lower Austria";
+            case "bg", "burgenland", "bl":
+                return "Burgenland";
+            default:
+                return federalState;
+        }
+    }
+
+    @Override
+    public String getDistrict(String districtId) {
+        if(districtId == null) {
+            return null;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("mapping/district-mapping.json")) {
+            if (is == null) {
+                throw new IllegalStateException("File not found: mapping/district-mapping.json");
+            }
+
+            // list of districts
+            List<Map<String, String>> districtList = mapper.readValue(is, new TypeReference<List<Map<String, String>>>() {});
+
+            // search for the district by ID
+            for (Map<String, String> entry : districtList) {
+                if (districtId.equals(entry.get("id"))) {
+                    return entry.get("name");
+                }
+            }
+
+            throw new IllegalArgumentException("District ID not found: " + districtId);
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading district-mapping.json", e);
+        }
+    }
+
+    @Override
+    public String getDistrictId(String district) {
+        if(district == null) {
+            return null;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("mapping/district-mapping.json")) {
+            if (is == null) {
+                throw new IllegalStateException("File not found: mapping/district-mapping.json");
+            }
+
+            // list of districts
+            List<Map<String, String>> districtList = mapper.readValue(is, new TypeReference<List<Map<String, String>>>() {});
+
+            // search for the district by name
+            for (Map<String, String> entry : districtList) {
+                if (district.equalsIgnoreCase(entry.get("name"))) {
+                    return entry.get("id");
+                }
+            }
+
+            throw new IllegalArgumentException("District not found: " + district);
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading district-mapping.json", e);
         }
     }
 }
