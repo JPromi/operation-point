@@ -59,8 +59,8 @@ public class LocationServiceImpl implements LocationService {
         ) {
             String[] nextLine;
             while ((nextLine = reader.readNext()) != null) {
-                if (nextLine.length > 1 && nextLine[1].trim().equalsIgnoreCase(district)) {
-                    return nextLine[0].trim();
+                if (nextLine.length > 1 && nextLine[0].trim().equalsIgnoreCase(district)) {
+                    return nextLine[1].trim();
                 }
             }
             return null;
