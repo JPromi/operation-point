@@ -59,6 +59,25 @@ public class LocationServiceImpl implements LocationService {
         ) {
             String[] nextLine;
             while ((nextLine = reader.readNext()) != null) {
+                if (nextLine.length > 1 && nextLine[1].trim().equalsIgnoreCase(district)) {
+                    return nextLine[0].trim();
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public String getDistrictByDistrictId(String district) {
+        try (
+                InputStream is = getClass().getClassLoader().getResourceAsStream("mapping/district-mapping.csv");
+                CSVReader reader = new CSVReader(new InputStreamReader(is))
+        ) {
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
                 if (nextLine.length > 1 && nextLine[0].trim().equalsIgnoreCase(district)) {
                     return nextLine[1].trim();
                 }

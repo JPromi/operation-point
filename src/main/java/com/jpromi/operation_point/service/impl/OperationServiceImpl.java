@@ -61,7 +61,7 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public List<Operation> getActiveOperationsByFederalStateAndDistrict(String federalState, String district) {
         // search district
-        district = locationService.getDistrictIdByDistrict(district);
+        district = locationService.getDistrictByDistrictId(district);
         if (district == null) {
             throw new IllegalArgumentException("District not found");
         }

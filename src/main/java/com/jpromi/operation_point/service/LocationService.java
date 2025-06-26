@@ -4,4 +4,5 @@ public interface LocationService {
     String getDistrictByZipCode(String zipCode);
     String getCityByZipCode(String zipCode);
     String getDistrictIdByDistrict(String district);
+    String getDistrictByDistrictId(String district);
 }
