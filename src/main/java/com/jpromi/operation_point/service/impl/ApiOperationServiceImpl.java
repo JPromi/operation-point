@@ -9,6 +9,7 @@ import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationRepository;
 import com.jpromi.operation_point.repository.UnitRepository;
 import com.jpromi.operation_point.service.ApiOperationService;
+import com.jpromi.operation_point.service.LocationService;
 import com.jpromi.operation_point.service.OperationVariableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +43,9 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
     @Autowired
     private UnitRepository unitRepository;
+
+    @Autowired
+    private LocationService locationService;
 
     @Override
     public List<Operation> getOperationListBurgenland() {
@@ -496,6 +500,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             Operation operation = _operation.get();
             operation.setAlarmText(response.getRemark());
             operation.setCity(response.getCity());
+            operation.setDistrict(locationService.getDistrictByZipCode(response.getZipcode()));
             operation.setZipCode(response.getZipcode());
             operation.setLocation(response.getCity());
             operation.setLat(response.getLat());
@@ -566,6 +571,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .city(response.getCity())
                     .zipCode(response.getZipcode())
                     .location(response.getCity())
+                    .district(locationService.getDistrictByZipCode(response.getZipcode()))
                     .lat(response.getLat())
                     .lng(response.getLon())
                     .startTime(OffsetDateTime.now())

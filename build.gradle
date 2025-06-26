@@ -37,6 +37,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'com.opencsv:opencsv:5.7.1'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 

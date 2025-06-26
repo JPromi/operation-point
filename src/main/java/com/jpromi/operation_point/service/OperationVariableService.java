@@ -12,6 +12,4 @@ public interface OperationVariableService {
     String getAlarmCategoryTyrol(String alarm);
     OffsetDateTime getFromAnonymousTime(String datetime);
     String getFederalState(String federalState);
-    String getDistrict(String district);
-    String getDistrictId(String district);
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpromi.operation_point.enitiy.Operation;
 import com.jpromi.operation_point.repository.OperationRepository;
+import com.jpromi.operation_point.service.LocationService;
 import com.jpromi.operation_point.service.OperationService;
 import com.jpromi.operation_point.service.OperationVariableService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private OperationVariableService operationVariableService;
+
+    @Autowired
+    private LocationService locationService;
 
     @Override
     public List<Operation> getActiveOperations() {
@@ -57,7 +61,7 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public List<Operation> getActiveOperationsByFederalStateAndDistrict(String federalState, String district) {
         // search district
-        district = operationVariableService.getDistrict(district);
+        district = locationService.getDistrictIdByDistrict(district);
         if (district == null) {
             throw new IllegalArgumentException("District not found");
         }

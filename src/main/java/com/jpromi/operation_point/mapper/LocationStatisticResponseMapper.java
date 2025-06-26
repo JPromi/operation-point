@@ -3,6 +3,7 @@ package com.jpromi.operation_point.mapper;
 import com.jpromi.operation_point.enitiy.Operation;
 import com.jpromi.operation_point.enums.ServiceOriginEnum;
 import com.jpromi.operation_point.model.LocationStatisticResponse;
+import com.jpromi.operation_point.service.LocationService;
 import com.jpromi.operation_point.service.OperationVariableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,9 @@ public class LocationStatisticResponseMapper {
 
     @Autowired
     private OperationVariableService operationVariableService;
+
+    @Autowired
+    private LocationService locationService;
 
     public List<LocationStatisticResponse> fromOperationFederalState(List<Operation> operations) {
         Map<String, List<Operation>> grouped = operations.stream()
@@ -153,7 +157,7 @@ public class LocationStatisticResponseMapper {
                     LocationStatisticResponse response = new LocationStatisticResponse();
 
                     try {
-                        response.setNameId(operationVariableService.getDistrictId(district));
+                        response.setNameId(locationService.getDistrictIdByDistrict(district));
                     } catch (IllegalArgumentException e) {
                         response.setNameId(district);
                     }
