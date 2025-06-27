@@ -1,0 +1,73 @@
+section {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+section h1 {
+    color: #fff;
+    font-size: 2em;
+    margin-top: 20px;
+}
+
+section .searchbar {
+    display: flex;
+    margin-top: 20px;
+}
+
+section .searchbar input[type="search"] {
+    padding: 10px;
+    border: 1px solid #212121;
+    border-radius: 5px;
+    background-color: #21212150;
+    width: 300px;
+    color: #fff;
+    outline: none;
+}
+
+section .searchbar input[type="search"]:focus {
+    border-color: #21212100;
+}
+
+section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+section table thead {
+    background-color: #21212150;
+}
+
+section table thead tr {
+    text-align: left;
+}
+
+section table thead tr th {
+    padding: 10px;
+    border-bottom: 2px solid #ccc;
+}
+
+section table tbody tr {
+    text-align: left;
+}
+
+section table tbody tr td {
+    padding: 10px;
+}
+
+section table tbody tr td a {
+    color: #fff;
+}
+
+section table tbody tr td:nth-child(1) {
+    border-radius: 5px 0 0 5px;
+}
+
+section table tbody tr td:nth-last-child(1) {
+    border-radius: 0 5px 5px 0;
+}
+
+section table tbody tr:nth-child(odd) td {
+    background-color: #f9f9f910;
+}
