@@ -40,6 +40,7 @@ public class OperationController {
             OperationResponse response = operationResponseMapper.fromOperation(operation);
             operationResponses.add(response);
         }
+        operationResponses.sort((o1, o2) -> o2.getStartTime().compareTo(o1.getStartTime()));
         return ResponseEntity.ok(operationResponses);
     }
 
@@ -75,6 +76,7 @@ public class OperationController {
             OperationResponse response = operationResponseMapper.fromOperation(operation);
             operationResponses.add(response);
         }
+        operationResponses.sort((o1, o2) -> o2.getStartTime().compareTo(o1.getStartTime()));
         return ResponseEntity.ok(operationResponses);
     }
 
