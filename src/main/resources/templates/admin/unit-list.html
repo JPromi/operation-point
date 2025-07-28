@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/admin-layout :: layout (~{::title}, ~{::body})">
+<head>
+    <title>Einheiten</title>
+</head>
+<body>
+    <section>
+        <h1>Einheiten</h1>
+
+        <div class="searchbar">
+            <input type="search" name="searchbox" id="searchInput" placeholder="Search">
+        </div>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody id="dataTable">
+                <tr th:each="unit : ${units}" th:data-name="${unit.friendlyName}">
+                    <td>
+                        <a
+                                th:href="@{./dashboard/unit/{uuid}(uuid=${unit.uuid})}"
+                                th:text="${unit.friendlyName}"></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </section>
+    <link rel="stylesheet" th:href="@{/css/firedepartment-list.css}">
+    <script th:src="@{/js/search.js}"></script>
+</body>
+</html>

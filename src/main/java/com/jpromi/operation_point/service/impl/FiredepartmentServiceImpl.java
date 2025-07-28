@@ -82,6 +82,6 @@ public class FiredepartmentServiceImpl implements FiredepartmentService {
         operationFiredepartmentRepository.deleteByFiredepartment(firedepartment);
         firedepartmentRepository.delete(firedepartment);
 
-        return unit;
+        return unitSaved;
     }
 }
