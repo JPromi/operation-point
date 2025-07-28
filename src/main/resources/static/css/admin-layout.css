@@ -43,7 +43,14 @@ body > header > nav > div:nth-child(2) > ul > li {
     justify-content: center;
 }
 
-body > header > nav > div:nth-child(2) > ul > li > a {
+body > header > nav > div:nth-child(2) > ul > li > a,
+body > header > nav > div:nth-child(2) > ul > li button {
     color: #fff;
     text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    cursor: pointer;
+    border: none;
 }

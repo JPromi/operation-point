@@ -40,11 +40,6 @@ public class AdminController {
         return "admin/login";
     }
 
-    @GetMapping("/logout")
-    public String logout() {
-        return "admin/logout";
-    }
-
     @GetMapping("/dashboard")
     public String dashboard() {
         return "admin/dashboard";
@@ -88,7 +83,7 @@ public class AdminController {
 
                 firedepartmentRepository.save(firedepartment);
             }
-            return "redirect:/admin/dashboard/firedepartment/" + uuid;
+            return "redirect:/admin/dashboard/firedepartment";
         }
     }
 
@@ -122,7 +117,7 @@ public class AdminController {
                 unit.setFriendlyName(updatedUnit.getFriendlyName());
                 unitRepository.save(unit);
             }
-            return "redirect:/admin/dashboard/unit/" + uuid;
+            return "redirect:/admin/dashboard/unit";
         }
     }
 

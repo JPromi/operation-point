@@ -26,6 +26,12 @@
                         <li>
                             <a th:href="@{./dashboard/unit}">Einheiten</a>
                         </li>
+                        <li>
+                            <form th:action="@{/admin/logout}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit">Logout</button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </nav>
