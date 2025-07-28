@@ -23,6 +23,9 @@ public class AdminController {
     @Autowired
     private FiredepartmentRepository firedepartmentRepository;
 
+    @Autowired
+    private FiredepartmentService firedepartmentService;
+
     @GetMapping("/login")
     public String login() {
         return "admin/login";
@@ -58,7 +61,9 @@ public class AdminController {
     @PostMapping("/dashboard/firedepartment/{uuid}")
     public String updateFiredepartment(@PathVariable UUID uuid, FiredepartmentForm updatedFiredepartment) {
         if(updatedFiredepartment.getIsWrongAssignment() != null && updatedFiredepartment.getIsWrongAssignment()) {
-            return "redirect:/admin/dashboard/firedepartment/" + uuid + "?error=wrongAssignment";
+//            return "redirect:/admin/dashboard/firedepartment/" + uuid + "?error=wrongAssignment";
+            firedepartmentService.assignAsUnit(firedepartmentRepository.findByUuid(uuid).get());
+            return "redirect:/admin/dashboard/firedepartment";
         } else {
             Optional<Firedepartment> existingFiredepartment = firedepartmentRepository.findByUuid(uuid);
             if (existingFiredepartment.isPresent()) {
