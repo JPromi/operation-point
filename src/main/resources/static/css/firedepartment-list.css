@@ -68,6 +68,10 @@ section table tbody tr td:nth-last-child(1) {
     border-radius: 0 5px 5px 0;
 }
 
-section table tbody tr:nth-child(odd) td {
-    background-color: #f9f9f910;
+section table tbody tr.disabled {
+  display: none;
+}
+
+section table tbody tr:nth-of-type(odd):not(.disabled) td {
+  background-color: #f9f9f910;
 }

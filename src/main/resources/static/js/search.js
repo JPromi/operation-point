@@ -12,10 +12,23 @@ function searchTable() {
             if (nameAttr) {
                 const name = nameAttr.toLowerCase();
                 const found = name.includes(filter);
-                rows[i].style.display = found ? "" : "none";
+                rows[i].classList[found ? 'remove' : 'add']('disabled');
             } else {
-                rows[i].style.display = "none";
+                rows[i].classList.add("disabled");
             }
+        }
+
+        const sortedRows = Array.from(rows).sort((a, b) => {
+            const aDisabled = a.classList.contains("disabled");
+            const bDisabled = b.classList.contains("disabled");
+
+            if (aDisabled && !bDisabled) return 1;
+            if (!aDisabled && bDisabled) return -1;
+            return 0;
+        });
+
+        for (let i = 0; i < sortedRows.length; i++) {
+            table.appendChild(sortedRows[i]);
         }
     });
 }
