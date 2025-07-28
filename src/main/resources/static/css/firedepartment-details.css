@@ -1,0 +1,163 @@
+section {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+section h1 {
+    color: #fff;
+    font-size: 2em;
+    margin-top: 20px;
+}
+
+/* details */
+section .details {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+section .details .detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+section .details .detail-item h5 {
+    font-size: .65rem;
+    opacity: .5;
+    font-weight: 400;
+}
+
+section .details .detail-item span {
+    font-size: .85rem;
+    opacity: .75;
+}
+
+/* form */
+section form {
+    display: flex;
+    flex-direction: column;
+}
+
+section form h2 {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: .75rem;
+}
+
+section form .box {
+    margin: 1.5rem 0 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+section form .box .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+section form .box .form-group label {
+    font-weight: 400;
+    font-size: .8rem;
+    opacity: .5;
+    text-transform: uppercase;
+}
+
+section form .box .form-group input:not([type="checkbox"]) {
+    padding: .5rem .75em;
+    border-radius: 4px;
+    font-size: .85rem;
+    border: 1px solid #3a475a;
+    border-radius: .25rem;
+    background-color: #525d6d;
+    outline: none;
+    color: #fff;
+    height: 2.5rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+section form .box .form-group input:not([type="checkbox"]):focus {
+    border: 1px solid #3b7cdd;
+}
+
+section form .box .checkvalue {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+section form .box .checkvalue {
+    flex: 1;
+}
+
+section form .box .form-group input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: .5rem;
+}
+
+section form .box .form-group p.disclaimer {
+    font-size: .75rem;
+    opacity: .5;
+}
+
+section form .box .form-group select {
+    padding: .5rem .75em;
+    border-radius: 4px;
+    font-size: .85rem;
+    border: 1px solid #3a475a;
+    background-color: #525d6d;
+    outline: none;
+    color: #fff;
+    height: 2.5rem;
+    box-sizing: border-box;
+}
+
+section form .box .form-group select:focus {
+    border: 1px solid #3b7cdd;
+}
+
+section form .box .form-group select option {
+    background-color: #525d6d;
+    color: #fff;
+}
+
+section form .box .btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+section form .box .btns button,
+section form .box .btns a {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: .25rem;
+    padding: .5rem 1rem;
+    height: 2.5rem;
+    box-sizing: border-box;
+    color: #b7b7b7;
+    width: 10rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #707070;
+    text-decoration: none;
+}
+
+section form .box .btns button.primary,
+section form .box .btns a.primary {
+    background-color: #3b7cdd;
+    color: #fff;
+}

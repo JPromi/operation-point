@@ -10,11 +10,11 @@
 
             <div class="details">
                 <div class="detail-item">
-                    <strong>Feuerwehr UUID:</strong>
+                    <h5>Feuerwehr UUID:</h5>
                     <span th:text="${firedepartment.uuid}"></span>
                 </div>
                 <div class="detail-item">
-                    <strong>Cross System identification Name:</strong>
+                    <h5>Cross System identification Name:</h5>
                     <span th:text="${firedepartment.name}"></span>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                         <label for="atFireDepartmentId">Feuerwehr ID:</label>
                         <input type="text" id="atFireDepartmentId" name="atFireDepartmentId" th:value="${firedepartment.atFireDepartmentId}" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group checkvalue">
                         <label for="isVolunteer">Ist Freiwillige Feuerwehr:</label>
                         <input type="checkbox" id="isVolunteer" name="isVolunteer" th:checked="${firedepartment.isVolunteer}">
                     </div>
@@ -81,20 +81,22 @@
 
                 <h3>Sonstiges</h3>
                 <div class="box">
-                    <div class="form-group extended">
+                    <div class="form-group checkvalue">
                         <label for="isWrongAssignment">Als Einheit zuweisen:</label>
                         <input type="checkbox" name="isWrongAssignment" id="isWrongAssignment">
+                    </div>
+
+                    <div class="form-group">
                         <p class="disclaimer">Manchmal passiert es das der Crawler eine Einheit (Fahrzeug,...) als Feuerwehr zuweist. Bei auswahl dieser Funktion wird die Feuerwehr als Einheit umgewandelt und verliert alle nicht relevanten Eigenschaften.</p>
                     </div>
 
                 <div class="btns">
-                    <button type="submit" class="save">Speichern</button>
-                    <button type="reset" class="reset">Abbrechen</button>
+                    <a th:href="@{./dashboard/firedepartment}">Abbrechen</a>
+                    <button type="submit" class="primary">Speichern</button>
                 </div>
 
             </form>
-
-
         </section>
+        <link rel="stylesheet" th:href="@{/css/firedepartment-details.css}">
     </body>
 </html>
