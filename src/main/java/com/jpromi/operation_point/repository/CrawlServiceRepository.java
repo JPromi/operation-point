@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CrawlServiceRepository extends JpaRepository<CrawlService, Long> {
     CrawlService findByName(String name);
+    List<CrawlService> findAllByOrderByNameAsc();
 }

@@ -21,10 +21,14 @@
 
                 <div>
                     <ul>
-                        <li>
+                        <li sec:authorize="hasAnyRole('ADMIN', 'EDITOR')">
                             <a th:href="@{./dashboard/firedepartment}">Feuerwehren</a>
-                        <li>
+                        </li>
+                        <li sec:authorize="hasAnyRole('ADMIN', 'EDITOR')">
                             <a th:href="@{./dashboard/unit}">Einheiten</a>
+                        </li>
+                        <li sec:authorize="hasAnyRole('ADMIN')">
+                            <a th:href="@{./root}">Admin</a>
                         </li>
                         <li>
                             <form th:action="@{/admin/logout}" method="post">

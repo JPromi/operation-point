@@ -1,19 +1,20 @@
 package com.jpromi.operation_point.controller;
 
+import com.jpromi.operation_point.enitiy.CrawlService;
 import com.jpromi.operation_point.enitiy.Firedepartment;
 import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.model.CrawlServiceForm;
 import com.jpromi.operation_point.model.FiredepartmentForm;
+import com.jpromi.operation_point.repository.CrawlServiceRepository;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.UnitRepository;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,9 @@ public class AdminController {
     @Autowired
     private UnitService unitService;
 
+    @Autowired
+    private CrawlServiceRepository crawlServiceRepository;
+
     @GetMapping("/login")
     public String login() {
         return "admin/login";
@@ -47,13 +51,15 @@ public class AdminController {
 
     // Firedepartment
     @GetMapping("/dashboard/firedepartment")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public String firedepartmentList(Model model) {
-        List<Firedepartment> firedepartments = firedepartmentRepository.findAll();
+        List<Firedepartment> firedepartments = firedepartmentRepository.findAllByOrderByNameAsc();
         model.addAttribute("firedepartments", firedepartments);
         return "admin/firedepartment-list";
     }
 
     @GetMapping("/dashboard/firedepartment/{uuid}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public String firedepartmentDetail(@PathVariable UUID uuid, Model model) {
         Optional<Firedepartment> firedepartment = firedepartmentRepository.findByUuid(uuid);
         if (firedepartment.isEmpty()) {
@@ -64,6 +70,7 @@ public class AdminController {
     }
 
     @PostMapping("/dashboard/firedepartment/{uuid}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public String updateFiredepartment(@PathVariable UUID uuid, FiredepartmentForm updatedFiredepartment) {
         if(updatedFiredepartment.getIsWrongAssignment() != null && updatedFiredepartment.getIsWrongAssignment()) {
             Unit unit = firedepartmentService.assignAsUnit(firedepartmentRepository.findByUuid(uuid).get());
@@ -89,13 +96,15 @@ public class AdminController {
 
     // Unit
     @GetMapping("/dashboard/unit")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public String unitList(Model model) {
-        List<Unit> units = unitRepository.findAll();
+        List<Unit> units = unitRepository.findAllByOrderByNameAsc();
         model.addAttribute("units", units);
         return "admin/unit-list";
     }
 
     @GetMapping("/dashboard/unit/{uuid}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public String unitDetail(@PathVariable UUID uuid, Model model) {
         Optional<Unit> unit = unitRepository.findByUuid(uuid);
         if (unit.isEmpty()) {
@@ -106,6 +115,7 @@ public class AdminController {
     }
 
     @PostMapping("/dashboard/unit/{uuid}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public String updateUnit(@PathVariable UUID uuid, FiredepartmentForm updatedUnit) {
         if (updatedUnit.getIsWrongAssignment() != null && updatedUnit.getIsWrongAssignment()) {
             Firedepartment firedepartment = unitService.assignAsFiredepartment(unitRepository.findByUuid(uuid).get());
@@ -119,6 +129,37 @@ public class AdminController {
             }
             return "redirect:/admin/dashboard/unit";
         }
+    }
+
+    // Admin
+    @GetMapping("/root")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String rootDashboard() {
+        return "admin/root/root-dashboard";
+    }
+
+    @GetMapping("/root/crawler")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String crawlerDashboard(Model model) {
+        List<CrawlService> services = crawlServiceRepository.findAllByOrderByNameAsc();
+        model.addAttribute("services", services);
+        return "admin/root/crawler";
+    }
+
+    @PostMapping("/root/crawler")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String addCrawlService(@ModelAttribute("services") CrawlServiceForm services) {
+        List<CrawlService> servicesOriginal = crawlServiceRepository.findAllByOrderByNameAsc();
+        for (CrawlServiceForm.CrawlServiceFormService service : services.getServices()) {
+            Optional<CrawlService> existingService = servicesOriginal.stream()
+                    .filter(s -> s.getName().equals(service.getName()))
+                    .findFirst();
+            if (existingService.isPresent()) {
+                existingService.get().setIsEnabled(service.getIsEnabled());
+                crawlServiceRepository.save(existingService.get());
+            }
+        }
+        return "redirect:/admin/root/crawler";
     }
 
 }
