@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/admin-layout :: layout (~{::title}, ~{::body})">
+    <head>
+        <title th:text="${firedepartment.friendlyName}"></title>
+    </head>
+    <body>
+        <section>
+            <h1 th:text="${firedepartment.friendlyName}"></h1>
+
+            <div class="details">
+                <div class="detail-item">
+                    <h5>Feuerwehr UUID:</h5>
+                    <span th:text="${firedepartment.uuid}"></span>
+                </div>
+                <div class="detail-item">
+                    <h5>Cross System identification Name:</h5>
+                    <span th:text="${firedepartment.name}"></span>
+                </div>
+            </div>
+
+            <form method="POST" th:action="@{./dashboard/firedepartment/{uuid}(uuid=${firedepartment.uuid})}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <h3>Generell</h3>
+                <div class="box">
+                    <div class="form-group">
+                        <label for="friendlyName">Display Name:</label>
+                        <input type="text" id="friendlyName" name="friendlyName" th:value="${firedepartment.friendlyName}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="atFireDepartmentId">Feuerwehr ID:</label>
+                        <input type="text" id="atFireDepartmentId" name="atFireDepartmentId" th:value="${firedepartment.atFireDepartmentId}">
+                    </div>
+                    <div class="form-group checkvalue">
+                        <label for="isVolunteer">Ist Freiwillige Feuerwehr:</label>
+                        <input type="checkbox" id="isVolunteer" name="isVolunteer" th:checked="${firedepartment.isVolunteer}">
+                    </div>
+                </div>
+
+                <h3>Adresse</h3>
+                <div class="box">
+                    <div class="form-group">
+                        <label for="addressStreet">Straße:</label>
+                        <input type="text" id="addressStreet" name="addressStreet" th:value="${firedepartment.addressStreet}">
+                    </div>
+                    <div class="form-group">
+                        <label for="addressCity">Ort:</label>
+                        <input type="text" id="addressCity" name="addressCity" th:value="${firedepartment.addressCity}">
+                    </div>
+                    <div class="form-group">
+                        <label for="addressZipcode">PLZ:</label>
+                        <input type="text" id="addressZipcode" name="addressZipcode" th:value="${firedepartment.addressZipcode}">
+                    </div>
+                    <div class="form-group">
+                        <label for="addressFederalState">Bundesland:</label>
+                        <select id="addressFederalState" name="addressFederalState">
+                            <option value="" th:selected="${firedepartment.addressFederalState == ''}"></option>
+                            <option value="Lower Austria" th:selected="${firedepartment.addressFederalState == 'Lower Austria'}">Niederösterreich</option>
+                            <option value="Upper Austria" th:selected="${firedepartment.addressFederalState == 'Upper Austria'}">Oberösterreich</option>
+                            <option value="Burgenland" th:selected="${firedepartment.addressFederalState == 'Burgenland'}">Burgenland</option>
+                            <option value="Styria" th:selected="${firedepartment.addressFederalState == 'Styria'}">Steiermark</option>
+                            <option value="Tyrol" th:selected="${firedepartment.addressFederalState == 'Tyrol'}">Tirol</option>
+                            <option value="Salzburg" th:selected="${firedepartment.addressFederalState == 'Salzburg'}">Salzburg</option>
+                            <option value="Carinthia" th:selected="${firedepartment.addressFederalState == 'Carinthia'}">Kärnten</option>
+                            <option value="Vorarlberg" th:selected="${firedepartment.addressFederalState == 'Vorarlberg'}">Vorarlberg</option>
+                            <option value="Vienna" th:selected="${firedepartment.addressFederalState == 'Vienna'}">Wien</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <h3>Kontakt</h3>
+                <div class="box">
+                    <div class="form-group">
+                        <label for="website">Website:</label>
+                        <input type="text" id="website" name="website" th:value="${firedepartment.website}" placeholder="https://">
+                    </div>
+                </div>
+
+                <h3>Sonstiges</h3>
+                <div class="box">
+                    <div class="form-group checkvalue">
+                        <label for="isWrongAssignment">Als Einheit zuweisen:</label>
+                        <input type="checkbox" name="isWrongAssignment" id="isWrongAssignment">
+                    </div>
+
+                    <div class="form-group">
+                        <p class="disclaimer">Manchmal passiert es das der Crawler eine Einheit (Fahrzeug,...) als Feuerwehr zuweist. Bei auswahl dieser Funktion wird die Feuerwehr als Einheit umgewandelt und verliert alle nicht relevanten Eigenschaften.</p>
+                    </div>
+
+                <div class="btns">
+                    <a th:href="@{./dashboard/firedepartment}">Abbrechen</a>
+                    <button type="submit" class="primary">Speichern</button>
+                </div>
+
+            </form>
+        </section>
+        <link rel="stylesheet" th:href="@{/css/firedepartment-details.css}">
+    </body>
+</html>

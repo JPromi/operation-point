@@ -1,0 +1,34 @@
+section {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+section h1 {
+    color: #fff;
+    font-size: 2em;
+    margin-top: 20px;
+}
+
+section .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+section .grid .card {
+    background-color: #2a2b30;
+    padding: 1rem;
+    border-radius: .25rem;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    text-decoration: none;
+    box-sizing: border-box;
+}

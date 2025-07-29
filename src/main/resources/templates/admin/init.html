@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup Operation Point</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+<main>
+    <div class="info">
+        <h1>Setup</h1>
+        <h3>Create an Admin user for Operation Point</h3>
+    </div>
+    <div class="login-form">
+        <form th:action="@{/admin/init}" method="POST">
+            <label>
+                <p>Username</p>
+                <div class="input">
+                    <input type="text" name="username" required>
+                </div>
+            </label>
+            <br>
+            <label>
+                <p>Passwort</p>
+                <div class="input">
+                    <input type="password" name="password" id="password" required>
+                    <button id="togglePw" type="button">
+                        <span class="show">SHOW</span>
+                        <span class="hidden">HIDDEN</span>
+                    </button>
+                </div>
+            </label>
+            <br>
+            <button type="submit">Create</button>
+        </form>
+
+    </div>
+</main>
+
+<script th:src="@{/js/login.js}"></script>
+</body>
+</html>

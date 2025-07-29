@@ -9,6 +9,7 @@ import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationRepository;
 import com.jpromi.operation_point.repository.UnitRepository;
 import com.jpromi.operation_point.service.ApiOperationService;
+import com.jpromi.operation_point.service.LocationService;
 import com.jpromi.operation_point.service.OperationVariableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +43,9 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
     @Autowired
     private UnitRepository unitRepository;
+
+    @Autowired
+    private LocationService locationService;
 
     @Override
     public List<Operation> getOperationListBurgenland() {
@@ -420,6 +424,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setAlarmText(response.getProperties().getArt());
             operation.setLat(response.getGeometry().getCoordinates().get(1));
             operation.setLng(response.getGeometry().getCoordinates().get(0));
+            operation.setDistrict(getDistrictStyria(response.getProperties().getBereich()));
 
             // main firedepartment
             Firedepartment mainFiredepartment = createFiredepartmentIfNotExists(
@@ -458,6 +463,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .startTime(OffsetDateTime.now())
                     .lat(response.getGeometry().getCoordinates().get(1))
                     .lng(response.getGeometry().getCoordinates().get(0))
+                    .district(getDistrictStyria(response.getProperties().getBereich()))
                     .serviceOrigin(ServiceOriginEnum.ST_LFV_PUB)
                     .federalState("Styria")
                     .build();
@@ -494,6 +500,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             Operation operation = _operation.get();
             operation.setAlarmText(response.getRemark());
             operation.setCity(response.getCity());
+            operation.setDistrict(locationService.getDistrictByZipCode(response.getZipcode()));
             operation.setZipCode(response.getZipcode());
             operation.setLocation(response.getCity());
             operation.setLat(response.getLat());
@@ -564,6 +571,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .city(response.getCity())
                     .zipCode(response.getZipcode())
                     .location(response.getCity())
+                    .district(locationService.getDistrictByZipCode(response.getZipcode()))
                     .lat(response.getLat())
                     .lng(response.getLon())
                     .startTime(OffsetDateTime.now())
@@ -614,6 +622,8 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setCity(response.getO());
             operation.setDistrict(getDistrictLowerAustria(districtId));
             operation.setZipCode(response.getP());
+            operation.setLastSeen(null);
+            operation.setEndTime(null);
 
             // firedepartments / units, and check if they already exist
             List<OperationFiredepartment> firedepartments = operation.getFiredepartments();
@@ -881,6 +891,27 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             return districts.getOrDefault(bazId, null);
         } catch (IOException e) {
             throw new RuntimeException("Error reading LA_WASTL_PUB-districts.json", e);
+        }
+    }
+
+    private String getDistrictStyria(String districtId) {
+        // load json mapping/ST_LFV_PUB-districts.json
+        ObjectMapper mapper = new ObjectMapper();
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("mapping/ST_LFV_PUB-districts.json")) {
+            if (is == null) {
+                throw new IllegalStateException("File not found: mapping/ST_LFV_PUB-districts.json");
+            }
+
+            // get districts
+            Map<String, String> districts = mapper.readValue(
+                    is,
+                    new TypeReference<Map<String, String>>() {}
+            );
+
+            // return district by id
+            return districts.getOrDefault(districtId, null);
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading ST_LFV_PUB-districts.json", e);
         }
     }
 

@@ -1,19 +1,31 @@
 package com.jpromi.operation_point.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpromi.operation_point.service.OperationVariableService;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OperationVariableServiceImpl implements OperationVariableService {
 
     @Override
     public OffsetDateTime getTimeFromDateAndTime(String date, String time) {
-        return null;
+        if (date == null || time == null || date.isEmpty() || time.isEmpty()) {
+            return null;
+        }
+        String datetime = date + " " + time;
+        return OffsetDateTime.of(
+                LocalDateTime.parse(datetime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")),
+                OffsetDateTime.now().getOffset()
+        );
     }
 
     @Override
@@ -78,6 +90,26 @@ public class OperationVariableServiceImpl implements OperationVariableService {
             return parts[2];
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public String getFederalState(String federalState) {
+        federalState = federalState.toLowerCase();
+        federalState = federalState.replaceAll(" ", "-");
+        switch (federalState) {
+            case "ua", "upper-austria":
+                return "Upper Austria";
+            case "st", "styria":
+                return "Styria";
+            case "ty", "tyrol":
+                return "Tyrol";
+            case "la", "lower-austria":
+                return "Lower Austria";
+            case "bg", "burgenland", "bl":
+                return "Burgenland";
+            default:
+                return federalState;
         }
     }
 }

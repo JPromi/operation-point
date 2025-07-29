@@ -12,5 +12,6 @@ import java.util.UUID;
 public interface UnitRepository extends JpaRepository<Unit, Long> {
     Optional<Unit> findByName(String Name);
     Optional<Unit> findByUuid(UUID uuid);
+    List<Unit> findAllByOrderByNameAsc();
     List<Unit> findByFriendlyNameContainingIgnoreCase(String name);
 }

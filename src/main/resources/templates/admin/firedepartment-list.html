@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/admin-layout :: layout (~{::title}, ~{::body})">
+<head>
+    <title>Feuerwehren</title>
+</head>
+<body>
+    <section>
+        <h1>Feuerwehren</h1>
+
+        <div class="searchbar">
+            <input type="search" name="searchbox" id="searchInput" placeholder="Search">
+        </div>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Feuerwehr ID</th>
+                </tr>
+            </thead>
+            <tbody id="dataTable">
+                <tr th:each="firedepartment : ${firedepartments}" th:data-name="${firedepartment.friendlyName}">
+                    <td>
+                        <a
+                                th:href="@{./dashboard/firedepartment/{uuid}(uuid=${firedepartment.uuid})}"
+                                th:text="${firedepartment.friendlyName}"></a>
+                    </td>
+                    <td th:text="${firedepartment.atFireDepartmentId}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </section>
+    <link rel="stylesheet" th:href="@{/css/firedepartment-list.css}">
+    <script th:src="@{/js/search.js}"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/admin-layout :: layout (~{::title}, ~{::body})">
+  <head>
+    <title>Root Dashboard</title>
+  </head>
+  <body>
+    <section>
+      <h1>Root Admin Dashboard</h1>
+      <div class="grid">
+        <a class="card" th:href="@{/admin/root/crawler}">
+          <p>Crawler</p>
+        </a>
+        <a class="card" th:href="@{/admin/root/user}">
+          <p>Users</p>
+        </a>
+      </div>
+
+    </section>
+
+    <link rel="stylesheet" th:href="@{/css/root-dashboard.css}">
+  </body>
+</html>

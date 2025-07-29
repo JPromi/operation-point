@@ -1,12 +1,19 @@
 package com.jpromi.operation_point.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpromi.operation_point.enitiy.Operation;
 import com.jpromi.operation_point.repository.OperationRepository;
+import com.jpromi.operation_point.service.LocationService;
 import com.jpromi.operation_point.service.OperationService;
+import com.jpromi.operation_point.service.OperationVariableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,6 +22,12 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private OperationRepository operationRepository;
+
+    @Autowired
+    private OperationVariableService operationVariableService;
+
+    @Autowired
+    private LocationService locationService;
 
     @Override
     public List<Operation> getActiveOperations() {
@@ -25,7 +38,7 @@ public class OperationServiceImpl implements OperationService {
     public List<Operation> getActiveOperationsByFederalState(String federalState) {
         federalState = federalState.toLowerCase();
         federalState = federalState.replaceAll(" ", "-");
-        federalState = getFederalState(federalState);
+        federalState = operationVariableService.getFederalState(federalState);
         return operationRepository.findByEndTimeNullAndFederalStateOrderByStartTime(federalState);
     }
 
@@ -36,7 +49,7 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public Long getActiveOperationsByFederalStateCount(String federalState) {
-        return operationRepository.countByEndTimeNullAndFederalStateOrderByStartTime(getFederalState(federalState));
+        return operationRepository.countByEndTimeNullAndFederalStateOrderByStartTime(operationVariableService.getFederalState(federalState));
     }
 
     @Override
@@ -45,22 +58,16 @@ public class OperationServiceImpl implements OperationService {
         return operation.orElse(null);
     }
 
-    private String getFederalState(String federalState) {
+    @Override
+    public List<Operation> getActiveOperationsByFederalStateAndDistrict(String federalState, String district) {
+        // search district
+        district = locationService.getDistrictByDistrictId(district);
+        if (district == null) {
+            throw new IllegalArgumentException("District not found");
+        }
         federalState = federalState.toLowerCase();
         federalState = federalState.replaceAll(" ", "-");
-        switch (federalState) {
-            case "ua", "upper-austria":
-                return "Upper Austria";
-            case "st", "styria":
-                return "Styria";
-            case "ty", "tyrol":
-                return "Tyrol";
-            case "la", "lower-austria":
-                return "Lower Austria";
-            case "bg", "burgenland", "bl":
-                return "Burgenland";
-            default:
-                return federalState;
-        }
+        federalState = operationVariableService.getFederalState(federalState);
+        return operationRepository.findByEndTimeNullAndFederalStateAndDistrictIgnoreCaseOrderByStartTime(federalState, district);
     }
 }
