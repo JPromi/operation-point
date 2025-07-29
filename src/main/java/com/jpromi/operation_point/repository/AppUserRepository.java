@@ -2,9 +2,9 @@ package com.jpromi.operation_point.repository;
 
 import com.jpromi.operation_point.enitiy.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
-public interface UserRepository extends JpaRepository<AppUser, Long> {
-    Optional<AppUser> findByUsername(String username);
+@Repository
+public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+    boolean existsBy();
 }

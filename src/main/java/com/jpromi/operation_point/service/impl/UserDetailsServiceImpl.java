@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.service.impl;
 
-import com.jpromi.operation_point.model.AppUser;
+import com.jpromi.operation_point.enitiy.AppUser;
 import com.jpromi.operation_point.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

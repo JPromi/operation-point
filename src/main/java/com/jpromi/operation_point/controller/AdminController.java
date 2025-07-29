@@ -3,13 +3,16 @@ package com.jpromi.operation_point.controller;
 import com.jpromi.operation_point.enitiy.CrawlService;
 import com.jpromi.operation_point.enitiy.Firedepartment;
 import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.enitiy.AppUser;
 import com.jpromi.operation_point.model.CrawlServiceForm;
 import com.jpromi.operation_point.model.FiredepartmentForm;
+import com.jpromi.operation_point.repository.AppUserRepository;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.UnitRepository;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.UnitService;
+import com.jpromi.operation_point.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -39,9 +42,45 @@ public class AdminController {
     @Autowired
     private CrawlServiceRepository crawlServiceRepository;
 
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/login")
     public String login() {
-        return "admin/login";
+        if(!appUserRepository.existsBy()) {
+            return "redirect:/admin/init";
+        } else {
+            return "admin/login";
+        }
+    }
+
+    @GetMapping("/init")
+    public String init() {
+        if(!appUserRepository.existsBy()) {
+            return "admin/init";
+        } else {
+            return "redirect:/admin/login";
+        }
+    }
+
+    @PostMapping("/init")
+    public String initPost(@RequestParam String username, @RequestParam String password) {
+        if(!appUserRepository.existsBy()) {
+            AppUser user = AppUser.builder()
+                    .password(password)
+                    .username(username)
+                    .role("ADMIN")
+                    .build();
+
+            userService.hashUser(user);
+            userService.createUser(user);
+            return "redirect:/admin/login";
+        } else {
+            return "redirect:/admin/login";
+        }
     }
 
     @GetMapping("/dashboard")
