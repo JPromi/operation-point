@@ -58,7 +58,7 @@ public class OperationResponseMapper {
                                 .firedepartment(
                                         fd.getFiredepartment() != null ? FiredepartmentLightResponse.builder()
                                                 .uuid(fd.getFiredepartment().getUuid())
-                                                .name(fd.getFiredepartment().getName())
+                                                .name(fd.getFiredepartment().getFriendlyName())
                                                 .atFireDepartmentId(fd.getFiredepartment().getAtFireDepartmentId())
                                                 .isVolunteer(fd.getFiredepartment().getIsVolunteer())
                                                 .build() : null
@@ -83,7 +83,7 @@ public class OperationResponseMapper {
                                 .unit(
                                         unit.getUnit() != null ? UnitLightResponse.builder()
                                                 .uuid(unit.getUnit().getUuid())
-                                                .name(unit.getUnit().getName())
+                                                .name(unit.getUnit().getFriendlyName())
                                                 .build() : null
                                 )
                                 .dispoTime(unit.getDispoTime())
