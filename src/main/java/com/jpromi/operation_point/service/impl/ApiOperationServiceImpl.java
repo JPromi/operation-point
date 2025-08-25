@@ -623,7 +623,6 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setDistrict(getDistrictLowerAustria(districtId));
             operation.setZipCode(response.getP());
             operation.setLastSeen(null);
-            operation.setEndTime(null);
 
             // firedepartments / units, and check if they already exist
             List<OperationFiredepartment> firedepartments = operation.getFiredepartments();
