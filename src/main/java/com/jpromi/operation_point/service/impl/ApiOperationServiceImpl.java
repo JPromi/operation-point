@@ -109,7 +109,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             return operationList;
         } catch (Exception e) {
-            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+            throw new RuntimeException("Error fetching operations from Lower Austria API", e);
         }
     }
 
@@ -140,7 +140,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             return operationList;
         } catch (Exception e) {
-            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+            throw new RuntimeException("Error fetching operations from Upper Austria API", e);
         }
     }
 
@@ -173,7 +173,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             return operationList;
         } catch (Exception e) {
-            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+            throw new RuntimeException("Error fetching operations from Styria API", e);
         }
     }
 
@@ -209,7 +209,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             return operationList;
         } catch (Exception e) {
-            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+            throw new RuntimeException("Error fetching operations from Tyrol API", e);
         }
     }
 
