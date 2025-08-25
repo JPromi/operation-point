@@ -380,7 +380,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .district(response.getBezirk().getText())
                     .federalState("Upper Austria")
                     .serviceOrigin(ServiceOriginEnum.UA_LFV_PUB)
-                    .startTime(OffsetDateTime.parse(response.getStartzeit(), DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z")))
+                    .startTime(OffsetDateTime.parse(response.getStartzeit(), DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH)))
                     .build();
 
             // firedepartments
