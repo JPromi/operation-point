@@ -18,6 +18,8 @@
                 <tr>
                     <th>Name</th>
                     <th>Feuerwehr ID</th>
+                    <th>Freiwillig</th>
+                    <th>Bundesland</th>
                 </tr>
             </thead>
             <tbody id="dataTable">
@@ -28,6 +30,8 @@
                                 th:text="${firedepartment.friendlyName}"></a>
                     </td>
                     <td th:text="${firedepartment.atFireDepartmentId}"></td>
+                    <td th:text="${firedepartment.isVolunteer} ? 'Ja' : 'Nein'"></td>
+                    <td th:text="${firedepartment.addressFederalState}"></td>
                 </tr>
             </tbody>
         </table>
