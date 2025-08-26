@@ -109,7 +109,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             return operationList;
         } catch (Exception e) {
-            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+            throw new RuntimeException("Error fetching operations from Lower Austria API", e);
         }
     }
 
@@ -140,7 +140,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             return operationList;
         } catch (Exception e) {
-            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+            throw new RuntimeException("Error fetching operations from Upper Austria API", e);
         }
     }
 
@@ -173,7 +173,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             return operationList;
         } catch (Exception e) {
-            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+            throw new RuntimeException("Error fetching operations from Styria API", e);
         }
     }
 
@@ -209,7 +209,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             return operationList;
         } catch (Exception e) {
-            throw new RuntimeException("Error fetching operations from Burgenland API", e);
+            throw new RuntimeException("Error fetching operations from Tyrol API", e);
         }
     }
 
@@ -252,7 +252,11 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 List<OperationFiredepartment> finalFiredepartments = firedepartments;
                 response.getFwLocations().forEach(fwName -> {
                     Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                            Firedepartment.builder().name(fwName).addressFederalState("Burgenland").build()
+                            Firedepartment.builder()
+                                    .name(fwName)
+                                    .friendlyName("FW " + fwName)
+                                    .addressFederalState("Burgenland")
+                                    .build()
                     );
 
                     // check if firedepartment already exists
@@ -290,7 +294,11 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 List<OperationFiredepartment> firedepartments = new ArrayList<>();
                 response.getFwLocations().forEach(fwName -> {
                     Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                            Firedepartment.builder().name(fwName).addressFederalState("Burgenland").build()
+                            Firedepartment.builder()
+                                    .name(fwName)
+                                    .friendlyName("FW " + fwName)
+                                    .addressFederalState("Burgenland")
+                                    .build()
                     );
 
                     OperationFiredepartment opFd = OperationFiredepartment.builder()
@@ -344,9 +352,16 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             List<OperationFiredepartment> firedepartments = operation.getFiredepartments();
             List<OperationFiredepartment> finalFiredepartments = firedepartments;
             for (ApiOperationUpperAustriaResponse.ApiOperationUpperAustriaResponseOperation.ApiOperationUpperAustriaResponseOperationFeuerwehrArray firedepartment : response.getFeuerwehrenarray().values()) {
+                // replace Feuerwehr/Florian to FW
+                String cleanedName = firedepartment.getFwname();
+                if (cleanedName.startsWith("Feuerwehr/Florian ")) {
+                    cleanedName = "FW " + cleanedName.substring(18);
+                }
+
                 Firedepartment _firedepartment = createFiredepartmentIfNotExists(
                         Firedepartment.builder()
                                 .name(firedepartment.getFwname())
+                                .friendlyName(cleanedName)
                                 .atFireDepartmentId(firedepartment.getFwnr().toString())
                                 .addressFederalState("Upper Austria")
                                 .build()
@@ -380,15 +395,22 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .district(response.getBezirk().getText())
                     .federalState("Upper Austria")
                     .serviceOrigin(ServiceOriginEnum.UA_LFV_PUB)
-                    .startTime(OffsetDateTime.parse(response.getStartzeit(), DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z")))
+                    .startTime(OffsetDateTime.parse(response.getStartzeit(), DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH)))
                     .build();
 
             // firedepartments
             List<OperationFiredepartment> firedepartments = new ArrayList<>();
             for (ApiOperationUpperAustriaResponse.ApiOperationUpperAustriaResponseOperation.ApiOperationUpperAustriaResponseOperationFeuerwehrArray firedepartment : response.getFeuerwehrenarray().values()) {
+                // replace Feuerwehr/Florian to FW
+                String cleanedName = firedepartment.getFwname();
+                if (cleanedName.startsWith("Feuerwehr/Florian ")) {
+                    cleanedName = "FW " + cleanedName.substring(18);
+                }
+
                 Firedepartment _firedepartment = createFiredepartmentIfNotExists(
                         Firedepartment.builder()
                                 .name(firedepartment.getFwname())
+                                .friendlyName(cleanedName)
                                 .atFireDepartmentId(firedepartment.getFwnr().toString())
                                 .addressFederalState("Upper Austria")
                                 .build()
@@ -428,7 +450,11 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             // main firedepartment
             Firedepartment mainFiredepartment = createFiredepartmentIfNotExists(
-                    Firedepartment.builder().name(response.getProperties().getFeuerwehr()).addressFederalState("Styria").build()
+                    Firedepartment.builder()
+                            .name(response.getProperties().getFeuerwehr())
+                            .friendlyName("FW " + response.getProperties().getFeuerwehr())
+                            .addressFederalState("Styria")
+                            .build()
             );
             List<OperationFiredepartment> firedepartments = operation.getFiredepartments();
             if (firedepartments == null) {
@@ -473,7 +499,11 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             // add primary
             Firedepartment mainFiredepartment = createFiredepartmentIfNotExists(
-                    Firedepartment.builder().name(response.getProperties().getFeuerwehr()).addressFederalState("Styria").build()
+                    Firedepartment.builder()
+                            .name(response.getProperties().getFeuerwehr())
+                            .friendlyName("FW " + response.getProperties().getFeuerwehr())
+                            .addressFederalState("Styria")
+                            .build()
             );
 
             OperationFiredepartment mainOpFd = OperationFiredepartment.builder()
@@ -515,8 +545,9 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             List<OperationFiredepartment> operationFiredepartments = operation.getFiredepartments();
 
             firedepartments.forEach(fd -> {
+                String cleanedName = fd.substring(0, fd.length() - 8).trim();
                 Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                        Firedepartment.builder().name(fd).addressFederalState("Tyrol").build()
+                        Firedepartment.builder().name(fd).friendlyName(cleanedName).addressFederalState("Tyrol").build()
                 );
 
                 // check if firedepartment already exists
@@ -582,8 +613,9 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             List<OperationFiredepartment> firedepartments = new ArrayList<>();
             List<String> firedepartmentNames = getFiredepartmentsTyrol(response.getNameAtAlarmTime());
             firedepartmentNames.forEach(firedepartmentName -> {
+                String cleanedName = firedepartmentName.substring(0, firedepartmentName.length() - 8).trim();
                 Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                        Firedepartment.builder().name(firedepartmentName).addressFederalState("Tyrol").build()
+                        Firedepartment.builder().name(firedepartmentName).friendlyName(cleanedName).addressFederalState("Tyrol").build()
                 );
 
                 OperationFiredepartment opFd = OperationFiredepartment.builder()
@@ -623,7 +655,6 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setDistrict(getDistrictLowerAustria(districtId));
             operation.setZipCode(response.getP());
             operation.setLastSeen(null);
-            operation.setEndTime(null);
 
             // firedepartments / units, and check if they already exist
             List<OperationFiredepartment> firedepartments = operation.getFiredepartments();
