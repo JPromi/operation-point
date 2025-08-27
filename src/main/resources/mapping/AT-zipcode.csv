@@ -4,7 +4,7 @@ zip,city,district,federalstate
 2423,Deutsch Jahrndorf,Neusiedl am See,bl
 2424,Zurndorf,Neusiedl am See,bl
 2425,Nickelsdorf,Neusiedl am See,bl
-2473,Potzneusiedl,Bruck an der Leitha,bl
+2473,Potzneusiedl,Bruck/Leitha,bl
 2473,Potzneusiedl,Neusiedl am See,bl
 2474,Gattendorf,Neusiedl am See,bl
 2475,Neudorf,Neusiedl am See,bl
@@ -528,13 +528,13 @@ zip,city,district,federalstate
 2301,Groß-Enzersdorf,Gänserndorf,la
 2304,Orth an der Donau,Gänserndorf,la
 2305,Eckartsau,Gänserndorf,la
-2320,Schwechat,Bruck an der Leitha,la
-2322,Zwölfaxing,Bruck an der Leitha,la
-2325,Himberg,Bruck an der Leitha,la
-2326,Maria Lanzendorf,Bruck an der Leitha,la
+2320,Schwechat,Bruck/Leitha,la
+2322,Zwölfaxing,Bruck/Leitha,la
+2325,Himberg,Bruck/Leitha,la
+2326,Maria Lanzendorf,Bruck/Leitha,la
 2331,Vösendorf,Mödling,la
 2332,Hennersdorf,Mödling,la
-2333,Leopoldsdorf,Bruck an der Leitha,la
+2333,Leopoldsdorf,Bruck/Leitha,la
 2334,Vösendorf,Mödling,la
 2340,Mödling,Mödling,la
 2344,Maria Enzersdorf,Mödling,la
@@ -554,43 +554,43 @@ zip,city,district,federalstate
 2391,Kaltenleutgeben,Mödling,la
 2392,Sulz im Wienerwald,Mödling,la
 2393,Sittendorf,Mödling,la
-2401,Fischamend,Bruck an der Leitha,la
-2402,Maria Ellend,Bruck an der Leitha,la
-2403,Regelsbrunn,Bruck an der Leitha,la
-2404,Petronell,Bruck an der Leitha,la
-2405,Bad Deutsch Altenburg,Bruck an der Leitha,la
-2410,Hainburg an der Donau,Bruck an der Leitha,la
-2412,Wolfsthal,Bruck an der Leitha,la
-2413,Berg,Bruck an der Leitha,la
+2401,Fischamend,Bruck/Leitha,la
+2402,Maria Ellend,Bruck/Leitha,la
+2403,Regelsbrunn,Bruck/Leitha,la
+2404,Petronell,Bruck/Leitha,la
+2405,Bad Deutsch Altenburg,Bruck/Leitha,la
+2410,Hainburg an der Donau,Bruck/Leitha,la
+2412,Wolfsthal,Bruck/Leitha,la
+2413,Berg,Bruck/Leitha,la
 2413,Berg,Neusiedl am See,la
-2431,Kleinneusiedl,Bruck an der Leitha,la
-2432,Schwadorf,Bruck an der Leitha,la
-2433,Margarethen am Moos,Bruck an der Leitha,la
-2434,Götzendorf an der Leitha,Bruck an der Leitha,la
-2435,Ebergassing,Bruck an der Leitha,la
+2431,Kleinneusiedl,Bruck/Leitha,la
+2432,Schwadorf,Bruck/Leitha,la
+2433,Margarethen am Moos,Bruck/Leitha,la
+2434,Götzendorf an der Leitha,Bruck/Leitha,la
+2435,Ebergassing,Bruck/Leitha,la
 2440,Gramatneusiedl,Baden,la
-2440,Gramatneusiedl,Bruck an der Leitha,la
-2441,Mitterndorf an der Fischa,Bruck an der Leitha,la
+2440,Gramatneusiedl,Bruck/Leitha,la
+2441,Mitterndorf an der Fischa,Bruck/Leitha,la
 2441,Mitterndorf an der Fischa,Baden,la
 2442,Unterwaltersdorf,Baden,la
 2443,Deutsch-Brodersdorf,Baden,la
 2443,Deutsch-Brodersdorf,Eisenstadt-Umgebung,la
 2444,Seibersdorf,Baden,la
-2451,Hof am Leithaberge,Bruck an der Leitha,la
+2451,Hof am Leithaberge,Bruck/Leitha,la
 2452,Mannersdorf am Leithagebirge,Baden,la
-2452,Mannersdorf am Leithagebirge,Bruck an der Leitha,la
-2453,Sommerein,Bruck an der Leitha,la
-2454,Trautmannsdorf an der Leitha,Bruck an der Leitha,la
-2460,Bruck an der Leitha,Bruck an der Leitha,la
-2460,Bruck an der Leitha,Neusiedl am See,la
+2452,Mannersdorf am Leithagebirge,Bruck/Leitha,la
+2453,Sommerein,Bruck/Leitha,la
+2454,Trautmannsdorf an der Leitha,Bruck/Leitha,la
+2460,Bruck/Leitha,Bruck/Leitha,la
+2460,Bruck/Leitha,Neusiedl am See,la
 2462,Wilfleinsdorf,Neusiedl am See,la
-2462,Wilfleinsdorf,Bruck an der Leitha,la
-2463,Stixneusiedl,Bruck an der Leitha,la
-2464,Göttlesbrunn,Bruck an der Leitha,la
-2465,Höflein,Bruck an der Leitha,la
-2471,Rohrau,Bruck an der Leitha,la
+2462,Wilfleinsdorf,Bruck/Leitha,la
+2463,Stixneusiedl,Bruck/Leitha,la
+2464,Göttlesbrunn,Bruck/Leitha,la
+2465,Höflein,Bruck/Leitha,la
+2471,Rohrau,Bruck/Leitha,la
 2471,Rohrau,Neusiedl am See,la
-2472,Prellenkirchen,Bruck an der Leitha,la
+2472,Prellenkirchen,Bruck/Leitha,la
 2481,Achau,Mödling,la
 2482,Münchendorf,Mödling,la
 2483,Ebreichsdorf,Baden,la
@@ -2560,4 +2560,4 @@ zip,city,district,federalstate
 1210,Wien,Wien 21.,Floridsdorf,vi
 1220,Wien,Wien 22.,Donaustadt,vi
 1230,Wien,Wien 23.,Liesing,vi
-1300,Wien-Flughafen,Bruck an der Leitha,vi
+1300,Wien-Flughafen,Bruck/Leitha,vi
