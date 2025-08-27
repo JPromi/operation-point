@@ -436,7 +436,6 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
     private Operation updateSavedOperationStyria(ApiOperationStyriaResponse.ApiOperationStyriaResponseFeature response) {
         Optional<Operation> _opertaion = operationRepository.findByStId(response.getProperties().getInstanznummer());
-        System.out.println("Processing Styria operation ID: " + response.getProperties().getInstanznummer());
 
         if(_opertaion.isPresent()) {
             String alarmSplit = response.getProperties().getTyp().split("-")[0];
