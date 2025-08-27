@@ -13,10 +13,10 @@
         </div>
 
 
-        <table>
+        <table id="sortTable">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th onclick="sortTable(0)">Name</th>
                 </tr>
             </thead>
             <tbody id="dataTable">
@@ -33,5 +33,6 @@
     </section>
     <link rel="stylesheet" th:href="@{/css/firedepartment-list.css}">
     <script th:src="@{/js/search.js}"></script>
+    <script th:src="@{/js/table-sort.js}"></script>
 </body>
 </html>
