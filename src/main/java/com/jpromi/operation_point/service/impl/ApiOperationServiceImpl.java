@@ -652,7 +652,13 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setStartTime(operationVariableService.getTimeFromDateAndTime(response.getD(), response.getT()));
             operation.setLocation(response.getO());
             operation.setCity(response.getO());
-            operation.setDistrict(getDistrictLowerAustria(districtId));
+            if (districtId.isEmpty()) {
+                if (!response.getP().isEmpty()) {
+                    operation.setDistrict(locationService.getDistrictByZipCode(response.getP()));
+                }
+            } else {
+                operation.setDistrict(getDistrictLowerAustria(districtId));
+            }
             operation.setZipCode(response.getP());
             operation.setLastSeen(null);
             operation.setEndTime(null);
@@ -759,6 +765,14 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .federalState("Lower Austria")
                     .serviceOrigin(ServiceOriginEnum.LA_WASTL_PUB)
                     .build();
+
+            if (districtId.isEmpty()) {
+                if (!response.getP().isEmpty()) {
+                    operation.setDistrict(locationService.getDistrictByZipCode(response.getP()));
+                }
+            } else {
+                operation.setDistrict(getDistrictLowerAustria(districtId));
+            }
 
             // firedepartments / units
             List<OperationFiredepartment> firedepartments = new ArrayList<>();
