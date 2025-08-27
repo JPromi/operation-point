@@ -1,5 +1,6 @@
 {
   "BM": "Bruck-Mürzzuschlag",
+  "MZ": "Bruck-Mürzzuschlag",
   "DL": "Deutschlandsberg",
   "G": "Graz",
   "GB": "Gröbming",
@@ -12,5 +13,6 @@
   "MU": "Murau",
   "SO": "Südoststeiermark",
   "VO": "Voitsberg",
+  "JO": "Voitsberg",
   "WZ": "Weiz"
 }

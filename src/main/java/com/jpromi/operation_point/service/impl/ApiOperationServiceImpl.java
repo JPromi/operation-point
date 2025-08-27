@@ -447,6 +447,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setLat(response.getGeometry().getCoordinates().get(1));
             operation.setLng(response.getGeometry().getCoordinates().get(0));
             operation.setDistrict(getDistrictStyria(response.getProperties().getBereich()));
+            operation.setLastSeen(null);
 
             // main firedepartment
             Firedepartment mainFiredepartment = createFiredepartmentIfNotExists(
@@ -474,8 +475,10 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setFiredepartments(firedepartments);
 
             // end operation
-            if (response.getProperties().getWehrenImEinsatz().equals("Abgeschlossen")) {
+            if (response.getProperties().getWehrenImEinsatz().equals("Abgeschlossen") && !operation.getEndTime().isEqual(null)) {
                 operation.setEndTime(OffsetDateTime.now());
+            } else {
+                operation.setEndTime(null);
             }
 
             return operationRepository.save(operation);
@@ -515,8 +518,10 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setFiredepartments(firedepartments);
 
             // end operation
-            if (response.getProperties().getWehrenImEinsatz().equals("Abgeschlossen")) {
+            if (response.getProperties().getWehrenImEinsatz().equals("Abgeschlossen") && !operation.getEndTime().isEqual(null)) {
                 operation.setEndTime(OffsetDateTime.now());
+            } else {
+                operation.setEndTime(null);
             }
 
             return operationRepository.save(operation);
