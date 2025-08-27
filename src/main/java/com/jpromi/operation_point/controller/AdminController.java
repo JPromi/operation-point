@@ -123,6 +123,7 @@ public class AdminController {
                 firedepartment.setAddressCity(updatedFiredepartment.getAddressCity());
                 firedepartment.setAddressStreet(updatedFiredepartment.getAddressStreet());
                 firedepartment.setAddressZipcode(updatedFiredepartment.getAddressZipcode());
+                firedepartment.setAddressFederalState(updatedFiredepartment.getAddressFederalState());
                 firedepartment.setAddressCountry(updatedFiredepartment.getAddressCountry());
                 firedepartment.setIsVolunteer(updatedFiredepartment.getIsVolunteer());
                 firedepartment.setWebsite(updatedFiredepartment.getWebsite());
