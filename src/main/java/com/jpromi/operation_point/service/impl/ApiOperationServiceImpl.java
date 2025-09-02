@@ -752,6 +752,10 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             operation.setUpdatedAt(OffsetDateTime.now());
 
+            if (operation.getEndTime() == null && checkIfOperationMayBeEndedLowerAustria(operation)) {
+                operation.setEndTime(OffsetDateTime.now());
+            }
+
             return operationRepository.save(operation);
         } else {
             Operation operation = Operation.builder()
@@ -817,6 +821,10 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             });
             operation.setFiredepartments(firedepartments);
             operation.setUnits(units);
+
+            if (operation.getEndTime() == null && checkIfOperationMayBeEndedLowerAustria(operation)) {
+                operation.setEndTime(OffsetDateTime.now());
+            }
 
             return operationRepository.save(operation);
         }
@@ -964,6 +972,30 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         } catch (IOException e) {
             throw new RuntimeException("Error reading ST_LFV_PUB-districts.json", e);
         }
+    }
+
+    private Boolean checkIfOperationMayBeEndedLowerAustria(Operation operation) {
+        if (operation.getUnits() == null && operation.getFiredepartments() == null) {
+            return false;
+        }
+
+        if (operation.getUnits() != null) {
+            for (OperationUnit unit : operation.getUnits()) {
+                if (unit.getInTime() == null) {
+                    return false;
+                }
+            }
+        }
+
+        if (operation.getFiredepartments() != null) {
+            for (OperationFiredepartment firedepartment : operation.getFiredepartments()) {
+                if (firedepartment.getInTime() == null) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 }
