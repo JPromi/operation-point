@@ -75,6 +75,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             FileData fileData = FileData.builder().build();
             fileData.setFileName(file.getName());
             fileData.setFileSize(file.length());
+            fileData.setContentType(detectContentType(file));
             fileData = fileDataRepository.save(fileData);
 
             String path = _storeFile(file, fileData.getId(), file.getName());
@@ -151,6 +152,15 @@ public class FileStorageServiceImpl implements FileStorageService {
             return null;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private String detectContentType(File file) {
+        try {
+            String contentType = Files.probeContentType(file.toPath());
+            return contentType != null ? contentType : "application/octet-stream";
+        } catch (IOException e) {
+            return "application/octet-stream";
         }
     }
 }
