@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class FiredepartmentForm {
+    private String nameId;
     private String friendlyName;
     private String atFireDepartmentId;
     private String addressCity;

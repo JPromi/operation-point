@@ -131,14 +131,15 @@ public class AdminController {
             Optional<Firedepartment> existingFiredepartment = firedepartmentRepository.findByUuid(uuid);
             if (existingFiredepartment.isPresent()) {
                 Firedepartment firedepartment = existingFiredepartment.get();
-                firedepartment.setFriendlyName(updatedFiredepartment.getFriendlyName());
-                firedepartment.setAtFireDepartmentId(updatedFiredepartment.getAtFireDepartmentId());
-                firedepartment.setAddressCity(updatedFiredepartment.getAddressCity());
-                firedepartment.setAddressStreet(updatedFiredepartment.getAddressStreet());
-                firedepartment.setAddressZipcode(updatedFiredepartment.getAddressZipcode());
-                firedepartment.setAddressFederalState(updatedFiredepartment.getAddressFederalState());
-                firedepartment.setAddressCountry(updatedFiredepartment.getAddressCountry());
-                firedepartment.setIsVolunteer(updatedFiredepartment.getIsVolunteer());
+                firedepartment.setNameId((updatedFiredepartment.getNameId() != null && !updatedFiredepartment.getNameId().isEmpty()) ? sanitize(updatedFiredepartment.getNameId()) : null);
+                firedepartment.setFriendlyName((updatedFiredepartment.getFriendlyName() != null && !updatedFiredepartment.getFriendlyName().isEmpty()) ? updatedFiredepartment.getFriendlyName() : null);
+                firedepartment.setAtFireDepartmentId((updatedFiredepartment.getAtFireDepartmentId() != null && !updatedFiredepartment.getAtFireDepartmentId().isEmpty()) ? updatedFiredepartment.getAtFireDepartmentId() : null);
+                firedepartment.setAddressCity((updatedFiredepartment.getAddressCity() != null && !updatedFiredepartment.getAddressCity().isEmpty()) ? updatedFiredepartment.getAddressCity() : null);
+                firedepartment.setAddressStreet((updatedFiredepartment.getAddressStreet() != null && !updatedFiredepartment.getAddressStreet().isEmpty()) ? updatedFiredepartment.getAddressStreet() : null);
+                firedepartment.setAddressZipcode((updatedFiredepartment.getAddressZipcode() != null && !updatedFiredepartment.getAddressZipcode().isEmpty()) ? updatedFiredepartment.getAddressZipcode() : null);
+                firedepartment.setAddressFederalState((updatedFiredepartment.getAddressFederalState() != null && !updatedFiredepartment.getAddressFederalState().isEmpty()) ? updatedFiredepartment.getAddressFederalState() : null);
+                firedepartment.setAddressCountry((updatedFiredepartment.getAddressCountry() != null && !updatedFiredepartment.getAddressCountry().isEmpty()) ? updatedFiredepartment.getAddressCountry() : null);
+                firedepartment.setIsVolunteer(updatedFiredepartment.getIsVolunteer() != null ? updatedFiredepartment.getIsVolunteer() : false);
 
                 // save images
                 if (updatedFiredepartment.getLogo() != null && !updatedFiredepartment.getLogo().isEmpty() && !updatedFiredepartment.getLogoDelete()) {
@@ -237,7 +238,7 @@ public class AdminController {
             Optional<Unit> existingUnit = unitRepository.findByUuid(uuid);
             if (existingUnit.isPresent()) {
                 Unit unit = existingUnit.get();
-                unit.setFriendlyName(updatedUnit.getFriendlyName());
+                unit.setFriendlyName((updatedUnit.getFriendlyName() != null && !updatedUnit.getFriendlyName().isEmpty()) ? updatedUnit.getFriendlyName() : null);
                 unitRepository.save(unit);
             }
             return "redirect:/admin/dashboard/unit";
@@ -273,6 +274,14 @@ public class AdminController {
             }
         }
         return "redirect:/admin/root/crawler";
+    }
+
+    private String sanitize(String input) {
+        if (input == null) return null;
+        String sanitized = input.trim().toLowerCase();
+        sanitized = sanitized.replaceAll("\\s+", "-");
+        sanitized = sanitized.replaceAll("[^a-z0-9\\-_]", "");
+        return sanitized;
     }
 
 }

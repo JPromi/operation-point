@@ -26,15 +26,15 @@
                 <div class="box">
                     <div class="form-group">
                         <label for="nameId">Name Identifier:</label>
-                        <input type="text" id="nameId" name="nameId" th:value="${firedepartment.nameId}" required>
+                        <input type="text" id="nameId" name="nameId" th:value="${firedepartment.nameId}" placeholder="ff-feuerdorf"/>
                     </div>
                     <div class="form-group">
                         <label for="friendlyName">Display Name:</label>
-                        <input type="text" id="friendlyName" name="friendlyName" th:value="${firedepartment.friendlyName}" required>
+                        <input type="text" id="friendlyName" name="friendlyName" th:value="${firedepartment.friendlyName}" placeholder="FF Feuerdorf" required/>
                     </div>
                     <div class="form-group">
                         <label for="atFireDepartmentId">Feuerwehr ID:</label>
-                        <input type="text" id="atFireDepartmentId" name="atFireDepartmentId" th:value="${firedepartment.atFireDepartmentId}">
+                        <input type="text" id="atFireDepartmentId" name="atFireDepartmentId" th:value="${firedepartment.atFireDepartmentId}" placeholder="N14111"/>
                     </div>
                     <div class="form-group checkvalue">
                         <label for="isVolunteer">Ist Freiwillige Feuerwehr:</label>
