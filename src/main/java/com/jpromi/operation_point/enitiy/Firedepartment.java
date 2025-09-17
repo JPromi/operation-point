@@ -25,6 +25,7 @@ public class Firedepartment {
     @Builder.Default
     private UUID uuid = UUID.randomUUID();
 
+    private String nameId;
     private String name;
     private String friendlyName;
     private String atFireDepartmentId;
@@ -39,6 +40,12 @@ public class Firedepartment {
     private String addressCountry;
     private String addressFederalState;
     private String website;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private FileData logo;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private FileData banner;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Unit> units;

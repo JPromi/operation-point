@@ -17,6 +17,8 @@ public class FiredepartmentResponse {
     private Boolean isVolunteer;
     private FiredepartmentResponseAddress address;
     private FiredepartmentResponseContact contact;
+    private String logo;
+    private String banner;
 
     @Data
     @Builder

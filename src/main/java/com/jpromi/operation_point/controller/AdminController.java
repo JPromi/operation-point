@@ -1,15 +1,13 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.CrawlService;
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.Unit;
-import com.jpromi.operation_point.enitiy.AppUser;
+import com.jpromi.operation_point.enitiy.*;
 import com.jpromi.operation_point.model.CrawlServiceForm;
 import com.jpromi.operation_point.model.FiredepartmentForm;
 import com.jpromi.operation_point.repository.AppUserRepository;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.UnitRepository;
+import com.jpromi.operation_point.service.FileStorageService;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.UnitService;
 import com.jpromi.operation_point.service.UserService;
@@ -47,6 +45,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @GetMapping("/login")
     public String login() {
@@ -105,6 +106,8 @@ public class AdminController {
             return "redirect:/admin/dashboard/firedepartment";
         }
         model.addAttribute("firedepartment", firedepartment.get());
+        model.addAttribute("logoUrl", fileStorageService.getExternalUrl(firedepartment.get().getLogo()));
+        model.addAttribute("bannerUrl", fileStorageService.getExternalUrl(firedepartment.get().getBanner()));
         return "admin/firedepartment-details";
     }
 
@@ -127,6 +130,27 @@ public class AdminController {
                 firedepartment.setAddressCountry(updatedFiredepartment.getAddressCountry());
                 firedepartment.setIsVolunteer(updatedFiredepartment.getIsVolunteer());
                 firedepartment.setWebsite(updatedFiredepartment.getWebsite());
+
+                // save images
+                if (updatedFiredepartment.getLogo() != null && !updatedFiredepartment.getLogo().isEmpty() && !updatedFiredepartment.getLogoDelete()) {
+                    firedepartment.setLogo(
+                            fileStorageService.saveFile(updatedFiredepartment.getLogo())
+                    );
+                } else if (updatedFiredepartment.getLogoDelete()) {
+                    FileData logo = firedepartment.getLogo();
+                    firedepartment.setLogo(null);
+                    fileStorageService.deleteFile(logo);
+                }
+
+                if (updatedFiredepartment.getBanner() != null && !updatedFiredepartment.getBanner().isEmpty() && !updatedFiredepartment.getBannerDelete()) {
+                    firedepartment.setBanner(
+                            fileStorageService.saveFile(updatedFiredepartment.getBanner())
+                    );
+                } else if (updatedFiredepartment.getBannerDelete()) {
+
+                    firedepartment.setBanner(null);
+                    fileStorageService.deleteFile(firedepartment.getBanner());
+                }
 
                 firedepartmentRepository.save(firedepartment);
             }
