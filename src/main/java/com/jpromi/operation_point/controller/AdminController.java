@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -102,10 +103,19 @@ public class AdminController {
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public String firedepartmentDetail(@PathVariable UUID uuid, Model model) {
         Optional<Firedepartment> firedepartment = firedepartmentRepository.findByUuid(uuid);
+
         if (firedepartment.isEmpty()) {
             return "redirect:/admin/dashboard/firedepartment";
         }
+
+        List<FiredepartmentLink> links = new ArrayList<>(firedepartment.get().getLinks());
+
+        for (int i = 0; i < 3; i++) {
+            links.add(FiredepartmentLink.builder().build());
+        }
+
         model.addAttribute("firedepartment", firedepartment.get());
+        model.addAttribute("links", links);
         model.addAttribute("logoUrl", fileStorageService.getExternalUrl(firedepartment.get().getLogo()));
         model.addAttribute("bannerUrl", fileStorageService.getExternalUrl(firedepartment.get().getBanner()));
         return "admin/firedepartment-details";
@@ -129,7 +139,6 @@ public class AdminController {
                 firedepartment.setAddressFederalState(updatedFiredepartment.getAddressFederalState());
                 firedepartment.setAddressCountry(updatedFiredepartment.getAddressCountry());
                 firedepartment.setIsVolunteer(updatedFiredepartment.getIsVolunteer());
-                firedepartment.setWebsite(updatedFiredepartment.getWebsite());
 
                 // save images
                 if (updatedFiredepartment.getLogo() != null && !updatedFiredepartment.getLogo().isEmpty() && !updatedFiredepartment.getLogoDelete()) {
@@ -151,6 +160,46 @@ public class AdminController {
                     firedepartment.setBanner(null);
                     fileStorageService.deleteFile(firedepartment.getBanner());
                 }
+
+                List<FiredepartmentLink> existingLinks = firedepartment.getLinks();
+                List<FiredepartmentLink> oldLinksFinal = new ArrayList<>(existingLinks);
+                existingLinks.clear();
+
+                // update links
+                for (FiredepartmentForm.FiredepartmentFormLinks link : updatedFiredepartment.getLinks()) {
+                    if (link.getId() != null) {
+                        // update existing link
+                        Optional<FiredepartmentLink> existingLink = oldLinksFinal.stream()
+                                .filter(l -> l.getId().equals(link.getId()))
+                                .findFirst();
+
+                        if (existingLink.isPresent()) {
+                            if(
+                                (link.getName() != null && !link.getName().isEmpty()) ||
+                                (link.getUrl() != null && !link.getUrl().isEmpty())
+                            ) {
+                                existingLink.get().setName((link.getName() != null && !link.getName().isEmpty()) ? link.getName() : null);
+                                existingLink.get().setType((link.getType() != null && !link.getType().isEmpty()) ? link.getType() : null);
+                                existingLink.get().setUrl((link.getUrl() != null && !link.getUrl().isEmpty()) ? link.getUrl() : null);
+                                existingLinks.add(existingLink.get());
+                            }
+                        }
+                    } else if (
+                            (link.getName() != null && !link.getName().isEmpty()) ||
+                            (link.getUrl() != null && !link.getUrl().isEmpty())
+                    ) {
+                        // create new link
+                        FiredepartmentLink newLink = FiredepartmentLink.builder()
+                                .firedepartment(firedepartment)
+                                .name((link.getName() != null && !link.getName().isEmpty()) ? link.getName() : null)
+                                .type((link.getType() != null && !link.getType().isEmpty()) ? link.getType() : null)
+                                .url((link.getUrl() != null && !link.getUrl().isEmpty()) ? link.getUrl() : null)
+                                .build();
+                        existingLinks.add(newLink);
+                    }
+                }
+
+                firedepartment.setLinks(existingLinks);
 
                 firedepartmentRepository.save(firedepartment);
             }

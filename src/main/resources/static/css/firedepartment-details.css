@@ -182,6 +182,23 @@ section form .box .form-group.file .input .checkbox {
     align-items: center;
 }
 
+section form .box .form-group table.links {
+    width: 100%;
+    border-collapse: separate;
+    table-layout: fixed;
+    border-spacing: 10px;
+}
+
+section form .box .form-group table.links tbody,
+section form .box .form-group table.links thead {
+    width: 100%;
+}
+
+section form .box .form-group table.links input,
+section form .box .form-group table.links select {
+    width: 100%;
+}
+
 section form .box .btns {
     display: flex;
     justify-content: flex-end;

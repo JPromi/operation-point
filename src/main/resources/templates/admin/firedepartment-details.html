@@ -72,10 +72,39 @@
                 </div>
 
                 <h3>Kontakt</h3>
-                <div class="box">
+                <div class="box" style="width: 100%;">
+                    <div class="form-group" style="width: 100%;">
+                        <table class="links">
+                            <tr>
+                                <th style="width: 20%">Type</th>
+                                <th style="width: 50%">Url</th>
+                                <th style="width: 30%">Name / Tag</th>
+                            </tr>
+                            <tr th:each="item, iterStat : ${links}">
+                                <input type="hidden" th:name="|links[${iterStat.index}].id|" th:value="${item.id}" />
+                                <td>
+                                    <select th:name="|links[${iterStat.index}].type|">
+                                        <option value="" th:selected="${item.type == null or item.type == ''}">Nicht Definiert</option>
+                                        <option value="website" th:selected="${item.type == 'website'}">Website</option>
+                                        <option value="instagram" th:selected="${item.type == 'instagram'}">Instagram</option>
+                                        <option value="facebook" th:selected="${item.type == 'facebook'}">Facebook</option>
+                                        <option value="flickr" th:selected="${item.type == 'flickr'}">Flickr</option>
+                                        <option value="tiktok" th:selected="${item.type == 'tiktok'}">TikTok</option>
+                                        <option value="x" th:selected="${item.type == 'x'}">X</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="url" th:name="|links[${iterStat.index}].url|" th:value="${item.url}" placeholder="https://ff-feuerdorf.at" />
+                                </td>
+                                <td>
+                                    <input type="text" th:name="|links[${iterStat.index}].name|" th:value="${item.name}" placeholder="ff_feuerdorf" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
                     <div class="form-group">
-                        <label for="website">Website:</label>
-                        <input type="text" id="website" name="website" th:value="${firedepartment.website}" placeholder="https://">
+                        <p class="disclaimer">Website mit https:// am Anfang, Name bzw. Tag ist für z.b. den Instagram Username, oder Facebook username, wenn als type z.b. Instagram ausgewählt ist ist es nicht zwingend notwendig eine URL hinzuzufügen wenn der Name / Tag gesetzt ist. Dann wird die URL Automatisch generiert</p>
                     </div>
                 </div>
 

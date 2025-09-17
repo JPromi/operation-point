@@ -39,7 +39,8 @@ public class Firedepartment {
     private String addressZipcode;
     private String addressCountry;
     private String addressFederalState;
-    private String website;
+    @OneToMany(mappedBy = "firedepartment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FiredepartmentLink> links;
 
     @OneToOne(fetch = FetchType.LAZY)
     private FileData logo;

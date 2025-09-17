@@ -2,6 +2,7 @@ package com.jpromi.operation_point.model;
 
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,7 +17,7 @@ public class FiredepartmentResponse {
     private String atFireDepartmentId;
     private Boolean isVolunteer;
     private FiredepartmentResponseAddress address;
-    private FiredepartmentResponseContact contact;
+    private List<FiredepartmentResponseLinks> links;
     private String logo;
     private String banner;
 
@@ -40,8 +41,10 @@ public class FiredepartmentResponse {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class FiredepartmentResponseContact {
-        private String website;
+    public static class FiredepartmentResponseLinks {
+        private String name;
+        private String url;
+        private String type;
     }
 
 }
