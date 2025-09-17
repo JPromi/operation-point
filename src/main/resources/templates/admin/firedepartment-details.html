@@ -90,6 +90,7 @@
                                     <select th:name="|links[${iterStat.index}].type|">
                                         <option value="" th:selected="${item.type == null or item.type == ''}">Nicht Definiert</option>
                                         <option value="website" th:selected="${item.type == 'website'}">Website</option>
+                                        <option value="youtube" th:selected="${item.type == 'youtube'}">YouTube</option>
                                         <option value="instagram" th:selected="${item.type == 'instagram'}">Instagram</option>
                                         <option value="facebook" th:selected="${item.type == 'facebook'}">Facebook</option>
                                         <option value="flickr" th:selected="${item.type == 'flickr'}">Flickr</option>

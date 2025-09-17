@@ -46,7 +46,7 @@ public class FiredepartmentResponseMapper {
             linksMapped.add(FiredepartmentResponse.FiredepartmentResponseLinks.builder()
                     .name(link.getName())
                     .type(link.getType())
-                    .url(link.getUrl())
+                    .url(link.getLink())
                     .build());
         }
 
