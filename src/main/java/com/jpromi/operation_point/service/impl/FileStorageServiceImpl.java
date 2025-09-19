@@ -39,6 +39,17 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
+    public String getExternalUrl(FileData data, String fallbackFileName) {
+        String fileName = getExternalUrl(data);
+
+        if (fileName == null && fallbackFileName != null) {
+            fileName = host + fallbackFileName;
+        }
+
+        return fileName;
+    }
+
+    @Override
     public File getFile(UUID uuid, String filename) {
         Optional<FileData> fileData = fileDataRepository.findByFileNameAndUuid(filename, uuid);
 

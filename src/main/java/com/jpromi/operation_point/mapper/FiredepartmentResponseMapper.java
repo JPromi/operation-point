@@ -22,7 +22,7 @@ public class FiredepartmentResponseMapper {
                 .name(firedepartment.getName())
                 .atFireDepartmentId(firedepartment.getAtFireDepartmentId())
                 .isVolunteer(firedepartment.getIsVolunteer())
-                .logo(fileStorageService.getExternalUrl(firedepartment.getLogo()))
+                .logo(fileStorageService.getExternalUrl(firedepartment.getLogo(), "/static/images/korpsabzeichen.svg"))
                 .banner(fileStorageService.getExternalUrl(firedepartment.getBanner()))
                 .address(FiredepartmentResponse.FiredepartmentResponseAddress.builder()
                         .street(firedepartment.getAddressStreet())
