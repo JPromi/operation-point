@@ -475,8 +475,10 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setFiredepartments(firedepartments);
 
             // end operation
-            if (response.getProperties().getWehrenImEinsatz().equals("Abgeschlossen") && !operation.getEndTime().isEqual(null)) {
-                operation.setEndTime(OffsetDateTime.now());
+            if ("Abgeschlossen".equals(response.getProperties().getWehrenImEinsatz())) {
+                if (operation.getEndTime() == null) {
+                    operation.setEndTime(OffsetDateTime.now());
+                }
             } else {
                 operation.setEndTime(null);
             }
