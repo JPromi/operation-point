@@ -162,7 +162,8 @@ public class FileStorageServiceImpl implements FileStorageService {
 
             return null;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            // throw new RuntimeException(e);
+            return null;
         }
     }
 
