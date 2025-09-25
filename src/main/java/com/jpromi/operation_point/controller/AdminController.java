@@ -1,15 +1,13 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.CrawlService;
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.Unit;
-import com.jpromi.operation_point.enitiy.AppUser;
+import com.jpromi.operation_point.enitiy.*;
 import com.jpromi.operation_point.model.CrawlServiceForm;
 import com.jpromi.operation_point.model.FiredepartmentForm;
 import com.jpromi.operation_point.repository.AppUserRepository;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.UnitRepository;
+import com.jpromi.operation_point.service.FileStorageService;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.UnitService;
 import com.jpromi.operation_point.service.UserService;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,6 +46,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @GetMapping("/login")
     public String login() {
@@ -101,10 +103,21 @@ public class AdminController {
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public String firedepartmentDetail(@PathVariable UUID uuid, Model model) {
         Optional<Firedepartment> firedepartment = firedepartmentRepository.findByUuid(uuid);
+
         if (firedepartment.isEmpty()) {
             return "redirect:/admin/dashboard/firedepartment";
         }
+
+        List<FiredepartmentLink> links = new ArrayList<>(firedepartment.get().getLinks());
+
+        for (int i = 0; i < 3; i++) {
+            links.add(FiredepartmentLink.builder().build());
+        }
+
         model.addAttribute("firedepartment", firedepartment.get());
+        model.addAttribute("links", links);
+        model.addAttribute("logoUrl", fileStorageService.getExternalUrl(firedepartment.get().getLogo()));
+        model.addAttribute("bannerUrl", fileStorageService.getExternalUrl(firedepartment.get().getBanner()));
         return "admin/firedepartment-details";
     }
 
@@ -118,14 +131,76 @@ public class AdminController {
             Optional<Firedepartment> existingFiredepartment = firedepartmentRepository.findByUuid(uuid);
             if (existingFiredepartment.isPresent()) {
                 Firedepartment firedepartment = existingFiredepartment.get();
-                firedepartment.setFriendlyName(updatedFiredepartment.getFriendlyName());
-                firedepartment.setAtFireDepartmentId(updatedFiredepartment.getAtFireDepartmentId());
-                firedepartment.setAddressCity(updatedFiredepartment.getAddressCity());
-                firedepartment.setAddressStreet(updatedFiredepartment.getAddressStreet());
-                firedepartment.setAddressZipcode(updatedFiredepartment.getAddressZipcode());
-                firedepartment.setAddressCountry(updatedFiredepartment.getAddressCountry());
-                firedepartment.setIsVolunteer(updatedFiredepartment.getIsVolunteer());
-                firedepartment.setWebsite(updatedFiredepartment.getWebsite());
+                firedepartment.setNameId((updatedFiredepartment.getNameId() != null && !updatedFiredepartment.getNameId().isEmpty()) ? sanitize(updatedFiredepartment.getNameId()) : null);
+                firedepartment.setFriendlyName((updatedFiredepartment.getFriendlyName() != null && !updatedFiredepartment.getFriendlyName().isEmpty()) ? updatedFiredepartment.getFriendlyName() : null);
+                firedepartment.setAtFireDepartmentId((updatedFiredepartment.getAtFireDepartmentId() != null && !updatedFiredepartment.getAtFireDepartmentId().isEmpty()) ? updatedFiredepartment.getAtFireDepartmentId() : null);
+                firedepartment.setAddressCity((updatedFiredepartment.getAddressCity() != null && !updatedFiredepartment.getAddressCity().isEmpty()) ? updatedFiredepartment.getAddressCity() : null);
+                firedepartment.setAddressStreet((updatedFiredepartment.getAddressStreet() != null && !updatedFiredepartment.getAddressStreet().isEmpty()) ? updatedFiredepartment.getAddressStreet() : null);
+                firedepartment.setAddressZipcode((updatedFiredepartment.getAddressZipcode() != null && !updatedFiredepartment.getAddressZipcode().isEmpty()) ? updatedFiredepartment.getAddressZipcode() : null);
+                firedepartment.setAddressFederalState((updatedFiredepartment.getAddressFederalState() != null && !updatedFiredepartment.getAddressFederalState().isEmpty()) ? updatedFiredepartment.getAddressFederalState() : null);
+                firedepartment.setAddressCountry((updatedFiredepartment.getAddressCountry() != null && !updatedFiredepartment.getAddressCountry().isEmpty()) ? updatedFiredepartment.getAddressCountry() : null);
+                firedepartment.setIsVolunteer(updatedFiredepartment.getIsVolunteer() != null ? updatedFiredepartment.getIsVolunteer() : false);
+
+                // save images
+                if (updatedFiredepartment.getLogo() != null && !updatedFiredepartment.getLogo().isEmpty() && !updatedFiredepartment.getLogoDelete()) {
+                    firedepartment.setLogo(
+                            fileStorageService.saveFile(updatedFiredepartment.getLogo())
+                    );
+                } else if (updatedFiredepartment.getLogoDelete()) {
+                    FileData logo = firedepartment.getLogo();
+                    firedepartment.setLogo(null);
+                    fileStorageService.deleteFile(logo);
+                }
+
+                if (updatedFiredepartment.getBanner() != null && !updatedFiredepartment.getBanner().isEmpty() && !updatedFiredepartment.getBannerDelete()) {
+                    firedepartment.setBanner(
+                            fileStorageService.saveFile(updatedFiredepartment.getBanner())
+                    );
+                } else if (updatedFiredepartment.getBannerDelete()) {
+
+                    firedepartment.setBanner(null);
+                    fileStorageService.deleteFile(firedepartment.getBanner());
+                }
+
+                List<FiredepartmentLink> existingLinks = firedepartment.getLinks();
+                List<FiredepartmentLink> oldLinksFinal = new ArrayList<>(existingLinks);
+                existingLinks.clear();
+
+                // update links
+                for (FiredepartmentForm.FiredepartmentFormLinks link : updatedFiredepartment.getLinks()) {
+                    if (link.getId() != null) {
+                        // update existing link
+                        Optional<FiredepartmentLink> existingLink = oldLinksFinal.stream()
+                                .filter(l -> l.getId().equals(link.getId()))
+                                .findFirst();
+
+                        if (existingLink.isPresent()) {
+                            if(
+                                (link.getName() != null && !link.getName().isEmpty()) ||
+                                (link.getUrl() != null && !link.getUrl().isEmpty())
+                            ) {
+                                existingLink.get().setName((link.getName() != null && !link.getName().isEmpty()) ? link.getName() : null);
+                                existingLink.get().setType((link.getType() != null && !link.getType().isEmpty()) ? link.getType() : null);
+                                existingLink.get().setUrl((link.getUrl() != null && !link.getUrl().isEmpty()) ? link.getUrl() : null);
+                                existingLinks.add(existingLink.get());
+                            }
+                        }
+                    } else if (
+                            (link.getName() != null && !link.getName().isEmpty()) ||
+                            (link.getUrl() != null && !link.getUrl().isEmpty())
+                    ) {
+                        // create new link
+                        FiredepartmentLink newLink = FiredepartmentLink.builder()
+                                .firedepartment(firedepartment)
+                                .name((link.getName() != null && !link.getName().isEmpty()) ? link.getName() : null)
+                                .type((link.getType() != null && !link.getType().isEmpty()) ? link.getType() : null)
+                                .url((link.getUrl() != null && !link.getUrl().isEmpty()) ? link.getUrl() : null)
+                                .build();
+                        existingLinks.add(newLink);
+                    }
+                }
+
+                firedepartment.setLinks(existingLinks);
 
                 firedepartmentRepository.save(firedepartment);
             }
@@ -163,7 +238,7 @@ public class AdminController {
             Optional<Unit> existingUnit = unitRepository.findByUuid(uuid);
             if (existingUnit.isPresent()) {
                 Unit unit = existingUnit.get();
-                unit.setFriendlyName(updatedUnit.getFriendlyName());
+                unit.setFriendlyName((updatedUnit.getFriendlyName() != null && !updatedUnit.getFriendlyName().isEmpty()) ? updatedUnit.getFriendlyName() : null);
                 unitRepository.save(unit);
             }
             return "redirect:/admin/dashboard/unit";
@@ -199,6 +274,14 @@ public class AdminController {
             }
         }
         return "redirect:/admin/root/crawler";
+    }
+
+    private String sanitize(String input) {
+        if (input == null) return null;
+        String sanitized = input.trim().toLowerCase();
+        sanitized = sanitized.replaceAll("\\s+", "-");
+        sanitized = sanitized.replaceAll("[^a-z0-9\\-_]", "");
+        return sanitized;
     }
 
 }

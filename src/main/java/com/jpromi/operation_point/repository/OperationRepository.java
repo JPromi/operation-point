@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface OperationRepository extends JpaRepository<Operation, Long> {
     Optional<Operation> findByBlId(String blId);
     Optional<Operation> findByUaId(String uaId);
-    Optional<Operation> findByStId(String stId);
+    Optional<Operation> findByStHash(String stHash);
     Optional<Operation> findByTyEventId(String tyEventId);
     Optional<Operation> findByLaSysId(String laSysId);
 

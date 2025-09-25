@@ -61,7 +61,8 @@ public class Operation {
     private String uaId; // only Upper Austria
     private String tyEventId; // only Tyrol
     private String blId; // only Burgenland
-    private String stId; // only Styria
+    private String stHash; // only Styria
+    private String stInstanceId; // only Styria
     private String laWastlPubId; // only Lower Austria (M2......)
     private String laSysId; // only Lower Austria (ELKOS 00000)
     private String laId; // only Lower Austria (-201...)

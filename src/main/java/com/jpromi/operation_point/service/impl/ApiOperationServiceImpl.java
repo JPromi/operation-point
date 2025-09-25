@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
@@ -435,7 +436,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     }
 
     private Operation updateSavedOperationStyria(ApiOperationStyriaResponse.ApiOperationStyriaResponseFeature response) {
-        Optional<Operation> _opertaion = operationRepository.findByStId(response.getProperties().getInstanznummer());
+        Optional<Operation> _opertaion = operationRepository.findByStHash(getStyriaOperationHash(response));
 
         if(_opertaion.isPresent()) {
             String alarmSplit = response.getProperties().getTyp().split("-")[0];
@@ -443,7 +444,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setAlarmType(operationVariableService.getAlarmType(alarmSplit));
             operation.setAlarmLevel(operationVariableService.getAlarmLevel(alarmSplit));
             operation.setAlarmLevelAddition(operationVariableService.getAlarmLevelAddition(alarmSplit));
-            operation.setAlarmText(response.getProperties().getArt());
+            operation.setAlarmText(getAlarmTextStyria(response));
             operation.setLat(response.getGeometry().getCoordinates().get(1));
             operation.setLng(response.getGeometry().getCoordinates().get(0));
             operation.setDistrict(getDistrictStyria(response.getProperties().getBereich()));
@@ -474,9 +475,13 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             operation.setFiredepartments(firedepartments);
 
+            operation.setUpdatedAt(OffsetDateTime.now());
+
             // end operation
-            if (response.getProperties().getWehrenImEinsatz().equals("Abgeschlossen") && !operation.getEndTime().isEqual(null)) {
-                operation.setEndTime(OffsetDateTime.now());
+            if ("Abgeschlossen".equals(response.getProperties().getWehrenImEinsatz())) {
+                if (operation.getEndTime() == null) {
+                    operation.setEndTime(OffsetDateTime.now());
+                }
             } else {
                 operation.setEndTime(null);
             }
@@ -485,10 +490,11 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         } else {
             String alarmSplit = response.getProperties().getTyp().split("-")[0];
             Operation operation = Operation.builder()
-                    .stId(response.getProperties().getInstanznummer())
+                    .stInstanceId(response.getProperties().getInstanznummer())
+                    .stHash(getStyriaOperationHash(response))
                     .alarmType(operationVariableService.getAlarmType(alarmSplit))
                     .alarmLevel(operationVariableService.getAlarmLevel(alarmSplit))
-                    .alarmText(response.getProperties().getArt())
+                    .alarmText(getAlarmTextStyria(response))
                     .startTime(OffsetDateTime.now())
                     .lat(response.getGeometry().getCoordinates().get(1))
                     .lng(response.getGeometry().getCoordinates().get(0))
@@ -752,6 +758,10 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             operation.setUpdatedAt(OffsetDateTime.now());
 
+            if (operation.getEndTime() == null && checkIfOperationMayBeEndedLowerAustria(operation)) {
+                operation.setEndTime(OffsetDateTime.now());
+            }
+
             return operationRepository.save(operation);
         } else {
             Operation operation = Operation.builder()
@@ -817,6 +827,10 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             });
             operation.setFiredepartments(firedepartments);
             operation.setUnits(units);
+
+            if (operation.getEndTime() == null && checkIfOperationMayBeEndedLowerAustria(operation)) {
+                operation.setEndTime(OffsetDateTime.now());
+            }
 
             return operationRepository.save(operation);
         }
@@ -964,6 +978,57 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         } catch (IOException e) {
             throw new RuntimeException("Error reading ST_LFV_PUB-districts.json", e);
         }
+    }
+
+    private String getStyriaOperationHash(ApiOperationStyriaResponse.ApiOperationStyriaResponseFeature response) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(response.getProperties().getInstanznummer());
+        sb.append("-");
+        sb.append(response.getProperties().getTyp());
+        sb.append("-");
+        sb.append(response.getProperties().getArt());
+        sb.append("-");
+        sb.append(response.getProperties().getFeuerwehr());
+        sb.append("-");
+        sb.append(response.getProperties().getBereich());
+        sb.append("-");
+        sb.append(response.getGeometry().getCoordinates().get(0));
+        sb.append("-");
+        sb.append(response.getGeometry().getCoordinates().get(1));
+
+        return DigestUtils.md5DigestAsHex(sb.toString().getBytes());
+    }
+
+    private String getAlarmTextStyria(ApiOperationStyriaResponse.ApiOperationStyriaResponseFeature response) {
+        if(response.getProperties().getTyp().split("-").length > 1) {
+            return response.getProperties().getTyp().split("-")[1].trim();
+        } else {
+            return response.getProperties().getArt();
+        }
+    }
+
+    private Boolean checkIfOperationMayBeEndedLowerAustria(Operation operation) {
+        if (operation.getUnits() == null && operation.getFiredepartments() == null) {
+            return false;
+        }
+
+        if (operation.getUnits() != null) {
+            for (OperationUnit unit : operation.getUnits()) {
+                if (unit.getInTime() == null) {
+                    return false;
+                }
+            }
+        }
+
+        if (operation.getFiredepartments() != null) {
+            for (OperationFiredepartment firedepartment : operation.getFiredepartments()) {
+                if (firedepartment.getInTime() == null) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 }

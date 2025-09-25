@@ -98,18 +98,38 @@ public class OperationVariableServiceImpl implements OperationVariableService {
         federalState = federalState.toLowerCase();
         federalState = federalState.replaceAll(" ", "-");
         switch (federalState) {
-            case "ua", "upper-austria":
+            case "ua", "upper-austria", "upper austria":
                 return "Upper Austria";
             case "st", "styria":
                 return "Styria";
             case "ty", "tyrol":
                 return "Tyrol";
-            case "la", "lower-austria":
+            case "la", "lower-austria", "lower austria":
                 return "Lower Austria";
             case "bg", "burgenland", "bl":
                 return "Burgenland";
             default:
-                return federalState;
+                return null;
+        }
+    }
+
+    @Override
+    public String getFederalStateId(String federalState) {
+        federalState = federalState.toLowerCase();
+        federalState = federalState.replaceAll(" ", "-");
+        switch (federalState) {
+            case "ua", "upper-austria", "upper austria":
+                return "upper-austria";
+            case "st", "styria":
+                return "styria";
+            case "ty", "tyrol":
+                return "tyrol";
+            case "la", "lower-austria", "lower austria":
+                return "lower-austria";
+            case "bg", "burgenland", "bl":
+                return "burgenland";
+            default:
+                return null;
         }
     }
 }

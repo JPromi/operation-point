@@ -3,9 +3,11 @@ package com.jpromi.operation_point.initizializer;
 import com.jpromi.operation_point.enitiy.CrawlService;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +17,13 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private CrawlServiceRepository crawlServiceRepository;
 
+    @Value("${com.jpromi.operation_point.file.storage.path}")
+    private String fileStoragePath;
+
     @Override
     public void run(String... args) throws Exception {
         initCrawlServices();
+        initDataFolder();
     }
 
     private void initCrawlServices() {
@@ -38,6 +44,13 @@ public class DataInitializer implements CommandLineRunner {
             if (crawlServiceRepository.findByName(crawlService.getName()) == null) {
                 crawlServiceRepository.save(crawlService);
             }
+        }
+    }
+
+    private void initDataFolder() {
+        File file = new File(fileStoragePath);
+        if (!file.exists()) {
+            file.mkdirs();
         }
     }
 }
