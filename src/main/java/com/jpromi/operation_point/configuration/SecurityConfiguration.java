@@ -25,8 +25,12 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/community-improvement/**")
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/dashboard/**").authenticated()
+                        .requestMatchers("/community-improvement/**").permitAll()
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
