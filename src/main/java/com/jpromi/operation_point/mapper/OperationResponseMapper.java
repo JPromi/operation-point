@@ -32,7 +32,7 @@ public class OperationResponseMapper {
         response.getExternalIds().setUpperAustriaId(operation.getUaId());
         response.getExternalIds().setTyrolEventId(operation.getTyEventId());
         response.getExternalIds().setBurgenlandId(operation.getBlId());
-        response.getExternalIds().setStyriaId(operation.getStId());
+        response.getExternalIds().setStyriaId(operation.getStInstanceId());
         response.getExternalIds().setLowerAustriaWastlPubId(operation.getLaWastlPubId());
         response.getExternalIds().setLowerAustriaSysId(operation.getLaSysId());
         response.getExternalIds().setLowerAustriaId(operation.getLaId());
