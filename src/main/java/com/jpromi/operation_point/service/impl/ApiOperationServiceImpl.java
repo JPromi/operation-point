@@ -1001,7 +1001,8 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
     private String getAlarmTextStyria(ApiOperationStyriaResponse.ApiOperationStyriaResponseFeature response) {
         if(response.getProperties().getTyp().split("-").length > 1) {
-            return response.getProperties().getTyp().split("-")[1].trim();
+            String type = response.getProperties().getTyp().split("-")[0];
+            return response.getProperties().getTyp().substring(type.length() + 1).replaceAll("-", " ");
         } else {
             return response.getProperties().getArt();
         }
