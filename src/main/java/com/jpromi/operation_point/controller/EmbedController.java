@@ -148,7 +148,9 @@ public class EmbedController {
                 "#map { fill: " + (styleType.equals("dark") ? "#1F2225" : "#BFC1C3" ) + "; } ";
 
         for (Map.Entry<String, String> entry : districtColors.entrySet()) {
-            svgStyle += "#" + entry.getKey().toLowerCase() + " { fill: " + entry.getValue() + "; } ";
+            if (entry.getKey() != null && entry.getValue() != null) {
+                svgStyle += "#" + entry.getKey().toLowerCase() + " { fill: " + entry.getValue() + "; } ";
+            }
         }
 
         Map<String, Object> variables = new HashMap<>();
