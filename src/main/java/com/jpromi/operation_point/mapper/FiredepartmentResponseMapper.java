@@ -21,7 +21,7 @@ public class FiredepartmentResponseMapper {
     public FiredepartmentResponse fromFiredepartment(Firedepartment firedepartment) {
         return FiredepartmentResponse.builder()
                 .uuid(firedepartment.getUuid())
-                .name(firedepartment.getName())
+                .name(firedepartment.getFriendlyName())
                 .atFireDepartmentId(firedepartment.getAtFireDepartmentId())
                 .isVolunteer(firedepartment.getIsVolunteer())
                 .logo(fileStorageService.getExternalUrl(firedepartment.getLogo(), "/static/images/korpsabzeichen.svg"))

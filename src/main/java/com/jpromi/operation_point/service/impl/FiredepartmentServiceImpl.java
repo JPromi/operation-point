@@ -10,6 +10,9 @@ import com.jpromi.operation_point.repository.UnitRepository;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,12 +40,12 @@ public class FiredepartmentServiceImpl implements FiredepartmentService {
     }
 
     @Override
-    public List<Firedepartment> getList(String query) {
-        if (query == null || query.isEmpty()) {
-            return firedepartmentRepository.findAll();
-        }
-        return firedepartmentRepository.findByNameContainingIgnoreCase(query);
+    public Page<Firedepartment> getList(String query, Integer limit, Integer page) {
+        Pageable pageable = PageRequest.of(page, limit);
+        return firedepartmentRepository.findByFriendlyNameContainingIgnoreCaseOrderByFriendlyNameAsc(query, pageable);
     }
+
+
 
     @Override
     public Firedepartment getByUuid(UUID uuid) {
