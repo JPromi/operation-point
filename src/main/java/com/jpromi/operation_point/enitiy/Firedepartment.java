@@ -3,6 +3,7 @@ package com.jpromi.operation_point.enitiy;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.List;
 import java.util.UUID;
@@ -50,4 +51,9 @@ public class Firedepartment {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Unit> units;
+
+    @Builder.Default
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private Boolean isHidden = false;
 }

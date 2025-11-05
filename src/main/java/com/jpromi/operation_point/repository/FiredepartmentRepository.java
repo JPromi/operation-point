@@ -17,5 +17,5 @@ public interface FiredepartmentRepository extends JpaRepository<Firedepartment, 
     Optional<Firedepartment> findByUuid(UUID uuid);
     List<Firedepartment> findAllByOrderByNameAsc();
     List<Firedepartment> findByNameContainingIgnoreCase(String name);
-    Page<Firedepartment> findByFriendlyNameContainingIgnoreCaseOrderByFriendlyNameAsc(String friednlyName, Pageable pageable);
+    Page<Firedepartment> findByFriendlyNameContainingIgnoreCaseAndIsHiddenIsFalseOrderByFriendlyNameAsc(String friendlyName, Pageable pageable);
 }

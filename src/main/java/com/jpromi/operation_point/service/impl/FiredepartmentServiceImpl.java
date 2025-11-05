@@ -42,7 +42,7 @@ public class FiredepartmentServiceImpl implements FiredepartmentService {
     @Override
     public Page<Firedepartment> getList(String query, Integer limit, Integer page) {
         Pageable pageable = PageRequest.of(page, limit);
-        return firedepartmentRepository.findByFriendlyNameContainingIgnoreCaseOrderByFriendlyNameAsc(query, pageable);
+        return firedepartmentRepository.findByFriendlyNameContainingIgnoreCaseAndIsHiddenIsFalseOrderByFriendlyNameAsc(query, pageable);
     }
 
 
