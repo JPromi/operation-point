@@ -19,6 +19,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/community-improvement")
+@RestController("CommunityImprovementController")
 public class CommunityImprovementController {
 
     @Autowired
