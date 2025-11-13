@@ -30,6 +30,8 @@ import java.util.*;
 @Service
 public class ApiOperationServiceImpl implements ApiOperationService {
 
+    private static Map<String, String> districtCache;
+
     @Value("${com.jpromi.operation_point.crawler.tyrol.authentication}")
     private String crawlerTyrolAuthentication;
 
@@ -959,24 +961,24 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     }
 
     private String getDistrictStyria(String districtId) {
-        // load json mapping/ST_LFV_PUB-districts.json
-        ObjectMapper mapper = new ObjectMapper();
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("mapping/ST_LFV_PUB-districts.json")) {
-            if (is == null) {
-                throw new IllegalStateException("File not found: mapping/ST_LFV_PUB-districts.json");
+        if (districtCache == null) {
+            synchronized (this) {
+                if (districtCache == null) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    try (InputStream is = getClass().getClassLoader()
+                            .getResourceAsStream("mapping/ST_LFV_PUB-districts.json")) {
+                        if (is == null)
+                            throw new IllegalStateException("File not found: mapping/ST_LFV_PUB-districts.json");
+
+                        districtCache = mapper.readValue(is, new TypeReference<>() {});
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error reading ST_LFV_PUB-districts.json", e);
+                    }
+                }
             }
-
-            // get districts
-            Map<String, String> districts = mapper.readValue(
-                    is,
-                    new TypeReference<Map<String, String>>() {}
-            );
-
-            // return district by id
-            return districts.getOrDefault(districtId, null);
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading ST_LFV_PUB-districts.json", e);
         }
+
+        return districtCache.getOrDefault(districtId, null);
     }
 
     private String getStyriaOperationHash(ApiOperationStyriaResponse.ApiOperationStyriaResponseFeature response) {
@@ -994,6 +996,8 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         sb.append(response.getGeometry().getCoordinates().get(0));
         sb.append("-");
         sb.append(response.getGeometry().getCoordinates().get(1));
+        sb.append("-");
+        sb.append(response.getProperties().getDatum());
 
         return DigestUtils.md5DigestAsHex(sb.toString().getBytes());
     }
