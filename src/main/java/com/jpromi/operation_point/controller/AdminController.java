@@ -140,6 +140,7 @@ public class AdminController {
                 firedepartment.setAddressFederalState((updatedFiredepartment.getAddressFederalState() != null && !updatedFiredepartment.getAddressFederalState().isEmpty()) ? updatedFiredepartment.getAddressFederalState() : null);
                 firedepartment.setAddressCountry((updatedFiredepartment.getAddressCountry() != null && !updatedFiredepartment.getAddressCountry().isEmpty()) ? updatedFiredepartment.getAddressCountry() : null);
                 firedepartment.setIsVolunteer(updatedFiredepartment.getIsVolunteer() != null ? updatedFiredepartment.getIsVolunteer() : false);
+                firedepartment.setIsHidden(updatedFiredepartment.getIsHidden() != null ? updatedFiredepartment.getIsHidden() : false);
 
                 // save images
                 if (updatedFiredepartment.getLogo() != null && !updatedFiredepartment.getLogo().isEmpty() && !updatedFiredepartment.getLogoDelete()) {

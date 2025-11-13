@@ -25,6 +25,7 @@ public class FiredepartmentForm {
     private Boolean logoDelete = false;
     private Boolean bannerDelete = false;
     private List<FiredepartmentFormLinks> links =  new ArrayList<>();
+    private Boolean isHidden = false;
 
     @Data
     @Builder

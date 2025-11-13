@@ -9,6 +9,7 @@ import com.jpromi.operation_point.model.UnitResponse;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,13 +32,13 @@ public class FiredepartmentController {
     private FiredepartmentResponseMapper firedepartmentResponseMapper;
 
     @GetMapping(value = "list", produces = {"application/json"})
-    public ResponseEntity<List<FiredepartmentResponse>> getList(@RequestParam(required = false, value = "q") String query) {
-        List<Firedepartment> firedepartments = firedepartmentService.getList(query);
-        return ResponseEntity.ok(
-                firedepartments.stream()
-                        .map(firedepartmentResponseMapper::fromFiredepartment)
-                        .toList()
-        );
+    public ResponseEntity<Page<FiredepartmentResponse>> getList(
+            @RequestParam(required = false, value = "q") String query,
+            @RequestParam(required = false, value = "limit", defaultValue = "20") Integer limit,
+            @RequestParam(required = false, value = "page", defaultValue = "0") Integer page) {
+        Page<Firedepartment> result = firedepartmentService.getList(query, limit, page);
+        Page<FiredepartmentResponse> dto = result.map(firedepartmentResponseMapper::fromFiredepartment);
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping(value = "{uuid}", produces = {"application/json"})
