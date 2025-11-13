@@ -663,12 +663,12 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setStartTime(operationVariableService.getTimeFromDateAndTime(response.getD(), response.getT()));
             operation.setLocation(response.getO());
             operation.setCity(response.getO());
-            if (districtId.isEmpty()) {
-                if (!response.getP().isEmpty()) {
-                    operation.setDistrict(locationService.getDistrictByZipCode(response.getP()));
-                }
+            if (!response.getP().isEmpty()) {
+                operation.setDistrict(locationService.getDistrictByZipCode(response.getP()));
             } else {
-                operation.setDistrict(getDistrictLowerAustria(districtId));
+                if (!districtId.isEmpty()) {
+                    operation.setDistrict(getDistrictLowerAustria(districtId));
+                }
             }
             operation.setZipCode(response.getP());
             operation.setLastSeen(null);
@@ -775,18 +775,17 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .startTime(operationVariableService.getTimeFromDateAndTime(response.getD(), response.getT()))
                     .location(response.getO())
                     .city(response.getO())
-                    .district(getDistrictLowerAustria(districtId))
                     .zipCode(response.getP())
                     .federalState("Lower Austria")
                     .serviceOrigin(ServiceOriginEnum.LA_WASTL_PUB)
                     .build();
 
-            if (districtId.isEmpty()) {
-                if (!response.getP().isEmpty()) {
-                    operation.setDistrict(locationService.getDistrictByZipCode(response.getP()));
-                }
+            if (!response.getP().isEmpty()) {
+                operation.setDistrict(locationService.getDistrictByZipCode(response.getP()));
             } else {
-                operation.setDistrict(getDistrictLowerAustria(districtId));
+                if (!districtId.isEmpty()) {
+                    operation.setDistrict(getDistrictLowerAustria(districtId));
+                }
             }
 
             // firedepartments / units
