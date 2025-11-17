@@ -1,13 +1,13 @@
 package com.jpromi.operation_point.model;
 
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlValue;
+import jakarta.xml.bind.annotation.*;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 @XmlRootElement(name = "webext2")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ApiOperationUpperAustriaXmlResponse {
     @XmlAttribute
     public String version;
@@ -21,10 +21,14 @@ public class ApiOperationUpperAustriaXmlResponse {
     @XmlElement
     public ResourcesList resources;
 
+    @Data
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class EinsatzList {
         @XmlElement(name = "einsatz")
         public List<Einsatz> einsatz;
 
+        @Data
+        @XmlAccessorType(XmlAccessType.FIELD)
         public static class Einsatz {
             @XmlAttribute
             public String id;
@@ -60,6 +64,8 @@ public class ApiOperationUpperAustriaXmlResponse {
             @XmlElement
             public EinheitenList einheiten;
 
+            @Data
+            @XmlAccessorType(XmlAccessType.FIELD)
             public static class Adresse {
                 @XmlElement(name = "default")
                 public String defaultAddress;
@@ -75,6 +81,8 @@ public class ApiOperationUpperAustriaXmlResponse {
                 public String ecompl;
             }
 
+            @Data
+            @XmlAccessorType(XmlAccessType.FIELD)
             public static class EinheitenList {
                 @XmlElement(name = "einheit")
                 public List<IdValueType> einheit;
@@ -83,10 +91,14 @@ public class ApiOperationUpperAustriaXmlResponse {
         }
     }
 
+    @Data
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class ResourcesList {
         @XmlElement(name = "resource")
         public List<Resource> resource;
 
+        @Data
+        @XmlAccessorType(XmlAccessType.FIELD)
         public static class Resource {
             @XmlAttribute
             public String name;
@@ -104,6 +116,8 @@ public class ApiOperationUpperAustriaXmlResponse {
             @XmlElement
             public Usedat usedat;
 
+            @Data
+            @XmlAccessorType(XmlAccessType.FIELD)
             public static class Usedat {
                 @XmlAttribute
                 public String id;
@@ -116,6 +130,8 @@ public class ApiOperationUpperAustriaXmlResponse {
         }
     }
 
+    @Data
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class IdValueType {
         @XmlAttribute
         public String id;
