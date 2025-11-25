@@ -14,15 +14,16 @@ import java.util.UUID;
 
 @Service
 public class OperationServiceImpl implements OperationService {
+    private final OperationRepository operationRepository;
+    private final OperationVariableService operationVariableService;
+    private final LocationService locationService;
 
     @Autowired
-    private OperationRepository operationRepository;
-
-    @Autowired
-    private OperationVariableService operationVariableService;
-
-    @Autowired
-    private LocationService locationService;
+    public OperationServiceImpl(OperationRepository operationRepository, OperationVariableService operationVariableService, LocationService locationService) {
+        this.operationRepository = operationRepository;
+        this.operationVariableService = operationVariableService;
+        this.locationService = locationService;
+    }
 
     @Override
     public List<Operation> getActiveOperations() {

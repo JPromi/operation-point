@@ -28,6 +28,11 @@ import java.util.*;
 
 @Service
 public class ApiOperationServiceImpl implements ApiOperationService {
+    private final OperationVariableService operationVariableService;
+    private final OperationRepository operationRepository;
+    private final FiredepartmentRepository firedepartmentRepository;
+    private final UnitRepository unitRepository;
+    private final LocationService locationService;
 
     private static Map<String, String> districtCache;
 
@@ -35,19 +40,13 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     private String crawlerTyrolAuthentication;
 
     @Autowired
-    private OperationVariableService operationVariableService;
-
-    @Autowired
-    private OperationRepository operationRepository;
-
-    @Autowired
-    private FiredepartmentRepository firedepartmentRepository;
-
-    @Autowired
-    private UnitRepository unitRepository;
-
-    @Autowired
-    private LocationService locationService;
+    public ApiOperationServiceImpl(OperationVariableService operationVariableService, OperationRepository operationRepository, FiredepartmentRepository firedepartmentRepository, UnitRepository unitRepository, LocationService locationService) {
+        this.operationVariableService = operationVariableService;
+        this.operationRepository = operationRepository;
+        this.firedepartmentRepository = firedepartmentRepository;
+        this.unitRepository = unitRepository;
+        this.locationService = locationService;
+    }
 
     @Override
     public List<Operation> getOperationListBurgenland() {

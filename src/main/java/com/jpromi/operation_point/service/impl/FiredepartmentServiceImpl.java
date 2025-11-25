@@ -20,18 +20,18 @@ import java.util.UUID;
 
 @Service
 public class FiredepartmentServiceImpl implements FiredepartmentService {
+    private final FiredepartmentRepository firedepartmentRepository;
+    private final UnitRepository unitRepository;
+    private final OperationFiredepartmentRepository operationFiredepartmentRepository;
+    private final OperationUnitRepository operationUnitRepository;
 
     @Autowired
-    private FiredepartmentRepository firedepartmentRepository;
-
-    @Autowired
-    private UnitRepository unitRepository;
-
-    @Autowired
-    private OperationFiredepartmentRepository operationFiredepartmentRepository;
-
-    @Autowired
-    private OperationUnitRepository operationUnitRepository;
+    public FiredepartmentServiceImpl(FiredepartmentRepository firedepartmentRepository, UnitRepository unitRepository, OperationFiredepartmentRepository operationFiredepartmentRepository, OperationUnitRepository operationUnitRepository) {
+        this.firedepartmentRepository = firedepartmentRepository;
+        this.unitRepository = unitRepository;
+        this.operationFiredepartmentRepository = operationFiredepartmentRepository;
+        this.operationUnitRepository = operationUnitRepository;
+    }
 
     @Override
     public List<Firedepartment> getList() {
@@ -43,8 +43,6 @@ public class FiredepartmentServiceImpl implements FiredepartmentService {
         Pageable pageable = PageRequest.of(page, limit);
         return firedepartmentRepository.findByFriendlyNameContainingIgnoreCaseAndIsHiddenIsFalseOrderByFriendlyNameAsc(query, pageable);
     }
-
-
 
     @Override
     public Firedepartment getByUuid(UUID uuid) {

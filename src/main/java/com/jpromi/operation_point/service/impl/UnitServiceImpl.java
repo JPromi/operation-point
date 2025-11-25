@@ -17,18 +17,18 @@ import java.util.UUID;
 
 @Service
 public class UnitServiceImpl implements UnitService {
+    private final UnitRepository unitRepository;
+    private final FiredepartmentRepository firedepartmentRepository;
+    private final OperationUnitRepository operationUnitRepository;
+    private final OperationFiredepartmentRepository operationFiredepartmentRepository;
 
     @Autowired
-    private UnitRepository unitRepository;
-
-    @Autowired
-    private FiredepartmentRepository firedepartmentRepository;
-
-    @Autowired
-    private OperationUnitRepository operationUnitRepository;
-
-    @Autowired
-    private OperationFiredepartmentRepository operationFiredepartmentRepository;
+    public UnitServiceImpl(UnitRepository unitRepository, FiredepartmentRepository firedepartmentRepository, OperationUnitRepository operationUnitRepository, OperationFiredepartmentRepository operationFiredepartmentRepository) {
+        this.unitRepository = unitRepository;
+        this.firedepartmentRepository = firedepartmentRepository;
+        this.operationUnitRepository = operationUnitRepository;
+        this.operationFiredepartmentRepository = operationFiredepartmentRepository;
+    }
 
     @Override
     public List<Unit> getList() {

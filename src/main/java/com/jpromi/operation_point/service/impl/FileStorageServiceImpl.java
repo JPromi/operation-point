@@ -19,6 +19,7 @@ import java.util.UUID;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
+    private final FileDataRepository fileDataRepository;
 
     @Value("${com.jpromi.operation_point.file.storage.path}")
     private String fileStoragePath;
@@ -27,7 +28,9 @@ public class FileStorageServiceImpl implements FileStorageService {
     private String host;
 
     @Autowired
-    private FileDataRepository fileDataRepository;
+    public FileStorageServiceImpl(FileDataRepository fileDataRepository) {
+        this.fileDataRepository = fileDataRepository;
+    }
 
     @Override
     public String getExternalUrl(FileData data) {
