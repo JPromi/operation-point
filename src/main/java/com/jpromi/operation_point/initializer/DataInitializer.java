@@ -1,4 +1,4 @@
-package com.jpromi.operation_point.initizializer;
+package com.jpromi.operation_point.initializer;
 
 import com.jpromi.operation_point.entity.CrawlService;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
