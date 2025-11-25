@@ -1,7 +1,6 @@
 package com.jpromi.operation_point.repository;
 
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.Operation;
+import com.jpromi.operation_point.entity.Firedepartment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

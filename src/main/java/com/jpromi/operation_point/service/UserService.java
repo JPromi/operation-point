@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.service;
 
-import com.jpromi.operation_point.enitiy.AppUser;
+import com.jpromi.operation_point.entity.AppUser;
 
 public interface UserService {
     AppUser createUser(AppUser user);

@@ -1,4 +1,4 @@
-package com.jpromi.operation_point.enitiy;
+package com.jpromi.operation_point.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,16 +12,16 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-public class Unit {
-
+public class FileData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     @Builder.Default
     private UUID uuid = UUID.randomUUID();
 
-    private String name;
-    private String friendlyName;
+    private String fileName;
+    private String contentType;
+    private Long fileSize;
 }

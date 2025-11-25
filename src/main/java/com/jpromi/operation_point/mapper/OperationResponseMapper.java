@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.mapper;
 
-import com.jpromi.operation_point.enitiy.Operation;
+import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.model.FiredepartmentLightResponse;
 import com.jpromi.operation_point.model.OperationResponse;
 import com.jpromi.operation_point.model.UnitLightResponse;

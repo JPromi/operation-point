@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.service.impl;
 
-import com.jpromi.operation_point.enitiy.AppUser;
+import com.jpromi.operation_point.entity.AppUser;
 import com.jpromi.operation_point.repository.AppUserRepository;
 import com.jpromi.operation_point.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final AppUserRepository appUserRepository;
 
     @Autowired
-    private AppUserRepository appUserRepository;
+    public UserServiceImpl(AppUserRepository appUserRepository) {
+        this.appUserRepository = appUserRepository;
+    }
 
     @Override
     public AppUser createUser(AppUser user) {

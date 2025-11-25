@@ -1,9 +1,7 @@
-package com.jpromi.operation_point.enitiy;
+package com.jpromi.operation_point.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.UUID;
 
 @Data
 @Builder

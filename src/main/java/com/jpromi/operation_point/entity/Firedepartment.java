@@ -1,14 +1,12 @@
-package com.jpromi.operation_point.enitiy;
+package com.jpromi.operation_point.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-
 
 @Data
 @Builder
@@ -18,7 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class FiredepartmentChange {
+public class Firedepartment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,8 +40,8 @@ public class FiredepartmentChange {
     private String addressZipcode;
     private String addressCountry;
     private String addressFederalState;
-    @OneToMany(mappedBy = "firedepartmentChange", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FiredepartmentLinkChange> links;
+    @OneToMany(mappedBy = "firedepartment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FiredepartmentLink> links;
 
     @OneToOne(fetch = FetchType.LAZY)
     private FileData logo;
@@ -54,23 +52,8 @@ public class FiredepartmentChange {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Unit> units;
 
-    private Long firedepartmentId;
-    private UUID firedepartmentUuid;
-
     @Builder.Default
-    private LocalDateTime changeDate = LocalDateTime.now();
     @Column(nullable = false)
-    private String changeType; // e.g., "Added", "Updated"
-    @Column(nullable = true)
-    private String changedEmail;
-    @Column(nullable = true)
-    private String ip;
-    @Column(nullable = true)
-    private String userAgent;
-    private LocalDateTime processedDate;
-    @Builder.Default
-    private Boolean isProcessed = false;
-    @Builder.Default
-    private Boolean isVerified = false;
-
+    @ColumnDefault("false")
+    private Boolean isHidden = false;
 }

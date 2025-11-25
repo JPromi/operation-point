@@ -3,7 +3,7 @@ package com.jpromi.operation_point.service.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpromi.operation_point.enums.ServiceOriginEnum;
-import com.jpromi.operation_point.enitiy.*;
+import com.jpromi.operation_point.entity.*;
 import com.jpromi.operation_point.model.*;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationRepository;
@@ -21,15 +21,18 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
 public class ApiOperationServiceImpl implements ApiOperationService {
+    private final OperationVariableService operationVariableService;
+    private final OperationRepository operationRepository;
+    private final FiredepartmentRepository firedepartmentRepository;
+    private final UnitRepository unitRepository;
+    private final LocationService locationService;
 
     private static Map<String, String> districtCache;
 
@@ -37,19 +40,13 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     private String crawlerTyrolAuthentication;
 
     @Autowired
-    private OperationVariableService operationVariableService;
-
-    @Autowired
-    private OperationRepository operationRepository;
-
-    @Autowired
-    private FiredepartmentRepository firedepartmentRepository;
-
-    @Autowired
-    private UnitRepository unitRepository;
-
-    @Autowired
-    private LocationService locationService;
+    public ApiOperationServiceImpl(OperationVariableService operationVariableService, OperationRepository operationRepository, FiredepartmentRepository firedepartmentRepository, UnitRepository unitRepository, LocationService locationService) {
+        this.operationVariableService = operationVariableService;
+        this.operationRepository = operationRepository;
+        this.firedepartmentRepository = firedepartmentRepository;
+        this.unitRepository = unitRepository;
+        this.locationService = locationService;
+    }
 
     @Override
     public List<Operation> getOperationListBurgenland() {

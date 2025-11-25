@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.Operation;
+import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.mapper.LocationStatisticResponseMapper;
 import com.jpromi.operation_point.mapper.OperationResponseMapper;
 import com.jpromi.operation_point.model.LocationStatisticResponse;
@@ -23,14 +23,16 @@ public class OperationController {
     GET - details
     */
 
-    @Autowired
-    private OperationService operationService;
+    private final OperationService operationService;
+    private final OperationResponseMapper operationResponseMapper;
+    private final LocationStatisticResponseMapper locationStatisticResponseMapper;
 
     @Autowired
-    private OperationResponseMapper operationResponseMapper;
-
-    @Autowired
-    private LocationStatisticResponseMapper locationStatisticResponseMapper;
+    public OperationController(OperationService operationService, OperationResponseMapper operationResponseMapper, LocationStatisticResponseMapper locationStatisticResponseMapper) {
+        this.operationService = operationService;
+        this.operationResponseMapper = operationResponseMapper;
+        this.locationStatisticResponseMapper = locationStatisticResponseMapper;
+    }
 
     @GetMapping(value = "list", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getList() {

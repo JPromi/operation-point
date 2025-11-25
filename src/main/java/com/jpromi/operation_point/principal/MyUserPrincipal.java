@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.principal;
 
-import com.jpromi.operation_point.enitiy.AppUser;
+import com.jpromi.operation_point.entity.AppUser;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

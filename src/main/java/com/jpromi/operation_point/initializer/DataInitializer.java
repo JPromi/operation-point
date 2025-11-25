@@ -1,6 +1,6 @@
-package com.jpromi.operation_point.initizializer;
+package com.jpromi.operation_point.initializer;
 
-import com.jpromi.operation_point.enitiy.CrawlService;
+import com.jpromi.operation_point.entity.CrawlService;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,15 +13,18 @@ import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
-
-    @Autowired
-    private CrawlServiceRepository crawlServiceRepository;
+    private final CrawlServiceRepository crawlServiceRepository;
 
     @Value("${com.jpromi.operation_point.file.storage.path}")
     private String fileStoragePath;
 
+    @Autowired
+    public DataInitializer(CrawlServiceRepository crawlServiceRepository) {
+        this.crawlServiceRepository = crawlServiceRepository;
+    }
+
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         initCrawlServices();
         initDataFolder();
     }
