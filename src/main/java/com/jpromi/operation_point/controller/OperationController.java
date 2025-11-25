@@ -23,14 +23,16 @@ public class OperationController {
     GET - details
     */
 
-    @Autowired
-    private OperationService operationService;
+    private final OperationService operationService;
+    private final OperationResponseMapper operationResponseMapper;
+    private final LocationStatisticResponseMapper locationStatisticResponseMapper;
 
     @Autowired
-    private OperationResponseMapper operationResponseMapper;
-
-    @Autowired
-    private LocationStatisticResponseMapper locationStatisticResponseMapper;
+    public OperationController(OperationService operationService, OperationResponseMapper operationResponseMapper, LocationStatisticResponseMapper locationStatisticResponseMapper) {
+        this.operationService = operationService;
+        this.operationResponseMapper = operationResponseMapper;
+        this.locationStatisticResponseMapper = locationStatisticResponseMapper;
+    }
 
     @GetMapping(value = "list", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getList() {

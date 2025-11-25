@@ -25,11 +25,14 @@ public class FiredepartmentController {
     GET - details
     */
 
-    @Autowired
-    private FiredepartmentService firedepartmentService;
+    private final FiredepartmentService firedepartmentService;
+    private final FiredepartmentResponseMapper firedepartmentResponseMapper;
 
     @Autowired
-    private FiredepartmentResponseMapper firedepartmentResponseMapper;
+    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper) {
+        this.firedepartmentService = firedepartmentService;
+        this.firedepartmentResponseMapper = firedepartmentResponseMapper;
+    }
 
     @GetMapping(value = "list", produces = {"application/json"})
     public ResponseEntity<Page<FiredepartmentResponse>> getList(

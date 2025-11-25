@@ -22,9 +22,12 @@ import java.util.UUID;
 @RestController("FileController")
 @RequestMapping("/files")
 public class FileServeController {
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    private FileStorageService fileStorageService;
+    public FileServeController(FileStorageService fileStorageService) {
+        this.fileStorageService = fileStorageService;
+    }
 
     @GetMapping("/{uuid}/{filename:.+}")
     public ResponseEntity<Resource> serveFile(@PathVariable UUID uuid, @PathVariable String filename) {

@@ -21,18 +21,19 @@ import java.util.UUID;
 @RequestMapping("/community-improvement")
 @RestController("CommunityImprovementController")
 public class CommunityImprovementController {
+    private final FiredepartmentChangeMapper firedepartmentChangeMapper;
+    private final FiredepartmentResponseMapper firedepartmentResponseMapper;
+    private final FiredepartmentChangeRepository firedepartmentChangeRepository;
 
     @Autowired
-    private FiredepartmentChangeMapper firedepartmentChangeMapper;
-
-    @Autowired
-    private FiredepartmentResponseMapper firedepartmentResponseMapper;
-
-    @Autowired
-    private FiredepartmentChangeRepository firedepartmentChangeRepository;
+    public CommunityImprovementController(FiredepartmentChangeMapper firedepartmentChangeMapper, FiredepartmentResponseMapper firedepartmentResponseMapper, FiredepartmentChangeRepository firedepartmentChangeRepository) {
+        this.firedepartmentChangeMapper = firedepartmentChangeMapper;
+        this.firedepartmentResponseMapper = firedepartmentResponseMapper;
+        this.firedepartmentChangeRepository = firedepartmentChangeRepository;
+    }
 
     @PostMapping(value = "firedepartment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> improveFiredepartment(@ModelAttribute CommunityImporvementFiredepartmentRequest body, HttpServletRequest request) {
+    public ResponseEntity<?> improveFiredepartment(@ModelAttribute CommunityImporvementFiredepartmentRequest body, HttpServletRequest request) {
         if (body.getChangedEmail() == null || body.getChangedEmail().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -51,7 +52,7 @@ public class CommunityImprovementController {
     }
 
     @PostMapping(value = "firedepartment/validate")
-    public ResponseEntity<Void> validateFiredepartment(@RequestBody UUID changeUuid) {
+    public ResponseEntity<?> validateFiredepartment(@RequestBody UUID changeUuid) {
         Optional<FiredepartmentChange> changeOpt = firedepartmentChangeRepository.findByUuid(changeUuid);
 
         if (changeOpt.isEmpty()) {

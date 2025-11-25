@@ -35,20 +35,20 @@ import java.util.Map;
 @RequestMapping("/embed")
 @RestController("EmbedController")
 public class EmbedController {
+    private final OperationService operationService;
+    private final CrawlServiceRepository crawlServiceRepository;
+    private final OperationVariableService operationVariableService;
+    private final LocationStatisticResponseMapper locationStatisticResponseMapper;
+    private final SpringTemplateEngine templateEngine;
 
     @Autowired
-    private OperationService operationService;
-
-    @Autowired
-    private CrawlServiceRepository crawlServiceRepository;
-
-    @Autowired
-    private OperationVariableService operationVariableService;
-
-    @Autowired
-    private LocationStatisticResponseMapper locationStatisticResponseMapper;
-    @Autowired
-    private SpringTemplateEngine templateEngine;
+    public EmbedController(OperationService operationService, CrawlServiceRepository crawlServiceRepository, OperationVariableService operationVariableService, LocationStatisticResponseMapper locationStatisticResponseMapper, SpringTemplateEngine templateEngine) {
+        this.operationService = operationService;
+        this.crawlServiceRepository = crawlServiceRepository;
+        this.operationVariableService = operationVariableService;
+        this.locationStatisticResponseMapper = locationStatisticResponseMapper;
+        this.templateEngine = templateEngine;
+    }
 
     @GetMapping(value = "/vector/map/country.svg", produces = "image/svg+xml")
     public ResponseEntity<String> vectorMapCountry(
