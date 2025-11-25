@@ -1,9 +1,8 @@
 package com.jpromi.operation_point.mapper;
 
-import com.jpromi.operation_point.enitiy.FileData;
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.FiredepartmentChange;
-import com.jpromi.operation_point.enitiy.FiredepartmentLinkChange;
+import com.jpromi.operation_point.entity.FileData;
+import com.jpromi.operation_point.entity.FiredepartmentChange;
+import com.jpromi.operation_point.entity.FiredepartmentLinkChange;
 import com.jpromi.operation_point.model.CommunityImporvementFiredepartmentRequest;
 import org.springframework.stereotype.Component;
 

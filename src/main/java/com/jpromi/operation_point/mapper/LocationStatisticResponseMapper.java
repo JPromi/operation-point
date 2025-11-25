@@ -1,7 +1,6 @@
 package com.jpromi.operation_point.mapper;
 
-import com.jpromi.operation_point.enitiy.Operation;
-import com.jpromi.operation_point.enums.ServiceOriginEnum;
+import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.model.LocationStatisticResponse;
 import com.jpromi.operation_point.service.LocationService;
 import com.jpromi.operation_point.service.OperationVariableService;

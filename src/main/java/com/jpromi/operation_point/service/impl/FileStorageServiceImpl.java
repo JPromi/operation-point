@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.service.impl;
 
-import com.jpromi.operation_point.enitiy.FileData;
+import com.jpromi.operation_point.entity.FileData;
 import com.jpromi.operation_point.repository.FileDataRepository;
 import com.jpromi.operation_point.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;

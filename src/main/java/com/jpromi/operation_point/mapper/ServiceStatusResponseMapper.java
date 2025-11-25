@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.mapper;
 
-import com.jpromi.operation_point.enitiy.CrawlService;
+import com.jpromi.operation_point.entity.CrawlService;
 import com.jpromi.operation_point.model.ServiceStatusResponse;
 import org.springframework.stereotype.Component;
 

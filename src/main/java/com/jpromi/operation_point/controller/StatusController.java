@@ -1,12 +1,9 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.CrawlService;
-import com.jpromi.operation_point.enitiy.Operation;
+import com.jpromi.operation_point.entity.CrawlService;
 import com.jpromi.operation_point.mapper.ServiceStatusResponseMapper;
-import com.jpromi.operation_point.model.OperationResponse;
 import com.jpromi.operation_point.model.ServiceStatusResponse;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.service;
 
-import com.jpromi.operation_point.enitiy.Operation;
+import com.jpromi.operation_point.entity.Operation;
 
 import java.util.List;
 import java.util.UUID;

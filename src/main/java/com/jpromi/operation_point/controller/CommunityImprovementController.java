@@ -1,12 +1,11 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.FiredepartmentChange;
+import com.jpromi.operation_point.entity.FiredepartmentChange;
 import com.jpromi.operation_point.mapper.FiredepartmentChangeMapper;
 import com.jpromi.operation_point.mapper.FiredepartmentResponseMapper;
 import com.jpromi.operation_point.model.CommunityImporvementFiredepartmentRequest;
 import com.jpromi.operation_point.model.FiredepartmentResponse;
 import com.jpromi.operation_point.repository.FiredepartmentChangeRepository;
-import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

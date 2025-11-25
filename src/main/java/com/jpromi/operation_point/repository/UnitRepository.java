@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.repository;
 
-import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.entity.Unit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

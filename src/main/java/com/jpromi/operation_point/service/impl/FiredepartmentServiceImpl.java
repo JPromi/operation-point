@@ -1,14 +1,13 @@
 package com.jpromi.operation_point.service.impl;
 
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.OperationUnit;
-import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.entity.Firedepartment;
+import com.jpromi.operation_point.entity.OperationUnit;
+import com.jpromi.operation_point.entity.Unit;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationFiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationUnitRepository;
 import com.jpromi.operation_point.repository.UnitRepository;
 import com.jpromi.operation_point.service.FiredepartmentService;
-import com.jpromi.operation_point.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

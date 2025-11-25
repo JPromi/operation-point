@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.initizializer;
 
-import com.jpromi.operation_point.enitiy.CrawlService;
+import com.jpromi.operation_point.entity.CrawlService;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

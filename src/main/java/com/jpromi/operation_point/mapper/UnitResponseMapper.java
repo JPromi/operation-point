@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.mapper;
 
-import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.entity.Unit;
 import com.jpromi.operation_point.model.UnitResponse;
 import org.springframework.stereotype.Component;
 

@@ -1,24 +1,21 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.CrawlService;
-import com.jpromi.operation_point.enitiy.Operation;
+import com.jpromi.operation_point.entity.CrawlService;
+import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.mapper.LocationStatisticResponseMapper;
 import com.jpromi.operation_point.model.LocationStatisticResponse;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
-import com.jpromi.operation_point.repository.OperationRepository;
 import com.jpromi.operation_point.service.OperationService;
 import com.jpromi.operation_point.service.OperationVariableService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.thymeleaf.context.WebContext;

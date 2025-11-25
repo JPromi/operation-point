@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.entity.Unit;
 import com.jpromi.operation_point.mapper.UnitResponseMapper;
 import com.jpromi.operation_point.model.UnitResponse;
 import com.jpromi.operation_point.service.UnitService;

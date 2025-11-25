@@ -1,9 +1,8 @@
 package com.jpromi.operation_point.service.impl;
 
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.OperationFiredepartment;
-import com.jpromi.operation_point.enitiy.OperationUnit;
-import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.entity.Firedepartment;
+import com.jpromi.operation_point.entity.OperationFiredepartment;
+import com.jpromi.operation_point.entity.Unit;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationFiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationUnitRepository;

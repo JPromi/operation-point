@@ -1,7 +1,7 @@
 package com.jpromi.operation_point.service;
 
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.entity.Firedepartment;
+import com.jpromi.operation_point.entity.Unit;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

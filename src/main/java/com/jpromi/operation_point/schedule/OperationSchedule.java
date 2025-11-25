@@ -1,15 +1,13 @@
 package com.jpromi.operation_point.schedule;
 
 
-import com.jpromi.operation_point.enitiy.CrawlService;
+import com.jpromi.operation_point.entity.CrawlService;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
 import com.jpromi.operation_point.service.ApiOperationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class OperationSchedule {

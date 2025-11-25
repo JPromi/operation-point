@@ -1,7 +1,6 @@
 package com.jpromi.operation_point.repository;
 
-import com.jpromi.operation_point.enitiy.AppUser;
-import com.jpromi.operation_point.enitiy.FileData;
+import com.jpromi.operation_point.entity.FileData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

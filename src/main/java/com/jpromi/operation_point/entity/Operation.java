@@ -1,4 +1,4 @@
-package com.jpromi.operation_point.enitiy;
+package com.jpromi.operation_point.entity;
 
 import com.jpromi.operation_point.enums.ServiceOriginEnum;
 import jakarta.persistence.*;

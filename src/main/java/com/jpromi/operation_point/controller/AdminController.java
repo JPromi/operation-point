@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.*;
+import com.jpromi.operation_point.entity.*;
 import com.jpromi.operation_point.model.CrawlServiceForm;
 import com.jpromi.operation_point.model.FiredepartmentForm;
 import com.jpromi.operation_point.repository.AppUserRepository;

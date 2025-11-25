@@ -1,9 +1,7 @@
 package com.jpromi.operation_point.repository;
 
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.OperationFiredepartment;
-import com.jpromi.operation_point.enitiy.OperationUnit;
-import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.entity.OperationUnit;
+import com.jpromi.operation_point.entity.Unit;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

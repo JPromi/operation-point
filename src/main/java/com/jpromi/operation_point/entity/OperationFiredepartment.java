@@ -1,4 +1,4 @@
-package com.jpromi.operation_point.enitiy;
+package com.jpromi.operation_point.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

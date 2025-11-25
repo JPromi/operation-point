@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.Operation;
+import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.mapper.LocationStatisticResponseMapper;
 import com.jpromi.operation_point.mapper.OperationResponseMapper;
 import com.jpromi.operation_point.model.LocationStatisticResponse;
