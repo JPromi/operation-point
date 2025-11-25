@@ -62,7 +62,7 @@ public class OperationSchedule {
         try {
             apiOperationService.getOperationListTyrol();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -71,7 +71,7 @@ public class OperationSchedule {
         try {
             apiOperationService.getOperationListUpperAustria();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -80,7 +80,7 @@ public class OperationSchedule {
         try {
             apiOperationService.getOperationListStyria();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -89,7 +89,7 @@ public class OperationSchedule {
         try {
             apiOperationService.getOperationListBurgenland();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -98,7 +98,7 @@ public class OperationSchedule {
         try {
             apiOperationService.getOperationListLowerAustria();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -106,5 +106,4 @@ public class OperationSchedule {
         CrawlService crawlService = crawlServiceRepository.findByName(serviceName);
         return crawlService != null && crawlService.getIsEnabled();
     }
-
 }
