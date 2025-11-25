@@ -13,15 +13,18 @@ import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
-
-    @Autowired
-    private CrawlServiceRepository crawlServiceRepository;
+    private final CrawlServiceRepository crawlServiceRepository;
 
     @Value("${com.jpromi.operation_point.file.storage.path}")
     private String fileStoragePath;
 
+    @Autowired
+    public DataInitializer(CrawlServiceRepository crawlServiceRepository) {
+        this.crawlServiceRepository = crawlServiceRepository;
+    }
+
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         initCrawlServices();
         initDataFolder();
     }
