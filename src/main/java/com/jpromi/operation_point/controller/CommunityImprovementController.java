@@ -43,7 +43,7 @@ public class CommunityImprovementController {
         }
         String userAgent = request.getHeader("User-Agent");
 
-        FiredepartmentChange change = firedepartmentChangeMapper.fromCommunityImporvementFiredepartmentRequest(body, null, null, ip, userAgent);
+        FiredepartmentChange change = firedepartmentChangeMapper.fromCommunityImprovementFiredepartmentRequest(body, null, null, ip, userAgent);
         change.setChangeType("update");
         change = firedepartmentChangeRepository.save(change);
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FiredepartmentChangeMapper {
-    public FiredepartmentChange fromCommunityImporvementFiredepartmentRequest(
+    public FiredepartmentChange fromCommunityImprovementFiredepartmentRequest(
             CommunityImporvementFiredepartmentRequest ciFd,
             FileData logo,
             FileData banner,
