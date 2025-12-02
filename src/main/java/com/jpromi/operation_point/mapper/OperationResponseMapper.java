@@ -88,9 +88,11 @@ public class OperationResponseMapper {
                                                 .name(unit.getUnit().getFriendlyName())
                                                 .build() : null
                                 )
-                                .dispoTime(unit.getDispoTime())
-                                .outTime(unit.getOutTime())
-                                .inTime(unit.getInTime())
+                                // TMP fix to hide times for LA_WASTL_PUB operations (Legal reasons)
+                                .alarmTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : unit.getAlarmTime())
+                                .dispoTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : unit.getDispoTime())
+                                .outTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : unit.getOutTime())
+                                .inTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : unit.getInTime())
                                 .build()
                 );
             });
