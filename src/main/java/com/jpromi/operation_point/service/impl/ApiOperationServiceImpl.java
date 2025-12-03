@@ -34,7 +34,9 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     private final UnitRepository unitRepository;
     private final LocationService locationService;
 
-    private static Map<String, String> districtCache;
+    private static Map<String, String> alarmTextCacheBl;
+    private static Map<String, String> districtCacheBl;
+    private static Map<String, String> districtCacheSt;
 
     @Value("${com.jpromi.operation_point.crawler.tyrol.authentication}")
     private String crawlerTyrolAuthentication;
@@ -54,7 +56,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             // get data from API
             WebClient webClient = WebClient.create();
             ApiOperationBurgenlandResponse result = webClient.get()
-                    .uri("https://www.lsz-b.at/fileadmin/fw_apps/api/")
+                    .uri("https://www.lsz-b.at/fuer-einsatzorganisationen/feuerwehr-einsatzkarte/?tx_lszoperations_operations[action]=bgldData&tx_lszoperations_operations[controller]=Operations")
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .bodyToMono(ApiOperationBurgenlandResponse.class)
@@ -63,7 +65,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             // build operation
             List<Operation> operationList = new ArrayList<>();
 
-            result.getOperations_current().forEach( operation -> {
+            result.getOperations().forEach( operation -> {
                 Operation _operation = updateSavedOperationBurgenland(operation);
                 if (_operation != null) {
                     operationList.add(_operation);
@@ -216,19 +218,22 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
     private Operation updateSavedOperationBurgenland(ApiOperationBurgenlandResponse.ApiOperationBurgenlandResponseOperation response) {
         if (response.getInfo() == null || !response.getInfo()) {
-            Optional<Operation> _operation = operationRepository.findByBlId(response.getOperationId());
+            Optional<Operation> _operation = operationRepository.findByBlId(response.getId().toString());
+
+            if(response.getCode().equals("INFO")) {
+                return null;
+            }
 
             if (_operation.isPresent()) {
                 Operation operation = _operation.get();
                 operation.setAlarmLevel(operationVariableService.getAlarmLevel(response.getCode()));
                 operation.setAlarmType(operationVariableService.getAlarmType(response.getCode()));
                 operation.setAlarmLevelAddition(operationVariableService.getAlarmLevelAddition(response.getCode()));
-                operation.setAlarmText(response.getCodeDesc());
-
-                operation.setDistrict(response.getDistrict());
+                operation.setAlarmText(getAlarmTextBurgenland(operationVariableService.getAlarmType(response.getCode())));
+                operation.setDistrict(getDistrictBurgenland(response.getDistrict()));
 
                 // units
-                int unitCount = Integer.parseInt(response.getNumVehicles());
+                Long unitCount = response.getNumVehicles();
                 // only add units if they are not already present
                 List<OperationUnit> operationUnits = operation.getUnits();
                 if (operationUnits == null) {
@@ -251,7 +256,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 }
 
                 List<OperationFiredepartment> finalFiredepartments = firedepartments;
-                response.getFwLocations().forEach(fwName -> {
+                response.getFireServices().forEach(fwName -> {
                     Firedepartment firedepartment = createFiredepartmentIfNotExists(
                             Firedepartment.builder()
                                     .name(fwName)
@@ -272,28 +277,35 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     }
                 });
                 operation.setFiredepartments(finalFiredepartments);
+
+                // end operation
+                if (response.getEndTime() > 0) {
+                    long operationEnd = response.getEndTime();
+                    operation.setEndTime(Instant.ofEpochSecond(operationEnd).atOffset(OffsetDateTime.now().getOffset()));
+                }
+
                 operation.setUpdatedAt(OffsetDateTime.now());
 
                 return operationRepository.save(operation);
             } else {
-                long operationStart = Long.parseLong(response.getStart());
+                long operationStart = response.getStartTime();
 
                 Operation operation = Operation.builder()
-                        .blId(response.getOperationId())
+                        .blId(response.getId().toString())
                         .alarmLevel(operationVariableService.getAlarmLevel(response.getCode()))
                         .alarmType(operationVariableService.getAlarmType(response.getCode()))
                         .alarmLevelAddition(operationVariableService.getAlarmLevelAddition(response.getCode()))
-                        .alarmText(response.getCodeDesc())
+                        .alarmText(getAlarmTextBurgenland(operationVariableService.getAlarmType(response.getCode())))
                         .startTime(Instant.ofEpochSecond(operationStart).atOffset(OffsetDateTime.now().getOffset()))
                         .location(response.getPlaceOfOperation())
-                        .district(response.getDistrict())
+                        .district(getDistrictBurgenland(response.getDistrict()))
                         .federalState("Burgenland")
                         .serviceOrigin(ServiceOriginEnum.BL_LSZ_PUB)
                         .build();
 
                 // firedepartments
                 List<OperationFiredepartment> firedepartments = new ArrayList<>();
-                response.getFwLocations().forEach(fwName -> {
+                response.getFireServices().forEach(fwName -> {
                     Firedepartment firedepartment = createFiredepartmentIfNotExists(
                             Firedepartment.builder()
                                     .name(fwName)
@@ -312,7 +324,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 operation.setFiredepartments(firedepartments);
 
                 // units
-                int unitCount = Integer.parseInt(response.getNumVehicles());
+                Long unitCount = response.getNumVehicles();
                 List<OperationUnit> operationUnits = new ArrayList<>();
                 for (int i = 0; i < unitCount; i++) {
                     OperationUnit unit = OperationUnit.builder()
@@ -321,6 +333,12 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     operationUnits.add(unit);
                 }
                 operation.setUnits(operationUnits);
+
+                // end operation
+                if (response.getEndTime() > 0) {
+                    long operationEnd = response.getEndTime();
+                    operation.setEndTime(Instant.ofEpochSecond(operationEnd).atOffset(OffsetDateTime.now().getOffset()));
+                }
 
                 return operationRepository.save(operation);
             }
@@ -965,16 +983,16 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     }
 
     private String getDistrictStyria(String districtId) {
-        if (districtCache == null) {
+        if (districtCacheSt == null) {
             synchronized (this) {
-                if (districtCache == null) {
+                if (districtCacheSt == null) {
                     ObjectMapper mapper = new ObjectMapper();
                     try (InputStream is = getClass().getClassLoader()
                             .getResourceAsStream("mapping/ST_LFV_PUB-districts.json")) {
                         if (is == null)
                             throw new IllegalStateException("File not found: mapping/ST_LFV_PUB-districts.json");
 
-                        districtCache = mapper.readValue(is, new TypeReference<>() {});
+                        districtCacheSt = mapper.readValue(is, new TypeReference<>() {});
                     } catch (IOException e) {
                         throw new RuntimeException("Error reading ST_LFV_PUB-districts.json", e);
                     }
@@ -982,7 +1000,49 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             }
         }
 
-        return districtCache.getOrDefault(districtId, null);
+        return districtCacheSt.getOrDefault(districtId, null);
+    }
+
+    private String getDistrictBurgenland(String districtId) {
+        if (districtCacheBl == null) {
+            synchronized (this) {
+                if (districtCacheBl == null) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    try (InputStream is = getClass().getClassLoader()
+                            .getResourceAsStream("mapping/BL_LSZ_PUB-districts.json")) {
+                        if (is == null)
+                            throw new IllegalStateException("File not found: mapping/BL_LSZ_PUB-districts.json");
+
+                        districtCacheBl = mapper.readValue(is, new TypeReference<>() {});
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error reading BL_LSZ_PUB-districts.json", e);
+                    }
+                }
+            }
+        }
+
+        return districtCacheBl.getOrDefault(districtId, null);
+    }
+
+    private String getAlarmTextBurgenland(String operationType) {
+        if (alarmTextCacheBl == null) {
+            synchronized (this) {
+                if (alarmTextCacheBl == null) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    try (InputStream is = getClass().getClassLoader()
+                            .getResourceAsStream("mapping/BL_LSZ_PUB-alarm_text.json")) {
+                        if (is == null)
+                            throw new IllegalStateException("File not found: mapping/BL_LSZ_PUB-alarm_text.json");
+
+                        alarmTextCacheBl = mapper.readValue(is, new TypeReference<>() {});
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error reading BL_LSZ_PUB-alarm_text.json", e);
+                    }
+                }
+            }
+        }
+
+        return alarmTextCacheBl.getOrDefault(operationType, null);
     }
 
     private String getStyriaOperationHash(ApiOperationStyriaResponse.ApiOperationStyriaResponseFeature response) {

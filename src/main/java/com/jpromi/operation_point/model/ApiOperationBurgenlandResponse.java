@@ -7,34 +7,34 @@ import java.util.List;
 
 @Data
 public class ApiOperationBurgenlandResponse {
-    private List<ApiOperationBurgenlandResponseOperation> operations_current;
+    private List<ApiOperationBurgenlandResponseOperation> operations;
 
     @Data
     public static class ApiOperationBurgenlandResponseOperation {
-        @JsonProperty("operation_id")
-        private String operationId;
-        private String district;
-        private String code;
-
-        @JsonProperty("code_desc")
-        private String codeDesc;
+        private Long id;
 
         @JsonProperty("place_of_operation")
         private String placeOfOperation;
 
+        private String code;
+
+        @JsonProperty("start_time")
+        private Long startTime;
+
+
+        @JsonProperty("end_time")
+        private Long endTime;
+
+        private String district;
+
+        @JsonProperty("num_fire_services")
+        private Long numFireServices;
+
         @JsonProperty("num_vehicles")
-        private String numVehicles;
+        private Long numVehicles;
 
-        private String start;
-
-        @JsonProperty("fire_service")
-        private String fireService;
-
-        @JsonProperty("updated_at")
-        private String updatedAt;
-
-        @JsonProperty("fw_locations")
-        private List<String> fwLocations;
+        @JsonProperty("fire_services")
+        private List<String> fireServices;
 
         private Boolean info;
     }
