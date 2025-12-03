@@ -229,7 +229,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                 operation.setAlarmLevel(operationVariableService.getAlarmLevel(response.getCode()));
                 operation.setAlarmType(operationVariableService.getAlarmType(response.getCode()));
                 operation.setAlarmLevelAddition(operationVariableService.getAlarmLevelAddition(response.getCode()));
-                operation.setAlarmText(getAlarmTextBurgenland(operationVariableService.getAlarmType(response.getCode())));
+                operation.setAlarmText(getAlarmTextBurgenland(response.getCode()));
                 operation.setDistrict(getDistrictBurgenland(response.getDistrict()));
 
                 // units
@@ -295,7 +295,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                         .alarmLevel(operationVariableService.getAlarmLevel(response.getCode()))
                         .alarmType(operationVariableService.getAlarmType(response.getCode()))
                         .alarmLevelAddition(operationVariableService.getAlarmLevelAddition(response.getCode()))
-                        .alarmText(getAlarmTextBurgenland(operationVariableService.getAlarmType(response.getCode())))
+                        .alarmText(getAlarmTextBurgenland(response.getCode()))
                         .startTime(Instant.ofEpochSecond(operationStart).atOffset(OffsetDateTime.now().getOffset()))
                         .location(response.getPlaceOfOperation())
                         .district(getDistrictBurgenland(response.getDistrict()))
@@ -1024,7 +1024,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         return districtCacheBl.getOrDefault(districtId, null);
     }
 
-    private String getAlarmTextBurgenland(String operationType) {
+    private String getAlarmTextBurgenland(String operationCode) {
         if (alarmTextCacheBl == null) {
             synchronized (this) {
                 if (alarmTextCacheBl == null) {
@@ -1042,7 +1042,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             }
         }
 
-        return alarmTextCacheBl.getOrDefault(operationType, null);
+        return alarmTextCacheBl.getOrDefault(operationCode, null);
     }
 
     private String getStyriaOperationHash(ApiOperationStyriaResponse.ApiOperationStyriaResponseFeature response) {
