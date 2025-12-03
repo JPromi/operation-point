@@ -1,9 +1,9 @@
 package com.jpromi.operation_point.mapper;
 
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.FiredepartmentChange;
-import com.jpromi.operation_point.enitiy.FiredepartmentLink;
-import com.jpromi.operation_point.enitiy.FiredepartmentLinkChange;
+import com.jpromi.operation_point.entity.Firedepartment;
+import com.jpromi.operation_point.entity.FiredepartmentChange;
+import com.jpromi.operation_point.entity.FiredepartmentLink;
+import com.jpromi.operation_point.entity.FiredepartmentLinkChange;
 import com.jpromi.operation_point.model.FiredepartmentResponse;
 import com.jpromi.operation_point.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class FiredepartmentResponseMapper {
     public FiredepartmentResponse fromFiredepartment(Firedepartment firedepartment) {
         return FiredepartmentResponse.builder()
                 .uuid(firedepartment.getUuid())
-                .name(firedepartment.getName())
+                .name(firedepartment.getFriendlyName())
                 .atFireDepartmentId(firedepartment.getAtFireDepartmentId())
                 .isVolunteer(firedepartment.getIsVolunteer())
                 .logo(fileStorageService.getExternalUrl(firedepartment.getLogo(), "/static/images/korpsabzeichen.svg"))

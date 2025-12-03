@@ -1,4 +1,4 @@
-package com.jpromi.operation_point.enitiy;
+package com.jpromi.operation_point.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +12,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-public class CrawlService {
+public class Unit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,4 @@ public class CrawlService {
 
     private String name;
     private String friendlyName;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean isEnabled = true;
 }

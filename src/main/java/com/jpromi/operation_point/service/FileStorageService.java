@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.service;
 
-import com.jpromi.operation_point.enitiy.FileData;
+import com.jpromi.operation_point.entity.FileData;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

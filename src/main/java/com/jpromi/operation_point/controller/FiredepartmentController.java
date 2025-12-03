@@ -1,18 +1,14 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.entity.Firedepartment;
 import com.jpromi.operation_point.mapper.FiredepartmentResponseMapper;
-import com.jpromi.operation_point.mapper.UnitResponseMapper;
 import com.jpromi.operation_point.model.FiredepartmentResponse;
-import com.jpromi.operation_point.model.UnitResponse;
 import com.jpromi.operation_point.service.FiredepartmentService;
-import com.jpromi.operation_point.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController("FiredepartmentController")
@@ -24,20 +20,23 @@ public class FiredepartmentController {
     GET - details
     */
 
-    @Autowired
-    private FiredepartmentService firedepartmentService;
+    private final FiredepartmentService firedepartmentService;
+    private final FiredepartmentResponseMapper firedepartmentResponseMapper;
 
     @Autowired
-    private FiredepartmentResponseMapper firedepartmentResponseMapper;
+    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper) {
+        this.firedepartmentService = firedepartmentService;
+        this.firedepartmentResponseMapper = firedepartmentResponseMapper;
+    }
 
     @GetMapping(value = "list", produces = {"application/json"})
-    public ResponseEntity<List<FiredepartmentResponse>> getList(@RequestParam(required = false, value = "q") String query) {
-        List<Firedepartment> firedepartments = firedepartmentService.getList(query);
-        return ResponseEntity.ok(
-                firedepartments.stream()
-                        .map(firedepartmentResponseMapper::fromFiredepartment)
-                        .toList()
-        );
+    public ResponseEntity<Page<FiredepartmentResponse>> getList(
+            @RequestParam(required = false, value = "q") String query,
+            @RequestParam(required = false, value = "limit", defaultValue = "20") Integer limit,
+            @RequestParam(required = false, value = "page", defaultValue = "0") Integer page) {
+        Page<Firedepartment> result = firedepartmentService.getList(query, limit, page);
+        Page<FiredepartmentResponse> dto = result.map(firedepartmentResponseMapper::fromFiredepartment);
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping(value = "{uuid}", produces = {"application/json"})

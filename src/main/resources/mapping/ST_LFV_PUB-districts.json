@@ -5,8 +5,13 @@
   "G": "Graz",
   "GB": "Gröbming",
   "GU": "Graz-Umgebung",
+  "FB": "Südoststeiermark",
+  "FF": "Hartberg-Fürstenfeld",
   "HF": "Hartberg-Fürstenfeld",
+  "HB": "Hartberg-Fürstenfeld",
+  "KF": "Murtal",
   "LB": "Leibnitz",
+  "LE": "Leoben",
   "LI": "Liezen",
   "LN": "Leoben",
   "MT": "Murtal",
@@ -14,5 +19,6 @@
   "SO": "Südoststeiermark",
   "VO": "Voitsberg",
   "JO": "Voitsberg",
+  "JU": "Murtal",
   "WZ": "Weiz"
 }

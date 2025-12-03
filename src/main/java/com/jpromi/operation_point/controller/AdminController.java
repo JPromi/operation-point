@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.*;
+import com.jpromi.operation_point.entity.*;
 import com.jpromi.operation_point.model.CrawlServiceForm;
 import com.jpromi.operation_point.model.FiredepartmentForm;
 import com.jpromi.operation_point.repository.AppUserRepository;
@@ -25,30 +25,26 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    private final FiredepartmentRepository firedepartmentRepository;
+    private final UnitRepository unitRepository;
+    private final FiredepartmentService firedepartmentService;
+    private final UnitService unitService;
+    private final CrawlServiceRepository crawlServiceRepository;
+    private final AppUserRepository appUserRepository;
+    private final UserService userService;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    private FiredepartmentRepository firedepartmentRepository;
-
-    @Autowired
-    private UnitRepository unitRepository;
-
-    @Autowired
-    private FiredepartmentService firedepartmentService;
-
-    @Autowired
-    private UnitService unitService;
-
-    @Autowired
-    private CrawlServiceRepository crawlServiceRepository;
-
-    @Autowired
-    private AppUserRepository appUserRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private FileStorageService fileStorageService;
+    public AdminController(FiredepartmentRepository firedepartmentRepository, UnitRepository unitRepository, FiredepartmentService firedepartmentService, UnitService unitService, CrawlServiceRepository crawlServiceRepository, AppUserRepository appUserRepository, UserService userService, FileStorageService fileStorageService) {
+        this.firedepartmentRepository = firedepartmentRepository;
+        this.unitRepository = unitRepository;
+        this.firedepartmentService = firedepartmentService;
+        this.unitService = unitService;
+        this.crawlServiceRepository = crawlServiceRepository;
+        this.appUserRepository = appUserRepository;
+        this.userService = userService;
+        this.fileStorageService = fileStorageService;
+    }
 
     @GetMapping("/login")
     public String login() {
@@ -140,6 +136,7 @@ public class AdminController {
                 firedepartment.setAddressFederalState((updatedFiredepartment.getAddressFederalState() != null && !updatedFiredepartment.getAddressFederalState().isEmpty()) ? updatedFiredepartment.getAddressFederalState() : null);
                 firedepartment.setAddressCountry((updatedFiredepartment.getAddressCountry() != null && !updatedFiredepartment.getAddressCountry().isEmpty()) ? updatedFiredepartment.getAddressCountry() : null);
                 firedepartment.setIsVolunteer(updatedFiredepartment.getIsVolunteer() != null ? updatedFiredepartment.getIsVolunteer() : false);
+                firedepartment.setIsHidden(updatedFiredepartment.getIsHidden() != null ? updatedFiredepartment.getIsHidden() : false);
 
                 // save images
                 if (updatedFiredepartment.getLogo() != null && !updatedFiredepartment.getLogo().isEmpty() && !updatedFiredepartment.getLogoDelete()) {

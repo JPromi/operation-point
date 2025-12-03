@@ -1,8 +1,7 @@
-package com.jpromi.operation_point.enitiy;
+package com.jpromi.operation_point.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.UUID;
 
@@ -13,16 +12,20 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-public class FileData {
+public class CrawlService {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     @Builder.Default
     private UUID uuid = UUID.randomUUID();
 
-    private String fileName;
-    private String contentType;
-    private Long fileSize;
+    private String name;
+    private String friendlyName;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isEnabled = true;
 }

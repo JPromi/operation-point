@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.entity.Unit;
 import com.jpromi.operation_point.mapper.UnitResponseMapper;
 import com.jpromi.operation_point.model.UnitResponse;
 import com.jpromi.operation_point.service.UnitService;
@@ -20,11 +20,14 @@ public class UnitController {
     GET - details
     */
 
-    @Autowired
-    private UnitService unitService;
+    private final UnitService unitService;
+    private final UnitResponseMapper unitResponseMapper;
 
     @Autowired
-    private UnitResponseMapper unitResponseMapper;
+    public UnitController(UnitService unitService, UnitResponseMapper unitResponseMapper) {
+        this.unitService = unitService;
+        this.unitResponseMapper = unitResponseMapper;
+    }
 
     @GetMapping(value = "list", produces = {"application/json"})
     public ResponseEntity<List<UnitResponse>> getList(@RequestParam(required = false, value = "q") String query) {

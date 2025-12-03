@@ -1,7 +1,6 @@
 package com.jpromi.operation_point.repository;
 
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.FiredepartmentChange;
+import com.jpromi.operation_point.entity.FiredepartmentChange;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

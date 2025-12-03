@@ -153,6 +153,11 @@
                 <h3>Sonstiges</h3>
                 <div class="box">
                     <div class="form-group checkvalue">
+                        <label for="isHidden">Verstecken:</label>
+                        <input type="checkbox" name="isHidden" id="isHidden" th:checked="${firedepartment.isHidden}">
+                    </div>
+
+                    <div class="form-group checkvalue">
                         <label for="isWrongAssignment">Als Einheit zuweisen:</label>
                         <input type="checkbox" name="isWrongAssignment" id="isWrongAssignment">
                     </div>
@@ -161,9 +166,13 @@
                         <p class="disclaimer">Manchmal passiert es das der Crawler eine Einheit (Fahrzeug,...) als Feuerwehr zuweist. Bei auswahl dieser Funktion wird die Feuerwehr als Einheit umgewandelt und verliert alle nicht relevanten Eigenschaften.</p>
                     </div>
 
-                <div class="btns">
-                    <a th:href="@{./dashboard/firedepartment}">Abbrechen</a>
-                    <button type="submit" class="primary">Speichern</button>
+                </div>
+
+                <div class="box">
+                    <div class="btns">
+                        <a th:href="@{./dashboard/firedepartment}">Abbrechen</a>
+                        <button type="submit" class="primary">Speichern</button>
+                    </div>
                 </div>
 
             </form>

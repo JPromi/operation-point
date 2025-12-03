@@ -1,9 +1,7 @@
 package com.jpromi.operation_point.controller;
 
-import com.jpromi.operation_point.enitiy.CrawlService;
-import com.jpromi.operation_point.enitiy.Operation;
+import com.jpromi.operation_point.entity.CrawlService;
 import com.jpromi.operation_point.mapper.ServiceStatusResponseMapper;
-import com.jpromi.operation_point.model.OperationResponse;
 import com.jpromi.operation_point.model.ServiceStatusResponse;
 import com.jpromi.operation_point.repository.CrawlServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +16,14 @@ import java.util.List;
 @RestController("StatusController")
 @RequestMapping("/status")
 public class StatusController {
+    private final ServiceStatusResponseMapper serviceStatusResponseMapper;
+    private final CrawlServiceRepository crawlServiceRepository;
 
     @Autowired
-    private ServiceStatusResponseMapper serviceStatusResponseMapper;
-
-    @Autowired
-    private CrawlServiceRepository crawlServiceRepository;
+    public StatusController(ServiceStatusResponseMapper serviceStatusResponseMapper, CrawlServiceRepository crawlServiceRepository) {
+        this.serviceStatusResponseMapper = serviceStatusResponseMapper;
+        this.crawlServiceRepository = crawlServiceRepository;
+    }
 
     @GetMapping("")
     public ResponseEntity<List<ServiceStatusResponse>> getList() {

@@ -1,6 +1,6 @@
 package com.jpromi.operation_point.repository;
 
-import com.jpromi.operation_point.enitiy.CrawlService;
+import com.jpromi.operation_point.entity.CrawlService;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,9 +1,8 @@
 package com.jpromi.operation_point.service.impl;
 
-import com.jpromi.operation_point.enitiy.Firedepartment;
-import com.jpromi.operation_point.enitiy.OperationFiredepartment;
-import com.jpromi.operation_point.enitiy.OperationUnit;
-import com.jpromi.operation_point.enitiy.Unit;
+import com.jpromi.operation_point.entity.Firedepartment;
+import com.jpromi.operation_point.entity.OperationFiredepartment;
+import com.jpromi.operation_point.entity.Unit;
 import com.jpromi.operation_point.repository.FiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationFiredepartmentRepository;
 import com.jpromi.operation_point.repository.OperationUnitRepository;
@@ -18,18 +17,18 @@ import java.util.UUID;
 
 @Service
 public class UnitServiceImpl implements UnitService {
+    private final UnitRepository unitRepository;
+    private final FiredepartmentRepository firedepartmentRepository;
+    private final OperationUnitRepository operationUnitRepository;
+    private final OperationFiredepartmentRepository operationFiredepartmentRepository;
 
     @Autowired
-    private UnitRepository unitRepository;
-
-    @Autowired
-    private FiredepartmentRepository firedepartmentRepository;
-
-    @Autowired
-    private OperationUnitRepository operationUnitRepository;
-
-    @Autowired
-    private OperationFiredepartmentRepository operationFiredepartmentRepository;
+    public UnitServiceImpl(UnitRepository unitRepository, FiredepartmentRepository firedepartmentRepository, OperationUnitRepository operationUnitRepository, OperationFiredepartmentRepository operationFiredepartmentRepository) {
+        this.unitRepository = unitRepository;
+        this.firedepartmentRepository = firedepartmentRepository;
+        this.operationUnitRepository = operationUnitRepository;
+        this.operationFiredepartmentRepository = operationFiredepartmentRepository;
+    }
 
     @Override
     public List<Unit> getList() {
