@@ -260,7 +260,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     Firedepartment firedepartment = createFiredepartmentIfNotExists(
                             Firedepartment.builder()
                                     .name(fwName)
-                                    .friendlyName("FW " + fwName)
+                                    .friendlyName(fwName)
                                     .addressFederalState("Burgenland")
                                     .build()
                     );
@@ -309,7 +309,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     Firedepartment firedepartment = createFiredepartmentIfNotExists(
                             Firedepartment.builder()
                                     .name(fwName)
-                                    .friendlyName("FW " + fwName)
+                                    .friendlyName(fwName)
                                     .addressFederalState("Burgenland")
                                     .build()
                     );
