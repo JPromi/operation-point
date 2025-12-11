@@ -1,5 +1,11 @@
-# Operation Point
-**Alle Einsätze der Feuerwehren in Österreich an einer Stelle.**
+<br />
+<div align="center">
+  <img src="/src/main/resources/static/static/logo/op_text.svg" width="560" alt="Operation Point" />
+</div>
+<br />
+<div align="center">
+  🇦🇹 Alle Einsätze der Feuerwehren in Österreich an einer Stelle. 🇦🇹
+</div>
 
 ## Informationen
 ### Ziel
