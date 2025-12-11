@@ -43,6 +43,7 @@ main > div.info h1 {
 main > div.info h3 {
     font-size: 1.25rem;
     font-weight: 400;
+    margin-right: 26px;
 }
 
 main > div.login-form {
@@ -141,4 +142,45 @@ main > div.login-form > form > button {
     font-weight: 500;
     font-size: 1rem;
     cursor: pointer;
+}
+
+@media screen and (max-width: 1200px) {
+    main {
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    body {
+        justify-content: flex-start;
+    }
+
+
+    main {
+        margin: 10vh auto 0 auto;
+        display: flex;
+        flex-direction: column;
+        place-items: flex-start;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding: 1rem;
+    }
+
+    main > .info {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 2rem;
+        width: 100%;
+    }
+
+    main > div:nth-child(1) {
+        border: none;
+        border-bottom: 1px solid #7a7a7a;
+    }
+
+    main > .info img {
+        width: 100%;
+    }
 }
