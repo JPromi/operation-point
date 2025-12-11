@@ -139,7 +139,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
             Path targetPath = pathId.resolve(filename);
 
-            Files.copy(file.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(file.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
             return "/" + path.relativize(targetPath).toString().replace("\\", "/");
         } catch (IOException e) {
