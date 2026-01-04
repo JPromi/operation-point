@@ -45,10 +45,10 @@ Für Wien, Salzburg, Kärnten und Vorarlberg gibt es keine öffentliche Schnitts
 - Steiermark: https://einsatzuebersicht.lfv.steiermark.at/einsatzkarte/data/public_current.json
 - Oberösterreich: https://cf-einsaetze.ooelfv.at/webext2/rss/json_laufend.txt
 - Niederösterreich: https://infoscreen.florian10.info/OWS/wastlMobile/getEinsatzAktiv.ashx
-- Burgenland: https://www.lsz-b.at/fileadmin/fw_apps/api/
+- Burgenland: https://www.lsz-b.at/fuer-einsatzorganisationen/feuerwehr-einsatzkarte/?tx_lszoperations_operations[action]=bgldData&tx_lszoperations_operations[controller]=Operations
 - Wien: Nicht verfügbar
 - Salzburg: Nicht verfügbar
-- Kärnetn: Nicht verfügbar
+- Kärnten: Nicht verfügbar
 - Vorarlberg: Nicht verfügbar
 
 ## Entwicklung
