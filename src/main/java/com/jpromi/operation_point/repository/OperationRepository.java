@@ -3,6 +3,7 @@ package com.jpromi.operation_point.repository;
 import com.jpromi.operation_point.enums.ServiceOriginEnum;
 import com.jpromi.operation_point.entity.Operation;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,4 +28,13 @@ public interface OperationRepository extends JpaRepository<Operation, Long> {
     Long countByEndTimeNullAndFederalStateOrderByStartTime(String federalState);
 
     Optional<Operation> findByUuid(UUID uuid);
+
+    @Query("""
+        SELECT o FROM Operation o
+        JOIN o.firedepartments fdState
+        JOIN fdState.firedepartment fd
+        WHERE o.endTime IS NULL
+        AND fd.uuid = :firedepartmentUuid
+    """)
+    List<Operation> findActiveOperationsByFiredepartment(UUID firedepartmentUuid);
 }

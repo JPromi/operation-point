@@ -1,12 +1,11 @@
 package com.jpromi.operation_point.service.impl;
 
 import com.jpromi.operation_point.entity.Firedepartment;
+import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.entity.OperationUnit;
 import com.jpromi.operation_point.entity.Unit;
-import com.jpromi.operation_point.repository.FiredepartmentRepository;
-import com.jpromi.operation_point.repository.OperationFiredepartmentRepository;
-import com.jpromi.operation_point.repository.OperationUnitRepository;
-import com.jpromi.operation_point.repository.UnitRepository;
+import com.jpromi.operation_point.model.OperationResponse;
+import com.jpromi.operation_point.repository.*;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,13 +23,15 @@ public class FiredepartmentServiceImpl implements FiredepartmentService {
     private final UnitRepository unitRepository;
     private final OperationFiredepartmentRepository operationFiredepartmentRepository;
     private final OperationUnitRepository operationUnitRepository;
+    private final OperationRepository operationRepository;
 
     @Autowired
-    public FiredepartmentServiceImpl(FiredepartmentRepository firedepartmentRepository, UnitRepository unitRepository, OperationFiredepartmentRepository operationFiredepartmentRepository, OperationUnitRepository operationUnitRepository) {
+    public FiredepartmentServiceImpl(FiredepartmentRepository firedepartmentRepository, UnitRepository unitRepository, OperationFiredepartmentRepository operationFiredepartmentRepository, OperationUnitRepository operationUnitRepository, OperationRepository operationRepository) {
         this.firedepartmentRepository = firedepartmentRepository;
         this.unitRepository = unitRepository;
         this.operationFiredepartmentRepository = operationFiredepartmentRepository;
         this.operationUnitRepository = operationUnitRepository;
+        this.operationRepository = operationRepository;
     }
 
     @Override
@@ -84,4 +85,10 @@ public class FiredepartmentServiceImpl implements FiredepartmentService {
 
         return unitSaved;
     }
+
+    @Override
+    public List<Operation> getActiveOperations(UUID firedepartmentUuid) {
+        return operationRepository.findActiveOperationsByFiredepartment(firedepartmentUuid);
+    }
+
 }

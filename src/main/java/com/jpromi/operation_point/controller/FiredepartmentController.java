@@ -1,14 +1,19 @@
 package com.jpromi.operation_point.controller;
 
 import com.jpromi.operation_point.entity.Firedepartment;
+import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.mapper.FiredepartmentResponseMapper;
+import com.jpromi.operation_point.mapper.OperationResponseMapper;
 import com.jpromi.operation_point.model.FiredepartmentResponse;
+import com.jpromi.operation_point.model.OperationResponse;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController("FiredepartmentController")
@@ -22,11 +27,13 @@ public class FiredepartmentController {
 
     private final FiredepartmentService firedepartmentService;
     private final FiredepartmentResponseMapper firedepartmentResponseMapper;
+    private final OperationResponseMapper operationResponseMapper;
 
     @Autowired
-    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper) {
+    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper, OperationResponseMapper operationResponseMapper) {
         this.firedepartmentService = firedepartmentService;
         this.firedepartmentResponseMapper = firedepartmentResponseMapper;
+        this.operationResponseMapper = operationResponseMapper;
     }
 
     @GetMapping(value = "list", produces = {"application/json"})
@@ -47,5 +54,18 @@ public class FiredepartmentController {
         }
         FiredepartmentResponse response = firedepartmentResponseMapper.fromFiredepartment(firedepartment);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "{uuid}/active-operations", produces = {"application/json"})
+    public ResponseEntity<List<OperationResponse>> getActiveOperationsByFiredepartmentUuid(@PathVariable UUID uuid) {
+        List<Operation> operations = firedepartmentService.getActiveOperations(uuid);
+
+        List<OperationResponse> operationResponses = new ArrayList<>();
+        for (Operation operation : operations) {
+            OperationResponse response = operationResponseMapper.fromOperation(operation);
+            operationResponses.add(response);
+        }
+        operationResponses.sort((o1, o2) -> o2.getStartTime().compareTo(o1.getStartTime()));
+        return ResponseEntity.ok(operationResponses);
     }
 }
