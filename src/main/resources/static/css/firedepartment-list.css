@@ -29,6 +29,16 @@ section .searchbar input[type="search"]:focus {
     border-color: #21212100;
 }
 
+section .searchbar button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #212121;
+    color: #fff;
+    cursor: pointer;
+}
+
 section table {
     width: 100%;
     border-collapse: collapse;
@@ -48,13 +58,19 @@ section table thead tr th {
     border-bottom: 2px solid #ccc;
 }
 
-section table thead tr th.asc::after {
-  content: " ▲";
-  font-size: 12px;
+section table thead tr a {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
 }
-section table thead tr th.desc::after {
-  content: " ▼";
-  font-size: 12px;
+
+section table thead tr th a.asc::after {
+    content: " ▼";
+    font-size: 12px;
+}
+section table thead tr th a.desc::after {
+    content: " ▲";
+    font-size: 12px;
 }
 
 
@@ -79,9 +95,72 @@ section table tbody tr td:nth-last-child(1) {
 }
 
 section table tbody tr.disabled {
-  display: none;
+    display: none;
 }
 
 section table tbody tr:not(.disabled):nth-of-type(odd) td {
-  background-color: #f9f9f910;
+    background-color: #f9f9f910;
+}
+
+.page {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    padding-bottom: 5rem;
+}
+
+.page form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page form select {
+    padding: 5px;
+    border: 1px solid #212121;
+    border-radius: 5px;
+    background-color: #21212150;
+    color: #fff;
+    outline: none;
+}
+
+.page div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page div a, .page div p {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page div p {
+    opacity: .5;
+}
+
+.page div span.arrow {
+    rotate: 45deg;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-style: solid;
+}
+
+.page div span.arrow.left {
+    border-top: 1px;
+    border-right: 1px;
+    border-color: #fff;
+}
+
+.page div span.arrow.right {
+    border-bottom: .5px;
+    border-left: 1px;
+    border-color: #fff;
 }

@@ -12,6 +12,11 @@ import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.UnitService;
 import com.jpromi.operation_point.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,9 +94,29 @@ public class AdminController {
     // Firedepartment
     @GetMapping("/dashboard/firedepartment")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public String firedepartmentList(Model model) {
-        List<Firedepartment> firedepartments = firedepartmentRepository.findAllByOrderByNameAsc();
-        model.addAttribute("firedepartments", firedepartments);
+    public String firedepartmentList(
+            @RequestParam(defaultValue = "") String q,
+            @RequestParam(defaultValue = "friendlyName") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            @PageableDefault(size = 50) Pageable pageable,
+            Model model
+    ) {
+        Sort.Direction direction = dir.equalsIgnoreCase("desc")
+                ? Sort.Direction.DESC
+                : Sort.Direction.ASC;
+
+        Pageable p = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(direction, sort)
+        );
+
+        Page<Firedepartment> page = firedepartmentRepository.findByFriendlyNameContainingIgnoreCase(q, p);
+
+        model.addAttribute("page", page);
+        model.addAttribute("q", q);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "admin/firedepartment-list";
     }
 
@@ -208,9 +233,29 @@ public class AdminController {
     // Unit
     @GetMapping("/dashboard/unit")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public String unitList(Model model) {
-        List<Unit> units = unitRepository.findAllByOrderByNameAsc();
-        model.addAttribute("units", units);
+    public String unitList(
+            @RequestParam(defaultValue = "") String q,
+            @RequestParam(defaultValue = "friendlyName") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            @PageableDefault(size = 50) Pageable pageable,
+            Model model
+            ) {
+        Sort.Direction direction = dir.equalsIgnoreCase("desc")
+                ? Sort.Direction.DESC
+                : Sort.Direction.ASC;
+
+        Pageable p = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(direction, sort)
+        );
+
+        Page<Unit> page = unitRepository.findByFriendlyNameContainingIgnoreCase(q, p);
+
+        model.addAttribute("page", page);
+        model.addAttribute("q", q);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "admin/unit-list";
     }
 

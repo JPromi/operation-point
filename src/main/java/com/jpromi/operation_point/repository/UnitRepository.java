@@ -1,6 +1,8 @@
 package com.jpromi.operation_point.repository;
 
 import com.jpromi.operation_point.entity.Unit;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +16,5 @@ public interface UnitRepository extends JpaRepository<Unit, Long> {
     Optional<Unit> findByUuid(UUID uuid);
     List<Unit> findAllByOrderByNameAsc();
     List<Unit> findByFriendlyNameContainingIgnoreCase(String name);
+    Page<Unit> findByFriendlyNameContainingIgnoreCase(String friendlyName, Pageable pageable);
 }
