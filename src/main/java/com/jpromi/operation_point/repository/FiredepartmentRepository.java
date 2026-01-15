@@ -16,6 +16,7 @@ import java.util.UUID;
 public interface FiredepartmentRepository extends JpaRepository<Firedepartment, Long> {
     Optional<Firedepartment> findByName(String name);
     Optional<Firedepartment> findByUuid(UUID uuid);
+    Optional<Firedepartment> findByNameId(String nameId);
     List<Firedepartment> findAllByOrderByNameAsc();
     List<Firedepartment> findByNameContainingIgnoreCase(String name);
     Page<Firedepartment> findByFriendlyNameContainingIgnoreCaseAndIsHiddenIsFalseOrderByFriendlyNameAsc(String friendlyName, Pageable pageable);

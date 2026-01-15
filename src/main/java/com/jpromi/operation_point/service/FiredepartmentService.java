@@ -14,6 +14,7 @@ public interface FiredepartmentService {
     List<Firedepartment> getList();
     Page<Firedepartment> getList(String query, Integer limit, Integer page);
     Firedepartment getByUuid(UUID uuid);
+    Firedepartment getByNameId(String nameId);
     Unit assignAsUnit(Firedepartment firedepartment);
     List<Operation> getActiveOperations(UUID firedepartmentUuid);
 }

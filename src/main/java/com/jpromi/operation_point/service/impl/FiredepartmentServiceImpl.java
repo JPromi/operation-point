@@ -52,6 +52,12 @@ public class FiredepartmentServiceImpl implements FiredepartmentService {
     }
 
     @Override
+    public Firedepartment getByNameId(String nameId) {
+        return firedepartmentRepository.findByNameId(nameId)
+                .orElse(null);
+    }
+
+    @Override
     @Transactional
     public Unit assignAsUnit(Firedepartment firedepartment) {
         // new unit

@@ -56,7 +56,12 @@ public class FiredepartmentController {
 
     @GetMapping(value = "{uuid}", produces = {"application/json"})
     public ResponseEntity<FiredepartmentResponse> getFiredepartmentByUuid(@PathVariable String uuid) {
-        Firedepartment firedepartment = firedepartmentService.getByUuid(UUID.fromString(uuid));
+        Firedepartment firedepartment;
+        if (isNameId(uuid)) {
+            firedepartment = firedepartmentService.getByNameId(uuid);
+        } else {
+            firedepartment = firedepartmentService.getByUuid(UUID.fromString(uuid));
+        }
         if (firedepartment == null) {
             return ResponseEntity.notFound().build();
         }
@@ -65,8 +70,14 @@ public class FiredepartmentController {
     }
 
     @GetMapping(value = "{uuid}/active-operations", produces = {"application/json"})
-    public ResponseEntity<List<OperationResponse>> getActiveOperationsByFiredepartmentUuid(@PathVariable UUID uuid) {
-        List<Operation> operations = firedepartmentService.getActiveOperations(uuid);
+    public ResponseEntity<List<OperationResponse>> getActiveOperationsByFiredepartmentUuid(@PathVariable String uuid) {
+        List<Operation> operations;
+        if (isNameId(uuid)) {
+            Firedepartment firedepartment = firedepartmentService.getByNameId(uuid);
+            operations = firedepartmentService.getActiveOperations(firedepartment.getUuid());
+        } else {
+            operations = firedepartmentService.getActiveOperations(UUID.fromString(uuid));
+        }
 
         List<OperationResponse> operationResponses = new ArrayList<>();
         for (Operation operation : operations) {
@@ -79,12 +90,28 @@ public class FiredepartmentController {
 
     @GetMapping(value = "{uuid}/operations", produces = {"application/json"})
     public ResponseEntity<Page<OperationResponse>> getAllOperationsByFiredepartmentUuid(
-            @PathVariable UUID uuid,
+            @PathVariable String uuid,
             @RequestParam(required = false) Instant dateStart,
             @RequestParam(required = false) Instant dateEnd,
             Pageable pageable) {
-        Page<Operation> operations = operationRepository.findByFiredepartmentFiltered(uuid, dateStart, dateEnd, pageable);
+        UUID firedepartmentUuid;
+        if (isNameId(uuid)) {
+            Firedepartment firedepartment = firedepartmentService.getByNameId(uuid);
+            firedepartmentUuid = firedepartment.getUuid();
+        } else {
+            firedepartmentUuid = UUID.fromString(uuid);
+        }
+        Page<Operation> operations = operationRepository.findByFiredepartmentFiltered(firedepartmentUuid, dateStart, dateEnd, pageable);
         Page<OperationResponse> dto = operations.map(operationResponseMapper::fromOperation);
         return ResponseEntity.ok(dto);
+    }
+
+    private Boolean isNameId(String query) {
+        try {
+            UUID.fromString(query);
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
     }
 }
