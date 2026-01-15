@@ -39,6 +39,23 @@ section .searchbar button {
     cursor: pointer;
 }
 
+section .options {
+    margin-top: 20px;
+    display: flex;
+    gap: 4rem;
+    align-items: center;
+}
+
+section .options a {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #212121;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 section table {
     width: 100%;
     border-collapse: collapse;

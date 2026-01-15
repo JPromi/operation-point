@@ -6,12 +6,16 @@ import com.jpromi.operation_point.mapper.FiredepartmentResponseMapper;
 import com.jpromi.operation_point.mapper.OperationResponseMapper;
 import com.jpromi.operation_point.model.FiredepartmentResponse;
 import com.jpromi.operation_point.model.OperationResponse;
+import com.jpromi.operation_point.repository.OperationRepository;
 import com.jpromi.operation_point.service.FiredepartmentService;
+import com.jpromi.operation_point.service.OperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -28,12 +32,16 @@ public class FiredepartmentController {
     private final FiredepartmentService firedepartmentService;
     private final FiredepartmentResponseMapper firedepartmentResponseMapper;
     private final OperationResponseMapper operationResponseMapper;
+    private final OperationService operationService;
+    private final OperationRepository operationRepository;
 
     @Autowired
-    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper, OperationResponseMapper operationResponseMapper) {
+    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper, OperationResponseMapper operationResponseMapper, OperationService operationService, OperationRepository operationRepository) {
         this.firedepartmentService = firedepartmentService;
         this.firedepartmentResponseMapper = firedepartmentResponseMapper;
         this.operationResponseMapper = operationResponseMapper;
+        this.operationService = operationService;
+        this.operationRepository = operationRepository;
     }
 
     @GetMapping(value = "list", produces = {"application/json"})
@@ -67,5 +75,16 @@ public class FiredepartmentController {
         }
         operationResponses.sort((o1, o2) -> o2.getStartTime().compareTo(o1.getStartTime()));
         return ResponseEntity.ok(operationResponses);
+    }
+
+    @GetMapping(value = "{uuid}/operations", produces = {"application/json"})
+    public ResponseEntity<Page<OperationResponse>> getAllOperationsByFiredepartmentUuid(
+            @PathVariable UUID uuid,
+            @RequestParam(required = false) Instant dateStart,
+            @RequestParam(required = false) Instant dateEnd,
+            Pageable pageable) {
+        Page<Operation> operations = operationRepository.findByFiredepartmentFiltered(uuid, dateStart, dateEnd, pageable);
+        Page<OperationResponse> dto = operations.map(operationResponseMapper::fromOperation);
+        return ResponseEntity.ok(dto);
     }
 }
