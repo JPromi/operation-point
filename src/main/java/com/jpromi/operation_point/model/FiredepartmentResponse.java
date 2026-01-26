@@ -13,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class FiredepartmentResponse {
     private UUID uuid;
+    private String nameId;
     private String name;
     private String atFireDepartmentId;
     private Boolean isVolunteer;

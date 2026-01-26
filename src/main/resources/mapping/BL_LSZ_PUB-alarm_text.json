@@ -1,6 +1,16 @@
 {
   "BMA": "Brandmeldeanlage",
-  "B": "Brand Einsatz",
-  "T": "Technischer Einsatz",
-  "G": "Gefahrgut Einsatz"
+  "BMA2": "Brandmeldeanlage",
+  "B0": "Brandverdacht im Freien",
+  "B1": "Entstehungsbrand",
+  "B2": "Zimmerbrand/Küchenbrand",
+  "B3": "Gebäudebrand",
+  "T0": "KFZ Bergung ohne Verkehrsunfall",
+  "T1": "Pumparbeiten",
+  "T2": "Verkehrsunfall mit eingeklemmter Person",
+  "T3": "Verkehrsunfall Autobus",
+  "G0": "Geringe Menge Treibstoff",
+  "G1": "Ölspur",
+  "G2": "Verkehrsunfall Tankwagen ohne Stoffaustritt",
+  "G3": "Verkehrsunfall Tankwagen mit Stoffaustritt"
 }

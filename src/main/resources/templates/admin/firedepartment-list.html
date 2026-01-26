@@ -8,22 +8,42 @@
     <section>
         <h1>Feuerwehren</h1>
 
-        <div class="searchbar">
-            <input type="search" name="searchbox" id="searchInput" placeholder="Search">
-        </div>
+        <form class="searchbar" method="get">
+            <input type="search" name="q" placeholder="Search" th:value="${q}">
+            <input type="hidden" name="sort" th:value="${sort}">
+            <input type="hidden" name="dir" th:value="${dir}">
+
+            <button type="submit">Suchen</button>
+        </form>
 
 
         <table id="sortTable">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">Name</th>
-                    <th onclick="sortTable(1)">Feuerwehr ID</th>
-                    <th onclick="sortTable(2)">Freiwillig</th>
-                    <th onclick="sortTable(3)">Bundesland</th>
+                    <th>
+                        <a th:href="@{/admin/dashboard/firedepartment(q=${q}, sort='friendlyName', dir=${dir=='asc'?'desc':'asc'})}" th:classappend="${sort}=='friendlyName' ? ${dir} : ''">
+                            Name
+                        </a>
+                    </th>
+                    <th>
+                        <a th:href="@{/admin/dashboard/firedepartment(q=${q}, sort='atFireDepartmentId', dir=${dir=='asc'?'desc':'asc'})}" th:classappend="${sort}=='atFireDepartmentId' ? ${dir} : ''">
+                            Feuerwehr ID
+                        </a>
+                    </th>
+                    <th>
+                        <a th:href="@{/admin/dashboard/firedepartment(q=${q}, sort='isVolunteer', dir=${dir=='asc'?'desc':'asc'})}" th:classappend="${sort}=='isVolunteer' ? ${dir} : ''">
+                            Freiwillig
+                        </a>
+                    </th>
+                    <th>
+                        <a th:href="@{/admin/dashboard/firedepartment(q=${q}, sort='addressFederalState', dir=${dir=='asc'?'desc':'asc'})}" th:classappend="${sort}=='addressFederalState' ? ${dir} : ''">
+                            Bundesland
+                        </a>
+                    </th>
                 </tr>
             </thead>
             <tbody id="dataTable">
-                <tr th:each="firedepartment : ${firedepartments}" th:data-name="${firedepartment.friendlyName}">
+                <tr th:each="firedepartment : ${page.get()}" th:data-name="${firedepartment.friendlyName}">
                     <td>
                         <a
                                 th:href="@{./dashboard/firedepartment/{uuid}(uuid=${firedepartment.uuid})}"
@@ -36,9 +56,39 @@
             </tbody>
         </table>
 
+        <div class="page">
+            <div>
+                <span th:text="'Seite ' + (${page.number} + 1) + ' von ' + ${page.totalPages}"></span>
+
+                <p th:if="${!page.hasPrevious()}">
+                    <span class="arrow left"></span>
+                </p>
+                <a th:if="${page.hasPrevious()}" th:href="@{/admin/dashboard/firedepartment(q=${q}, page=${page.number - 1}, size=${page.size}, sort=${sort}, dir=${dir})}">
+                    <span class="arrow left"></span>
+                </a>
+
+                <a th:if="${page.hasNext()}" th:href="@{/admin/dashboard/firedepartment(q=${q}, page=${page.number + 1}, size=${page.size}, sort=${sort}, dir=${dir})}">
+                    <span class="arrow right"></span>
+                </a>
+                <p th:if="${!page.hasNext()}">
+                    <span class="arrow right"></span>
+                </p>
+            </div>
+            <form method="get">
+                <label for="pageSize">Einträge pro Seite:</label>
+                <select id="pageSize" name="size" onchange="this.form.submit()">
+                    <option th:value="10" th:selected="${page.size == 10}">10</option>
+                    <option th:value="25" th:selected="${page.size == 25}">25</option>
+                    <option th:value="50" th:selected="${page.size == 50}">50</option>
+                    <option th:value="100" th:selected="${page.size == 100}">100</option>
+                </select>
+                <input type="hidden" name="q" th:value="${q}">
+                <input type="hidden" name="sort" th:value="${sort}">
+                <input type="hidden" name="dir" th:value="${dir}">
+            </form>
+        </div>
+
     </section>
     <link rel="stylesheet" th:href="@{/css/firedepartment-list.css}">
-    <script th:src="@{/js/search.js}"></script>
-    <script th:src="@{/js/table-sort.js}"></script>
 </body>
 </html>

@@ -1,17 +1,20 @@
 package com.jpromi.operation_point.controller;
 
 import com.jpromi.operation_point.entity.*;
+import com.jpromi.operation_point.model.AppUserForm;
 import com.jpromi.operation_point.model.CrawlServiceForm;
 import com.jpromi.operation_point.model.FiredepartmentForm;
-import com.jpromi.operation_point.repository.AppUserRepository;
-import com.jpromi.operation_point.repository.CrawlServiceRepository;
-import com.jpromi.operation_point.repository.FiredepartmentRepository;
-import com.jpromi.operation_point.repository.UnitRepository;
+import com.jpromi.operation_point.repository.*;
 import com.jpromi.operation_point.service.FileStorageService;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.UnitService;
 import com.jpromi.operation_point.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +36,10 @@ public class AdminController {
     private final AppUserRepository appUserRepository;
     private final UserService userService;
     private final FileStorageService fileStorageService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public AdminController(FiredepartmentRepository firedepartmentRepository, UnitRepository unitRepository, FiredepartmentService firedepartmentService, UnitService unitService, CrawlServiceRepository crawlServiceRepository, AppUserRepository appUserRepository, UserService userService, FileStorageService fileStorageService) {
+    public AdminController(FiredepartmentRepository firedepartmentRepository, UnitRepository unitRepository, FiredepartmentService firedepartmentService, UnitService unitService, CrawlServiceRepository crawlServiceRepository, AppUserRepository appUserRepository, UserService userService, FileStorageService fileStorageService, UserRepository userRepository) {
         this.firedepartmentRepository = firedepartmentRepository;
         this.unitRepository = unitRepository;
         this.firedepartmentService = firedepartmentService;
@@ -44,6 +48,7 @@ public class AdminController {
         this.appUserRepository = appUserRepository;
         this.userService = userService;
         this.fileStorageService = fileStorageService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/login")
@@ -89,9 +94,29 @@ public class AdminController {
     // Firedepartment
     @GetMapping("/dashboard/firedepartment")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public String firedepartmentList(Model model) {
-        List<Firedepartment> firedepartments = firedepartmentRepository.findAllByOrderByNameAsc();
-        model.addAttribute("firedepartments", firedepartments);
+    public String firedepartmentList(
+            @RequestParam(defaultValue = "") String q,
+            @RequestParam(defaultValue = "friendlyName") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            @PageableDefault(size = 50) Pageable pageable,
+            Model model
+    ) {
+        Sort.Direction direction = dir.equalsIgnoreCase("desc")
+                ? Sort.Direction.DESC
+                : Sort.Direction.ASC;
+
+        Pageable p = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(direction, sort)
+        );
+
+        Page<Firedepartment> page = firedepartmentRepository.findByFriendlyNameContainingIgnoreCase(q, p);
+
+        model.addAttribute("page", page);
+        model.addAttribute("q", q);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "admin/firedepartment-list";
     }
 
@@ -208,9 +233,29 @@ public class AdminController {
     // Unit
     @GetMapping("/dashboard/unit")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public String unitList(Model model) {
-        List<Unit> units = unitRepository.findAllByOrderByNameAsc();
-        model.addAttribute("units", units);
+    public String unitList(
+            @RequestParam(defaultValue = "") String q,
+            @RequestParam(defaultValue = "friendlyName") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            @PageableDefault(size = 50) Pageable pageable,
+            Model model
+            ) {
+        Sort.Direction direction = dir.equalsIgnoreCase("desc")
+                ? Sort.Direction.DESC
+                : Sort.Direction.ASC;
+
+        Pageable p = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(direction, sort)
+        );
+
+        Page<Unit> page = unitRepository.findByFriendlyNameContainingIgnoreCase(q, p);
+
+        model.addAttribute("page", page);
+        model.addAttribute("q", q);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "admin/unit-list";
     }
 
@@ -271,6 +316,97 @@ public class AdminController {
             }
         }
         return "redirect:/admin/root/crawler";
+    }
+
+    @GetMapping("/root/user")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String userDashboard(
+            @RequestParam(defaultValue = "") String q,
+            @RequestParam(defaultValue = "asc") String dir,
+            @PageableDefault(size = 50) Pageable pageable,
+            Model model
+    ) {
+        Sort.Direction direction = dir.equalsIgnoreCase("desc")
+                ? Sort.Direction.DESC
+                : Sort.Direction.ASC;
+
+        Pageable p = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(direction, "username")
+        );
+
+        Page<AppUser> page = appUserRepository.findByUsernameContainingIgnoreCase(q, p);
+
+        model.addAttribute("page", page);
+        model.addAttribute("q", q);
+        model.addAttribute("dir", dir);
+        return "admin/root/user-list";
+    }
+
+    @GetMapping("/root/user/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String userDetail(@PathVariable("id") Long id, Model model) {
+        Optional<AppUser> user = appUserRepository.findById(id);
+        if (user.isEmpty()) {
+            return "redirect:/admin/root/user";
+        }
+        model.addAttribute("user", user.get());
+        return "admin/root/user-details";
+    }
+
+    @GetMapping("/root/user/new")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String userDetailNew(Model model) {
+        AppUser user = AppUser.builder().id(0L).username("").role("").build();
+        model.addAttribute("user", user);
+        return "admin/root/user-details";
+    }
+
+    @PostMapping("/root/user/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String updateUser(@PathVariable("id") Long id, AppUserForm updatedUser) {
+        Optional<AppUser> existingUser = appUserRepository.findById(id);
+        if (existingUser.isPresent()) {
+            AppUser user = existingUser.get();
+            if (updatedUser.getDelete() != null && updatedUser.getDelete()) {
+                userRepository.delete(user);
+                return "redirect:/admin/root/user";
+            } else {
+                user.setUsername(updatedUser.getUsername());
+                user.setRole(updatedUser.getRole());
+                if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+                    user.setPassword(updatedUser.getPassword());
+                    userService.hashUser(user);
+                }
+                userRepository.save(user);
+                return "redirect:/admin/root/user";
+            }
+        }
+        return "redirect:/admin/root/user";
+    }
+
+    @PostMapping("/root/user/new")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String createUser(AppUserForm updatedUser) {
+
+        AppUser user = AppUser.builder()
+                .username(updatedUser.getUsername())
+                .role(updatedUser.getRole())
+                .build();
+
+        user.setPassword(updatedUser.getPassword());
+
+        try {
+            userService.hashUser(user);
+            userService.createUser(user);
+
+            return "redirect:/admin/root/user";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return  "redirect:/admin/root/user";
     }
 
     private String sanitize(String input) {

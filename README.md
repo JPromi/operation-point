@@ -1,5 +1,11 @@
-# Operation Point
-**Alle Einsätze der Feuerwehren in Österreich an einer Stelle.**
+<br />
+<div align="center">
+  <img src="/src/main/resources/static/static/logo/op_text.svg" width="560" alt="Operation Point" />
+</div>
+<br />
+<div align="center">
+  🇦🇹 Alle Einsätze der Feuerwehren in Österreich an einer Stelle. 🇦🇹
+</div>
 
 ## Informationen
 ### Ziel
@@ -30,7 +36,7 @@ Diese Daten können in der Datenbank korrigiert werden.
 | Oberösterreich   | Öffentliche Publizierung                        | [OÖLFV Dokumentation](https://einsaetze.ooelfv.at/publikationsformen)                                                       |
 | Steiermark       | Reverse Engineering der Einsatzkarte            | [Einsatzkarte](https://einsatzuebersicht.lfv.steiermark.at/lfvasp/einsatzkarte/karte_app_public.html)                       |
 | Tirol            | Reverse Engineering der Einsatz App Tirol       | [Aktuelle Einsätze Tirol](https://play.google.com/store/apps/details?id=alarmierung.lfv.his.alarmierungen&hl=de)            |
-| Burgenland       | Reverse Engineering der Einsatzkarte            | [Feurwehreinsatzkarte Burgenland](https://www.lsz-b.at/fileadmin/fw/lsz_demo.html)                                          |
+| Burgenland       | Reverse Engineering der Einsatzkarte            | [Feurwehreinsatzkarte Burgenland](https://www.lsz-b.at/fuer-einsatzorganisationen/feuerwehr-einsatzkarte/)                  |
 
 Für Wien, Salzburg, Kärnten und Vorarlberg gibt es keine öffentliche Schnittstelle, welche einsätze bereitstellt.
 
@@ -39,10 +45,10 @@ Für Wien, Salzburg, Kärnten und Vorarlberg gibt es keine öffentliche Schnitts
 - Steiermark: https://einsatzuebersicht.lfv.steiermark.at/einsatzkarte/data/public_current.json
 - Oberösterreich: https://cf-einsaetze.ooelfv.at/webext2/rss/json_laufend.txt
 - Niederösterreich: https://infoscreen.florian10.info/OWS/wastlMobile/getEinsatzAktiv.ashx
-- Burgenland: https://www.lsz-b.at/fileadmin/fw_apps/api/
+- Burgenland: https://www.lsz-b.at/fuer-einsatzorganisationen/feuerwehr-einsatzkarte/?tx_lszoperations_operations[action]=bgldData&tx_lszoperations_operations[controller]=Operations
 - Wien: Nicht verfügbar
 - Salzburg: Nicht verfügbar
-- Kärnetn: Nicht verfügbar
+- Kärnten: Nicht verfügbar
 - Vorarlberg: Nicht verfügbar
 
 ## Entwicklung
