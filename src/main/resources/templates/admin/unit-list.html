@@ -45,11 +45,11 @@
                 <p th:if="${!page.hasPrevious()}">
                     <span class="arrow left"></span>
                 </p>
-                <a th:if="${page.hasPrevious()}" th:href="@{/admin/dashboard/firedepartment(q=${q}, page=${page.number - 1}, size=${page.size}, sort=${sort}, dir=${dir})}">
+                <a th:if="${page.hasPrevious()}" th:href="@{/admin/dashboard/unit(q=${q}, page=${page.number - 1}, size=${page.size}, sort=${sort}, dir=${dir})}">
                     <span class="arrow left"></span>
                 </a>
 
-                <a th:if="${page.hasNext()}" th:href="@{/admin/dashboard/firedepartment(q=${q}, page=${page.number + 1}, size=${page.size}, sort=${sort}, dir=${dir})}">
+                <a th:if="${page.hasNext()}" th:href="@{/admin/dashboard/unit(q=${q}, page=${page.number + 1}, size=${page.size}, sort=${sort}, dir=${dir})}">
                     <span class="arrow right"></span>
                 </a>
                 <p th:if="${!page.hasNext()}">
