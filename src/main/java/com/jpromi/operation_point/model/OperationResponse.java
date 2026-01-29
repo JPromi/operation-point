@@ -1,6 +1,8 @@
 package com.jpromi.operation_point.model;
 
 import com.jpromi.operation_point.enums.ServiceOriginEnum;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.*;
 
@@ -16,6 +18,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @XmlRootElement
+@Schema(
+        description = "Für Niederösterreich werden die Zeiten der Einheiten und Feuerwehren auf die erste stelle der Minute gerundet von der Schnittstelle mitgegeben, diese Daten IMMER wieflogt anziegen: HH:Mx:xx (z.B. 14:23:00 -> 14:2x:xx) (Oder ein ähnliches Format). Für alle anderen Bundesländer werden die Zeiten exakt übergeben."
+)
 public class OperationResponse {
     private UUID uuid;
     @Builder.Default
