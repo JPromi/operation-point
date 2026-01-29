@@ -64,11 +64,10 @@ public class OperationResponseMapper {
                                                 .isVolunteer(fd.getFiredepartment().getIsVolunteer())
                                                 .build() : null
                                 )
-                                // TMP fix to hide times for LA_WASTL_PUB operations (Legal reasons)
-                                .alarmTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : fd.getAlarmTime())
-                                .dispoTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : fd.getDispoTime())
-                                .inTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : fd.getInTime())
-                                .outTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : fd.getOutTime())
+                                .alarmTime(fd.getAlarmTime())
+                                .dispoTime(fd.getDispoTime())
+                                .inTime(fd.getInTime())
+                                .outTime(fd.getOutTime())
                                 .build()
                 );
             });
@@ -88,11 +87,10 @@ public class OperationResponseMapper {
                                                 .name(unit.getUnit().getFriendlyName())
                                                 .build() : null
                                 )
-                                // TMP fix to hide times for LA_WASTL_PUB operations (Legal reasons)
-                                .alarmTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : unit.getAlarmTime())
-                                .dispoTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : unit.getDispoTime())
-                                .outTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : unit.getOutTime())
-                                .inTime(operation.getServiceOrigin().equals(ServiceOriginEnum.LA_WASTL_PUB) ? null : unit.getInTime())
+                                .alarmTime(unit.getAlarmTime())
+                                .dispoTime(unit.getDispoTime())
+                                .outTime(unit.getOutTime())
+                                .inTime(unit.getInTime())
                                 .build()
                 );
             });
