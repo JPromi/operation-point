@@ -9,6 +9,7 @@ import com.jpromi.operation_point.service.FileStorageService;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.UnitService;
 import com.jpromi.operation_point.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -403,7 +405,7 @@ public class AdminController {
 
             return "redirect:/admin/root/user";
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return  "redirect:/admin/root/user";
