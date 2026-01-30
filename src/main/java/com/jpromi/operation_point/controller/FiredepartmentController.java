@@ -9,6 +9,7 @@ import com.jpromi.operation_point.model.OperationResponse;
 import com.jpromi.operation_point.repository.OperationRepository;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.OperationService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -77,13 +78,7 @@ public class FiredepartmentController {
             operations = firedepartmentService.getActiveOperations(UUID.fromString(uuid));
         }
 
-        List<OperationResponse> operationResponses = new ArrayList<>();
-        for (Operation operation : operations) {
-            OperationResponse response = operationResponseMapper.fromOperation(operation);
-            operationResponses.add(response);
-        }
-        operationResponses.sort((o1, o2) -> o2.getStartTime().compareTo(o1.getStartTime()));
-        return ResponseEntity.ok(operationResponses);
+        return OperationService.BuildResponseFromOperations(operations, operationResponseMapper);
     }
 
     @GetMapping(value = "{uuid}/operations", produces = {"application/json"})
