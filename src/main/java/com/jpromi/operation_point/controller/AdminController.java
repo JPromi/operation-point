@@ -346,7 +346,7 @@ public class AdminController {
 
     @GetMapping("/root/user/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String userDetail(@PathVariable("id") Long id, Model model) {
+    public String userDetail(@PathVariable Long id, Model model) {
         Optional<AppUser> user = appUserRepository.findById(id);
         if (user.isEmpty()) {
             return "redirect:/admin/root/user";
@@ -365,7 +365,7 @@ public class AdminController {
 
     @PostMapping("/root/user/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String updateUser(@PathVariable("id") Long id, AppUserForm updatedUser) {
+    public String updateUser(@PathVariable Long id, AppUserForm updatedUser) {
         Optional<AppUser> existingUser = appUserRepository.findById(id);
         if (existingUser.isPresent()) {
             AppUser user = existingUser.get();
