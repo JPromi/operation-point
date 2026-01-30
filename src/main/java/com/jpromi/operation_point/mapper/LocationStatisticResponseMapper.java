@@ -4,7 +4,6 @@ import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.model.LocationStatisticResponse;
 import com.jpromi.operation_point.service.LocationService;
 import com.jpromi.operation_point.service.OperationVariableService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,11 +13,13 @@ import java.util.stream.Collectors;
 @Component
 public class LocationStatisticResponseMapper {
 
-    @Autowired
-    private OperationVariableService operationVariableService;
+    private final OperationVariableService operationVariableService;
+    private final LocationService locationService;
 
-    @Autowired
-    private LocationService locationService;
+    public LocationStatisticResponseMapper(OperationVariableService operationVariableService, LocationService locationService) {
+        this.operationVariableService = operationVariableService;
+        this.locationService = locationService;
+    }
 
     public List<LocationStatisticResponse> fromOperationFederalState(List<Operation> operations) {
         Map<String, List<Operation>> grouped = operations.stream()

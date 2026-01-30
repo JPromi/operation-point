@@ -11,7 +11,7 @@ public class ServiceStatusResponseMapper {
         return ServiceStatusResponse.builder()
                 .serviceName(crawlService.getName())
                 .name(crawlService.getFriendlyName())
-                .isEnabled(crawlService.getIsEnabled())
+                .isEnabled(crawlService.isEnabled())
                 .build();
     }
 }

@@ -12,5 +12,4 @@ import java.util.UUID;
 public interface FiredepartmentChangeRepository extends JpaRepository<FiredepartmentChange, Long> {
     Optional<FiredepartmentChange> findByUuid(UUID uuid);
     Optional<FiredepartmentChange> findByUuidAndIsVerifiedTrue(UUID uuid);
-    Optional<List<FiredepartmentChange>> findByFiredepartmentUuid(UUID uuid);
 }

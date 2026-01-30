@@ -9,6 +9,7 @@ import com.jpromi.operation_point.service.FileStorageService;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.UnitService;
 import com.jpromi.operation_point.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -311,7 +313,7 @@ public class AdminController {
                     .filter(s -> s.getName().equals(service.getName()))
                     .findFirst();
             if (existingService.isPresent()) {
-                existingService.get().setIsEnabled(service.getIsEnabled());
+                existingService.get().setEnabled(service.getIsEnabled());
                 crawlServiceRepository.save(existingService.get());
             }
         }
@@ -346,7 +348,7 @@ public class AdminController {
 
     @GetMapping("/root/user/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String userDetail(@PathVariable("id") Long id, Model model) {
+    public String userDetail(@PathVariable Long id, Model model) {
         Optional<AppUser> user = appUserRepository.findById(id);
         if (user.isEmpty()) {
             return "redirect:/admin/root/user";
@@ -365,7 +367,7 @@ public class AdminController {
 
     @PostMapping("/root/user/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String updateUser(@PathVariable("id") Long id, AppUserForm updatedUser) {
+    public String updateUser(@PathVariable Long id, AppUserForm updatedUser) {
         Optional<AppUser> existingUser = appUserRepository.findById(id);
         if (existingUser.isPresent()) {
             AppUser user = existingUser.get();
@@ -403,7 +405,7 @@ public class AdminController {
 
             return "redirect:/admin/root/user";
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return  "redirect:/admin/root/user";

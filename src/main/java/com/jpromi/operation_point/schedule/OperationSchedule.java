@@ -104,6 +104,6 @@ public class OperationSchedule {
 
     private Boolean isServiceActive(String serviceName) {
         CrawlService crawlService = crawlServiceRepository.findByName(serviceName);
-        return crawlService != null && crawlService.getIsEnabled();
+        return crawlService != null && crawlService.isEnabled();
     }
 }

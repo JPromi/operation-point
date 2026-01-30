@@ -32,15 +32,13 @@ public class FiredepartmentController {
     private final FiredepartmentService firedepartmentService;
     private final FiredepartmentResponseMapper firedepartmentResponseMapper;
     private final OperationResponseMapper operationResponseMapper;
-    private final OperationService operationService;
     private final OperationRepository operationRepository;
 
     @Autowired
-    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper, OperationResponseMapper operationResponseMapper, OperationService operationService, OperationRepository operationRepository) {
+    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper, OperationResponseMapper operationResponseMapper, OperationRepository operationRepository) {
         this.firedepartmentService = firedepartmentService;
         this.firedepartmentResponseMapper = firedepartmentResponseMapper;
         this.operationResponseMapper = operationResponseMapper;
-        this.operationService = operationService;
         this.operationRepository = operationRepository;
     }
 
@@ -79,13 +77,7 @@ public class FiredepartmentController {
             operations = firedepartmentService.getActiveOperations(UUID.fromString(uuid));
         }
 
-        List<OperationResponse> operationResponses = new ArrayList<>();
-        for (Operation operation : operations) {
-            OperationResponse response = operationResponseMapper.fromOperation(operation);
-            operationResponses.add(response);
-        }
-        operationResponses.sort((o1, o2) -> o2.getStartTime().compareTo(o1.getStartTime()));
-        return ResponseEntity.ok(operationResponses);
+        return OperationService.BuildResponseFromOperations(operations, operationResponseMapper);
     }
 
     @GetMapping(value = "{uuid}/operations", produces = {"application/json"})

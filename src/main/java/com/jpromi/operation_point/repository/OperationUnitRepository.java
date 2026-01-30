@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface OperationUnitRepository extends JpaRepository<OperationUnit, Long> {
     List<OperationUnit> findByUnit(Unit unit);
-    OperationUnit findByOperationId(Long operationId);
     void deleteByUnit(Unit unit);
 }

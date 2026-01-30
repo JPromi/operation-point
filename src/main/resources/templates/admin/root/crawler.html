@@ -17,7 +17,7 @@
                         <input type="checkbox"
                                th:id="'enabled_' + ${iterStat.index}"
                                th:name="services[__${iterStat.index}__].isEnabled"
-                               th:checked="${service.isEnabled}" />
+                               th:checked="${service.enabled}" />
                         <input type="hidden" th:name="services[__${iterStat.index}__].name" th:value="${service.name}" />
                     </div>
                 </div>

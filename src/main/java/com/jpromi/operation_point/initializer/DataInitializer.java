@@ -24,7 +24,7 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) {
+    public void run(final String... args) {
         initCrawlServices();
         initDataFolder();
     }
@@ -38,10 +38,10 @@ public class DataInitializer implements CommandLineRunner {
         crawlServices.add(CrawlService.builder().name("fs-ty").friendlyName("Tyrol").build());
 
         // not implemented
-        crawlServices.add(CrawlService.builder().name("fs-ct").friendlyName("Carinthia").isEnabled(false).build());
-        crawlServices.add(CrawlService.builder().name("fs-sb").friendlyName("Salzburg").isEnabled(false).build());
-        crawlServices.add(CrawlService.builder().name("fs-vi").friendlyName("Vienna").isEnabled(false).build());
-        crawlServices.add(CrawlService.builder().name("fs-vb").friendlyName("Vorarlberg").isEnabled(false).build());
+        crawlServices.add(CrawlService.builder().name("fs-ct").friendlyName("Carinthia").enabled(false).build());
+        crawlServices.add(CrawlService.builder().name("fs-sb").friendlyName("Salzburg").enabled(false).build());
+        crawlServices.add(CrawlService.builder().name("fs-vi").friendlyName("Vienna").enabled(false).build());
+        crawlServices.add(CrawlService.builder().name("fs-vb").friendlyName("Vorarlberg").enabled(false).build());
 
         for (CrawlService crawlService : crawlServices) {
             if (crawlServiceRepository.findByName(crawlService.getName()) == null) {

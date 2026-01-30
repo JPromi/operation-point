@@ -37,13 +37,7 @@ public class OperationController {
     @GetMapping(value = "list", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getList() {
         List<Operation> operations = operationService.getActiveOperations();
-        List<OperationResponse> operationResponses = new ArrayList<>();
-        for (Operation operation : operations) {
-            OperationResponse response = operationResponseMapper.fromOperation(operation);
-            operationResponses.add(response);
-        }
-        operationResponses.sort((o1, o2) -> o2.getStartTime().compareTo(o1.getStartTime()));
-        return ResponseEntity.ok(operationResponses);
+        return OperationService.BuildResponseFromOperations(operations, operationResponseMapper);
     }
 
     @GetMapping(value = "list/count", produces = {"application/json"})
@@ -66,20 +60,14 @@ public class OperationController {
 
     @GetMapping(value = "list/{federalState}", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getListByFederalState(@PathVariable String federalState, @RequestParam(required = false) String district) {
-        List<Operation> operations = new ArrayList<>();
+        List<Operation> operations;
 
         if(district != null) {
             operations = operationService.getActiveOperationsByFederalStateAndDistrict(federalState, district);
         } else {
             operations = operationService.getActiveOperationsByFederalState(federalState);
         }
-        List<OperationResponse> operationResponses = new ArrayList<>();
-        for (Operation operation : operations) {
-            OperationResponse response = operationResponseMapper.fromOperation(operation);
-            operationResponses.add(response);
-        }
-        operationResponses.sort((o1, o2) -> o2.getStartTime().compareTo(o1.getStartTime()));
-        return ResponseEntity.ok(operationResponses);
+        return OperationService.BuildResponseFromOperations(operations, operationResponseMapper);
     }
 
     @GetMapping(value = "list/{federalState}/count", produces = {"application/json"})

@@ -25,7 +25,7 @@ public class StatusController {
         this.crawlServiceRepository = crawlServiceRepository;
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<ServiceStatusResponse>> getList() {
         List<CrawlService> services = crawlServiceRepository.findAll();
         List<ServiceStatusResponse> serviceStatusResponse = new ArrayList<>();

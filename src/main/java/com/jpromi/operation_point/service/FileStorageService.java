@@ -13,5 +13,5 @@ public interface FileStorageService {
     File getFile(FileData data);
     FileData saveFile(File file);
     FileData saveFile(MultipartFile file);
-    Void deleteFile(FileData data);
+    void deleteFile(FileData data);
 }
