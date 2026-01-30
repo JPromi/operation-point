@@ -14,11 +14,13 @@ import java.util.stream.Collectors;
 @Component
 public class LocationStatisticResponseMapper {
 
-    @Autowired
-    private OperationVariableService operationVariableService;
+    private final OperationVariableService operationVariableService;
+    private final LocationService locationService;
 
-    @Autowired
-    private LocationService locationService;
+    public LocationStatisticResponseMapper(OperationVariableService operationVariableService, LocationService locationService) {
+        this.operationVariableService = operationVariableService;
+        this.locationService = locationService;
+    }
 
     public List<LocationStatisticResponse> fromOperationFederalState(List<Operation> operations) {
         Map<String, List<Operation>> grouped = operations.stream()
