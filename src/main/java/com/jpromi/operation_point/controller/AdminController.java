@@ -311,7 +311,7 @@ public class AdminController {
                     .filter(s -> s.getName().equals(service.getName()))
                     .findFirst();
             if (existingService.isPresent()) {
-                existingService.get().setIsEnabled(service.getIsEnabled());
+                existingService.get().setEnabled(service.getIsEnabled());
                 crawlServiceRepository.save(existingService.get());
             }
         }

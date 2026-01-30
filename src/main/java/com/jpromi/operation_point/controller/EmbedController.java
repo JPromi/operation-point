@@ -78,7 +78,7 @@ public class EmbedController {
         }
 
         for (CrawlService service : services) {
-            if (!service.getIsEnabled()) {
+            if (!service.isEnabled()) {
                 federalStateColors.put(service.getName().substring(service.getName().length() - 2), "url(#diagonalHatch)");
             }
         }

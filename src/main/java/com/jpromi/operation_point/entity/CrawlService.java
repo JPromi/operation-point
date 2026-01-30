@@ -15,7 +15,7 @@ public class CrawlService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(nullable = false, unique = true)
     @Builder.Default
@@ -24,7 +24,7 @@ public class CrawlService {
     private String name;
     private String friendlyName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "is_enabled")
     @Builder.Default
-    private Boolean isEnabled = true;
+    private boolean enabled = true;
 }
