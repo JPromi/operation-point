@@ -24,7 +24,7 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) {
+    public void run(final String... args) {
         initCrawlServices();
         initDataFolder();
     }
