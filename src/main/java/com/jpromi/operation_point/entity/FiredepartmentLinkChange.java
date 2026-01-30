@@ -30,22 +30,15 @@ public class FiredepartmentLinkChange {
                 return url;
             }
         } else {
-            switch (type) {
-                case "facebook":
-                    return "https://www.facebook.com/" + name;
-                case "instagram":
-                    return "https://www.instagram.com/" + name;
-                case "youtube":
-                    return "https://www.youtube.com/@" + name;
-                case "x":
-                    return "https://www.x.com/" + name;
-                case "tiktok":
-                    return "https://www.tiktok.com/@" + name;
-                case "flickr":
-                    return "https://www.flickr.com/people/" + name;
-                default:
-                    return url;
-            }
+            return switch (type) {
+                case "facebook" -> "https://www.facebook.com/" + name;
+                case "instagram" -> "https://www.instagram.com/" + name;
+                case "youtube" -> "https://www.youtube.com/@" + name;
+                case "x" -> "https://www.x.com/" + name;
+                case "tiktok" -> "https://www.tiktok.com/@" + name;
+                case "flickr" -> "https://www.flickr.com/people/" + name;
+                default -> url;
+            };
         }
     }
 }
