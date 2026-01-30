@@ -4,7 +4,6 @@ import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.model.LocationStatisticResponse;
 import com.jpromi.operation_point.service.LocationService;
 import com.jpromi.operation_point.service.OperationVariableService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

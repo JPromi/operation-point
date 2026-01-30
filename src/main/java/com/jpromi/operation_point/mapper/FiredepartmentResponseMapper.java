@@ -15,8 +15,11 @@ import java.util.List;
 @Component
 public class FiredepartmentResponseMapper {
 
-    @Autowired
-    private FileStorageService fileStorageService;
+    private final FileStorageService fileStorageService;
+
+    public FiredepartmentResponseMapper(FileStorageService fileStorageService) {
+        this.fileStorageService = fileStorageService;
+    }
 
     public FiredepartmentResponse fromFiredepartment(Firedepartment firedepartment) {
         return FiredepartmentResponse.builder()

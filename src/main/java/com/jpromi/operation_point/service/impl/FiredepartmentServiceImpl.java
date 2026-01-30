@@ -4,7 +4,6 @@ import com.jpromi.operation_point.entity.Firedepartment;
 import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.entity.OperationUnit;
 import com.jpromi.operation_point.entity.Unit;
-import com.jpromi.operation_point.model.OperationResponse;
 import com.jpromi.operation_point.repository.*;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;

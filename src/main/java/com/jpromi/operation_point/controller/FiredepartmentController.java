@@ -9,7 +9,6 @@ import com.jpromi.operation_point.model.OperationResponse;
 import com.jpromi.operation_point.repository.OperationRepository;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.OperationService;
-import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
