@@ -60,7 +60,7 @@ public class OperationController {
 
     @GetMapping(value = "list/{federalState}", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getListByFederalState(@PathVariable String federalState, @RequestParam(required = false) String district) {
-        List<Operation> operations = new ArrayList<>();
+        List<Operation> operations;
 
         if(district != null) {
             operations = operationService.getActiveOperationsByFederalStateAndDistrict(federalState, district);

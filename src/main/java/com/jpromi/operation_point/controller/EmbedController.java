@@ -139,17 +139,17 @@ public class EmbedController {
         }
 
         // generate style
-        String svgStyle = "#stroke { fill: " + (styleType.equals("dark") ? "#151718" : "#fff") + "}" +
-                "#map { fill: " + (styleType.equals("dark") ? "#1F2225" : "#BFC1C3" ) + "; } ";
+        StringBuilder svgStyle = new StringBuilder("#stroke { fill: " + (styleType.equals("dark") ? "#151718" : "#fff") + "}" +
+                "#map { fill: " + (styleType.equals("dark") ? "#1F2225" : "#BFC1C3") + "; } ");
 
         for (Map.Entry<String, String> entry : districtColors.entrySet()) {
             if (entry.getKey() != null && entry.getValue() != null) {
-                svgStyle += "#" + entry.getKey().toLowerCase() + " { fill: " + entry.getValue() + "; } ";
+                svgStyle.append("#").append(entry.getKey().toLowerCase()).append(" { fill: ").append(entry.getValue()).append("; } ");
             }
         }
 
         Map<String, Object> variables = new HashMap<>();
-        variables.put("style", svgStyle);
+        variables.put("style", svgStyle.toString());
         variables.put("showStroke", withStroke);
 
         // Thymeleaf WebContext (Thymeleaf 3.1+)
