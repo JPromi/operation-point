@@ -32,15 +32,13 @@ public class FiredepartmentController {
     private final FiredepartmentService firedepartmentService;
     private final FiredepartmentResponseMapper firedepartmentResponseMapper;
     private final OperationResponseMapper operationResponseMapper;
-    private final OperationService operationService;
     private final OperationRepository operationRepository;
 
     @Autowired
-    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper, OperationResponseMapper operationResponseMapper, OperationService operationService, OperationRepository operationRepository) {
+    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper, OperationResponseMapper operationResponseMapper, OperationRepository operationRepository) {
         this.firedepartmentService = firedepartmentService;
         this.firedepartmentResponseMapper = firedepartmentResponseMapper;
         this.operationResponseMapper = operationResponseMapper;
-        this.operationService = operationService;
         this.operationRepository = operationRepository;
     }
 
