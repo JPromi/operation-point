@@ -45,7 +45,7 @@ public class CommunityImprovementController {
 
         FiredepartmentChange change = firedepartmentChangeMapper.fromCommunityImprovementFiredepartmentRequest(body, null, null, ip, userAgent);
         change.setChangeType("update");
-        change = firedepartmentChangeRepository.save(change);
+        firedepartmentChangeRepository.save(change);
 
         return ResponseEntity.ok().build();
     }
@@ -67,11 +67,6 @@ public class CommunityImprovementController {
     public ResponseEntity<FiredepartmentResponse> getAll(@PathVariable UUID uuid) {
         Optional<FiredepartmentChange> changeOpt = firedepartmentChangeRepository.findByUuidAndIsVerifiedTrue(uuid);
 
-        if (changeOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(firedepartmentResponseMapper.fromFiredepartmentChange(changeOpt.get()));
-        }
-
+        return changeOpt.map(firedepartmentChange -> ResponseEntity.ok(firedepartmentResponseMapper.fromFiredepartmentChange(firedepartmentChange))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
