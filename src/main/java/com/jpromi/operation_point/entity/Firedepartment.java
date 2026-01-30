@@ -8,7 +8,6 @@ import org.hibernate.annotations.ColumnDefault;
 import java.util.List;
 import java.util.UUID;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

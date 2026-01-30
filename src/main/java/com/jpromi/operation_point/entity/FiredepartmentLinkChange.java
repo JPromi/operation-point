@@ -3,7 +3,6 @@ package com.jpromi.operation_point.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
