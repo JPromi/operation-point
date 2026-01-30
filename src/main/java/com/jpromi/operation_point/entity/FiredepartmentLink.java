@@ -1,5 +1,6 @@
 package com.jpromi.operation_point.entity;
 
+import com.jpromi.operation_point.helper.SocialHelper;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,22 +24,6 @@ public class FiredepartmentLink {
     private String type; // e.g., "website", "facebook", "twitter"
 
     public String getLink() {
-        if (url != null) {
-            if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                return "https://" + url;
-            } else {
-                return url;
-            }
-        } else {
-            return switch (type) {
-                case "facebook" -> "https://www.facebook.com/" + name;
-                case "instagram" -> "https://www.instagram.com/" + name;
-                case "youtube" -> "https://www.youtube.com/@" + name;
-                case "x" -> "https://www.x.com/" + name;
-                case "tiktok" -> "https://www.tiktok.com/@" + name;
-                case "flickr" -> "https://www.flickr.com/people/" + name;
-                default -> url;
-            };
-        }
+        return SocialHelper.GetUrlFromSocialLinks(url, type, name);
     }
 }
