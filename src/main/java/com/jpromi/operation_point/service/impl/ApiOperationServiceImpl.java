@@ -51,7 +51,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     }
 
     @Override
-    public List<Operation> getOperationListBurgenland() {
+    public void getOperationListBurgenland() {
         try {
             // get data from API
             WebClient webClient = WebClient.create();
@@ -74,14 +74,13 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             checkVanishedOperations(operationList, ServiceOriginEnum.BL_LSZ_PUB);
 
-            return operationList;
         } catch (Exception e) {
             throw new RuntimeException("Error fetching operations from Burgenland API", e);
         }
     }
 
     @Override
-    public List<Operation> getOperationListLowerAustria() {
+    public void getOperationListLowerAustria() {
         try {
             // get data from API
             WebClient webClient = WebClient.create();
@@ -110,14 +109,13 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             checkVanishedOperations(operationList, ServiceOriginEnum.LA_WASTL_PUB);
 
-            return operationList;
         } catch (Exception e) {
             throw new RuntimeException("Error fetching operations from Lower Austria API", e);
         }
     }
 
     @Override
-    public List<Operation> getOperationListUpperAustria() {
+    public void getOperationListUpperAustria() {
         try {
             // get data from API
             WebClient webClient = WebClient.create();
@@ -140,7 +138,6 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             // TODO: Uncomment when XML parsing is implemented
             checkVanishedOperations(operationList, ServiceOriginEnum.UA_LFV_PUB);
 
-            return operationList;
         } catch (Exception e) {
             throw new RuntimeException("Error fetching operations from Upper Austria API", e);
         }
@@ -148,7 +145,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
 
     @Override
-    public List<Operation> getOperationListStyria() {
+    public void getOperationListStyria() {
         try {
             // get data from API
             WebClient webClient = WebClient.create();
@@ -174,14 +171,13 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             checkVanishedOperations(operationList, ServiceOriginEnum.ST_LFV_PUB);
 
-            return operationList;
         } catch (Exception e) {
             throw new RuntimeException("Error fetching operations from Styria API", e);
         }
     }
 
     @Override
-    public List<Operation> getOperationListTyrol() {
+    public void getOperationListTyrol() {
         try {
             String authentication = "Basic " + Base64.getEncoder().encodeToString(crawlerTyrolAuthentication.getBytes());
             // get data from API
@@ -210,7 +206,6 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             checkVanishedOperations(operationList, ServiceOriginEnum.TYROL_LFS_APP);
 
-            return operationList;
         } catch (Exception e) {
             throw new RuntimeException("Error fetching operations from Tyrol API", e);
         }

@@ -106,12 +106,11 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public Void deleteFile(FileData data) {
+    public void deleteFile(FileData data) {
         if(data != null) {
             _deleteFile(data.getId(), data.getFileName());
             fileDataRepository.delete(data);
         }
-        return null;
     }
 
     private File _getFile(Long id, String filename) {

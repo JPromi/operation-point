@@ -17,17 +17,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AppUser createUser(AppUser user) {
+    public void createUser(AppUser user) {
         if (user == null || user.getUsername() == null || user.getPassword() == null) {
             throw new IllegalArgumentException("User and its username/password must not be null");
         }
-        return appUserRepository.save(user);
+        appUserRepository.save(user);
     }
 
     @Override
-    public AppUser hashUser(AppUser user) {
+    public void hashUser(AppUser user) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
-        return user;
     }
 }
