@@ -12,6 +12,7 @@ import com.jpromi.operation_point.service.OperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,8 +46,20 @@ public class FiredepartmentController {
     public ResponseEntity<Page<FiredepartmentResponse>> getList(
             @RequestParam(required = false, value = "q") String query,
             @RequestParam(required = false, value = "limit", defaultValue = "20") Integer limit,
-            @RequestParam(required = false, value = "page", defaultValue = "0") Integer page) {
-        Page<Firedepartment> result = firedepartmentService.getList(query, limit, page);
+            @RequestParam(required = false, value = "page", defaultValue = "0") Integer page,
+            @RequestParam(required = false, value = "uuids", defaultValue = "") List<UUID> uuids) {
+        Page<Firedepartment> result;
+
+        // return error when both search values are set
+        if (!uuids.isEmpty() && query != null && !query.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (uuids.isEmpty()) {
+            result = firedepartmentService.getList(query, limit, page);
+        } else {
+            result = firedepartmentService.getFromUuids(uuids, limit, page);
+        }
         Page<FiredepartmentResponse> dto = result.map(firedepartmentResponseMapper::fromFiredepartment);
         return ResponseEntity.ok(dto);
     }

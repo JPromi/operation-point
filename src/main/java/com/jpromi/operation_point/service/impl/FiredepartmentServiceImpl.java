@@ -45,6 +45,13 @@ public class FiredepartmentServiceImpl implements FiredepartmentService {
     }
 
     @Override
+    public Page<Firedepartment> getFromUuids(List<UUID> uuids, Integer limit, Integer page) {
+        Pageable pageable = PageRequest.of(page, limit);
+
+        return firedepartmentRepository.findByUuidIn(uuids, pageable);
+    }
+
+    @Override
     public Firedepartment getByUuid(UUID uuid) {
         return firedepartmentRepository.findByUuid(uuid)
                 .orElse(null);
