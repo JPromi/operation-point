@@ -609,7 +609,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setFiredepartments(operationFiredepartments);
 
             // end operation
-            if (response.getStatus().equals("finished") && operation.getEndTime() != null) {
+            if (response.getStatus().equals("finished") && operation.getEndTime() == null) {
                 operation.setEndTime(OffsetDateTime.now());
             }
 
@@ -652,7 +652,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setFiredepartments(firedepartments);
 
             // end operation
-            if (response.getStatus().equals("finished") && operation.getEndTime() != null) {
+            if (response.getStatus().equals("finished") && operation.getEndTime() == null) {
                 operation.setEndTime(OffsetDateTime.now());
             }
 
