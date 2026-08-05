@@ -106,7 +106,7 @@ public class FiredepartmentController {
             firedepartmentUuid = UUID.fromString(uuid);
         }
 
-        Instant dateStartFORCE = Instant.now().minusSeconds(7 * 24 * 60 * 60); // force last 7 days
+        Instant dateStartFORCE = Instant.now().minusSeconds(90 * 24 * 60 * 60); // force last 90 days
         Instant dateEndFORCE = Instant.now();
 
         Page<Operation> operations = operationRepository.findByFiredepartmentFiltered(firedepartmentUuid, dateStartFORCE, dateEndFORCE, pageable);
