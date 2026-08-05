@@ -41,7 +41,7 @@ Diese Daten können in der Datenbank korrigiert werden.
 Für Wien, Salzburg, Kärnten und Vorarlberg gibt es keine öffentliche Schnittstelle, welche einsätze bereitstellt.
 
 ### Datenquellen
-- Tirol: https://ffw-einsatzmonitor.at/lfs/proxytirol.php
+- Tirol: https://fastapi.feuerwehr.tirol/extAlarmsTirol/{token}/data
 - Steiermark: https://einsatzuebersicht.lfv.steiermark.at/einsatzkarte/data/public_current.json
 - Oberösterreich: https://cf-einsaetze.ooelfv.at/webext2/rss/json_laufend.txt
 - Niederösterreich: https://infoscreen.florian10.info/OWS/wastlMobile/getEinsatzAktiv.ashx

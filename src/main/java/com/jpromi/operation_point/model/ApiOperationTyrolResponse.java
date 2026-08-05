@@ -9,36 +9,36 @@ import java.util.Map;
 @Data
 public class ApiOperationTyrolResponse {
 
-    @JsonProperty("NAME")
-    private String name;
+    @JsonProperty("DATA")
+    private List<Operation> data;
 
-    @JsonProperty("REMARK")
-    private String remark;
+    private Long generationTimeStamp;
 
-    @JsonProperty("NAME_AT_ALARMTIME")
-    private List<String> nameAtAlarmTime;
+    @Data
+    public static class Operation {
 
-    @JsonProperty("CITY")
-    private String city;
+        @JsonProperty("ID")
+        private String id;
 
-    @JsonProperty("ZIPCODE")
-    private String zipcode;
+        @JsonProperty("NAME_AT_ALARMTIME")
+        private String nameAtAlarmTime;
 
-    @JsonProperty("ALARMTIME")
-    private String alarmtime;
+        @JsonProperty("NAMEEVENTTYPE")
+        private String nameEventType;
 
-    @JsonProperty("ALARMTIME_FORMATTED")
-    private String alarmtimeFormatted;
+        @JsonProperty("STATUS")
+        private String status; // finished, alarmed
 
-    @JsonProperty("LAT")
-    private Double lat;
+        @JsonProperty("ALARMTIME")
+        private String alarmtime;
 
-    @JsonProperty("LON")
-    private Double lon;
+        @JsonProperty("INFO")
+        private String info;
 
-    @JsonProperty("EVENTNUM")
-    private String eventnum;
+        @JsonProperty("ZIPCODE")
+        private String zipcode;
 
-    @JsonProperty("STATUS")
-    private String status;
+        @JsonProperty("CITY")
+        private String city;
+    }
 }
