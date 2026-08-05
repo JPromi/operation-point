@@ -11,13 +11,18 @@ import com.jpromi.operation_point.repository.UnitRepository;
 import com.jpromi.operation_point.service.ApiOperationService;
 import com.jpromi.operation_point.service.LocationService;
 import com.jpromi.operation_point.service.OperationVariableService;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +43,7 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     private static Map<String, String> districtCacheBl;
     private static Map<String, String> districtCacheSt;
 
-    @Value("${com.jpromi.operation_point.crawler.tyrol.authentication}")
+    @Value("${com.jpromi.operation_point.crawler.tyrol.token}")
     private String crawlerTyrolAuthentication;
 
     @Autowired
@@ -147,8 +152,19 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     @Override
     public void getOperationListStyria() {
         try {
+            // fix ssl issue
+            SslContext sslContext = SslContextBuilder
+                    .forClient()
+                    .trustManager(InsecureTrustManagerFactory.INSTANCE)
+                    .build();
+
+            HttpClient httpClient = HttpClient.create().secure(t -> t.sslContext(sslContext));
+
+            WebClient webClient = WebClient.builder()
+                    .clientConnector(new ReactorClientHttpConnector(httpClient))
+                    .build();
+
             // get data from API
-            WebClient webClient = WebClient.create();
             String json = webClient.get()
                     .uri("https://einsatzuebersicht.lfv.steiermark.at/einsatzkarte/data/public_current.json")
                     .accept(MediaType.APPLICATION_JSON)
@@ -179,25 +195,19 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     @Override
     public void getOperationListTyrol() {
         try {
-            String authentication = "Basic " + Base64.getEncoder().encodeToString(crawlerTyrolAuthentication.getBytes());
             // get data from API
             WebClient webClient = WebClient.create();
-            String json = webClient.get()
-                    .uri("https://ffw-einsatzmonitor.at/lfs/proxytirol.php")
+            ApiOperationTyrolResponse data = webClient.get()
+                    .uri("https://fastapi.feuerwehr.tirol/extAlarmsTirol/" + crawlerTyrolAuthentication + "/data")
                     .accept(MediaType.APPLICATION_JSON)
-                    .header("Authorization", authentication)
-                    .header("X-Requested-With", "xmlhttprequest")
                     .retrieve()
-                    .bodyToMono(String.class)
+                    .bodyToMono(ApiOperationTyrolResponse.class)
                     .block();
-
-            ObjectMapper mapper = new ObjectMapper();
-            List<ApiOperationTyrolResponse> result = mapper.readValue(json, new TypeReference<List<ApiOperationTyrolResponse>>() {});
 
             // build operation
             List<Operation> operationList = new ArrayList<>();
 
-            result.forEach( operation -> {
+            data.getData().forEach( operation -> {
                 Operation _operation = updateSavedOperationTyrol(operation);
                 if (_operation != null) {
                     operationList.add(_operation);
@@ -553,120 +563,84 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         }
     }
 
-    private Operation updateSavedOperationTyrol(ApiOperationTyrolResponse response) {
-        Optional<Operation> _operation = operationRepository.findByTyEventId(response.getEventnum());
+    private Operation updateSavedOperationTyrol(ApiOperationTyrolResponse.Operation response) {
+        Optional<Operation> _operation = operationRepository.findByTyEventId(response.getId());
 
         if(_operation.isPresent()) {
             Operation operation = _operation.get();
-            operation.setAlarmText(response.getRemark());
+            operation.setAlarmText(response.getInfo());
             operation.setCity(response.getCity());
             operation.setDistrict(locationService.getDistrictByZipCode(response.getZipcode()));
             operation.setZipCode(response.getZipcode());
             operation.setLocation(response.getCity());
-            operation.setLat(response.getLat());
-            operation.setLng(response.getLon());
             operation.setUpdatedAt(OffsetDateTime.now());
-            operation.setTyAlarmCategory(operationVariableService.getAlarmCategoryTyrol(response.getName()));
-            operation.setTyAlarmOrganization(operationVariableService.getAlarmOrganizationTyrol(response.getName()));
-            operation.setTyAlarmOutOrder(operationVariableService.getAlarmOutOrderTyrol(response.getName()));
+            operation.setTyAlarmCategory(operationVariableService.getAlarmCategoryTyrol(response.getNameEventType()));
+            operation.setTyAlarmOrganization(operationVariableService.getAlarmOrganizationTyrol(response.getNameEventType()));
+            operation.setTyAlarmOutOrder(operationVariableService.getAlarmOutOrderTyrol(response.getNameEventType()));
 
-            // firedepartments
-            List<String> firedepartments = getFiredepartmentsTyrol(response.getNameAtAlarmTime());
+            // firedepartment
             List<OperationFiredepartment> operationFiredepartments = operation.getFiredepartments();
 
-            firedepartments.forEach(fd -> {
-                String cleanedName = fd.substring(0, fd.length() - 8).trim();
-                Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                        Firedepartment.builder().name(fd).friendlyName(cleanedName).addressFederalState("Tyrol").build()
-                );
+            String cleanedName = response.getNameAtAlarmTime().substring(0, response.getNameAtAlarmTime().length() - 8).trim();
+            Firedepartment firedepartment = createFiredepartmentIfNotExists(
+                    Firedepartment.builder().name(response.getNameAtAlarmTime()).friendlyName(cleanedName).addressFederalState("Tyrol").build()
+            );
 
-                // check if firedepartment already exists
-                boolean exists = operationFiredepartments.stream()
-                        .anyMatch(opFd -> opFd.getFiredepartment().getName().equals(firedepartment.getName()));
-                if (!exists) {
-                    OperationFiredepartment opFd = OperationFiredepartment.builder()
-                            .firedepartment(firedepartment)
-                            .operation(operation)
-                            .build();
-                    operationFiredepartments.add(opFd);
-                }
-            });
+            // check if firedepartment already exists
+            boolean exists = operationFiredepartments.stream()
+                    .anyMatch(opFd -> opFd.getFiredepartment().getName().equals(firedepartment.getName()));
+            if (!exists) {
+                OperationFiredepartment opFd = OperationFiredepartment.builder()
+                        .firedepartment(firedepartment)
+                        .operation(operation)
+                        .build();
+                operationFiredepartments.add(opFd);
+            }
 
             operation.setFiredepartments(operationFiredepartments);
 
-            // units
-            List<String> unitNames = getUnitsTyrol(response.getNameAtAlarmTime());
-            List<OperationUnit> operationUnits = operation.getUnits();
-            unitNames.forEach(fd -> {
-                Unit unit = createUnitIfNotExists(
-                        Unit.builder().name(fd).build()
-                );
-
-                // check if unit already exists
-                boolean exists = operationUnits.stream()
-                        .anyMatch(opFd -> opFd.getUnit().getName().equals(unit.getName()));
-                if (!exists) {
-                    OperationUnit opUn = OperationUnit.builder()
-                            .unit(unit)
-                            .operation(operation)
-                            .build();
-                    operationUnits.add(opUn);
-                }
-            });
-
-            operation.setUnits(operationUnits);
-
             // end operation
-            if (response.getStatus().equals("finished")) {
+            if (response.getStatus().equals("finished") && operation.getEndTime() != null) {
                 operation.setEndTime(OffsetDateTime.now());
             }
 
             return operationRepository.save(operation);
         } else {
             Operation operation = Operation.builder()
-                    .tyEventId(response.getEventnum())
-                    .alarmText(response.getRemark())
-                    .tyAlarmCategory(operationVariableService.getAlarmCategoryTyrol(response.getName()))
-                    .tyAlarmOrganization(operationVariableService.getAlarmOrganizationTyrol(response.getName()))
-                    .tyAlarmOutOrder(operationVariableService.getAlarmOutOrderTyrol(response.getName()))
+                    .tyEventId(response.getId())
+                    .alarmText(response.getInfo())
+                    .tyAlarmCategory(operationVariableService.getAlarmCategoryTyrol(response.getNameEventType()))
+                    .tyAlarmOrganization(operationVariableService.getAlarmOrganizationTyrol(response.getNameEventType()))
+                    .tyAlarmOutOrder(operationVariableService.getAlarmOutOrderTyrol(response.getNameEventType()))
                     .city(response.getCity())
                     .zipCode(response.getZipcode())
                     .location(response.getCity())
                     .district(locationService.getDistrictByZipCode(response.getZipcode()))
-                    .lat(response.getLat())
-                    .lng(response.getLon())
                     .startTime(OffsetDateTime.now())
                     .serviceOrigin(ServiceOriginEnum.TYROL_LFS_APP)
                     .federalState("Tyrol")
                     .build();
             // firedepartments
             List<OperationFiredepartment> firedepartments = new ArrayList<>();
-            List<String> firedepartmentNames = getFiredepartmentsTyrol(response.getNameAtAlarmTime());
-            firedepartmentNames.forEach(firedepartmentName -> {
-                String cleanedName = firedepartmentName.substring(0, firedepartmentName.length() - 8).trim();
-                Firedepartment firedepartment = createFiredepartmentIfNotExists(
-                        Firedepartment.builder().name(firedepartmentName).friendlyName(cleanedName).addressFederalState("Tyrol").build()
-                );
 
-                OperationFiredepartment opFd = OperationFiredepartment.builder()
-                        .firedepartment(firedepartment)
-                        .operation(operation)
-                        .build();
-                firedepartments.add(opFd);
-            });
+            String cleanedName = response.getNameAtAlarmTime().substring(0, response.getNameAtAlarmTime().length() - 8).trim();
+            Firedepartment firedepartment = createFiredepartmentIfNotExists(
+                    Firedepartment.builder().name(response.getNameAtAlarmTime()).friendlyName(cleanedName).addressFederalState("Tyrol").build()
+            );
+
+            OperationFiredepartment opFd = OperationFiredepartment.builder()
+                    .firedepartment(firedepartment)
+                    .operation(operation)
+                    .build();
+            firedepartments.add(opFd);
+
             operation.setFiredepartments(firedepartments);
 
-            // units
-            List<OperationUnit> units = new ArrayList<>();
-            List<String> unitNames = getUnitsTyrol(response.getNameAtAlarmTime());
-            unitNames.forEach(unitName -> {
-                OperationUnit unit = OperationUnit.builder()
-                        .operation(operation)
-                        .unit(createUnitIfNotExists(Unit.builder().name(unitName).build()))
-                        .build();
-                units.add(unit);
-            });
-            operation.setUnits(units);
+            // end operation
+            if (response.getStatus().equals("finished") && operation.getEndTime() != null) {
+                operation.setEndTime(OffsetDateTime.now());
+            }
+
             return operationRepository.save(operation);
         }
     }
