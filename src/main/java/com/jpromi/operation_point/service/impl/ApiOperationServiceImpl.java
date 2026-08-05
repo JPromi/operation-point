@@ -27,7 +27,9 @@ import reactor.netty.http.client.HttpClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -577,6 +579,13 @@ public class ApiOperationServiceImpl implements ApiOperationService {
             operation.setTyAlarmCategory(operationVariableService.getAlarmCategoryTyrol(response.getNameEventType()));
             operation.setTyAlarmOrganization(operationVariableService.getAlarmOrganizationTyrol(response.getNameEventType()));
             operation.setTyAlarmOutOrder(operationVariableService.getAlarmOutOrderTyrol(response.getNameEventType()));
+            operation.setStartTime(LocalDateTime
+                    .parse(
+                            response.getAlarmtime(),
+                            DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+                    )
+                    .atZone(ZoneId.of("Europe/Vienna"))
+                    .toOffsetDateTime());
 
             // firedepartment
             List<OperationFiredepartment> operationFiredepartments = operation.getFiredepartments();
@@ -616,7 +625,13 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .zipCode(response.getZipcode())
                     .location(response.getCity())
                     .district(locationService.getDistrictByZipCode(response.getZipcode()))
-                    .startTime(OffsetDateTime.now())
+                    .startTime(LocalDateTime
+                            .parse(
+                                    response.getAlarmtime(),
+                                    DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+                            )
+                            .atZone(ZoneId.of("Europe/Vienna"))
+                            .toOffsetDateTime())
                     .serviceOrigin(ServiceOriginEnum.TYROL_LFS_APP)
                     .federalState("Tyrol")
                     .build();
