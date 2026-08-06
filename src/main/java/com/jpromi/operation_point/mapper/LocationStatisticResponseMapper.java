@@ -112,7 +112,7 @@ public class LocationStatisticResponseMapper {
                         entry.getKey(),
                         entry.getValue()
                 ))
-                .sorted(Comparator.comparing(LocationStatisticResponse::getNameId))
+                .sorted(Comparator.nullsLast(Comparator.comparing(LocationStatisticResponse::getNameId)))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         LocationStatisticResponse all = new LocationStatisticResponse();
@@ -194,9 +194,8 @@ public class LocationStatisticResponseMapper {
         LocationStatisticResponse response = new LocationStatisticResponse();
 
         try {
-            response.setNameId(
-                    locationService.getDistrictIdByDistrict(district)
-            );
+            String districtId = locationService.getDistrictIdByDistrict(district);
+            response.setNameId(districtId != null ? districtId : district);
         } catch (IllegalArgumentException e) {
             response.setNameId(district);
         }
