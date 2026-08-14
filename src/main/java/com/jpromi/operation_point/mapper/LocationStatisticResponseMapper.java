@@ -116,32 +116,30 @@ public class LocationStatisticResponseMapper {
                 .collect(Collectors.toCollection(ArrayList::new));
 
         LocationStatisticResponse all = new LocationStatisticResponse();
+
+        // Recalculate statistics for all from all operations
+        long countFireAll = 0;
+        long countTechnicalAll = 0;
+        long countAcidAll = 0;
+        long countOtherAll = 0;
+
+        for (Operation operation : operations) {
+            String category = getCategory(operation);
+
+            switch (category) {
+                case "FIRE" -> countFireAll++;
+                case "TECHNICAL" -> countTechnicalAll++;
+                case "ACID" -> countAcidAll++;
+                case "OTHER" -> countOtherAll++;
+            }
+        }
+
         all.setNameId("all");
-        all.setCountActive(
-                result.stream()
-                        .mapToLong(LocationStatisticResponse::getCountActive)
-                        .sum()
-        );
-        all.setCountFire(
-                result.stream()
-                        .mapToLong(LocationStatisticResponse::getCountFire)
-                        .sum()
-        );
-        all.setCountTechnical(
-                result.stream()
-                        .mapToLong(LocationStatisticResponse::getCountTechnical)
-                        .sum()
-        );
-        all.setCountAcid(
-                result.stream()
-                        .mapToLong(LocationStatisticResponse::getCountAcid)
-                        .sum()
-        );
-        all.setCountOther(
-                result.stream()
-                        .mapToLong(LocationStatisticResponse::getCountOther)
-                        .sum()
-        );
+        all.setCountActive((long) operations.size());
+        all.setCountFire(countFireAll);
+        all.setCountTechnical(countTechnicalAll);
+        all.setCountAcid(countAcidAll);
+        all.setCountOther(countOtherAll);
 
         result.addFirst(all);
 
