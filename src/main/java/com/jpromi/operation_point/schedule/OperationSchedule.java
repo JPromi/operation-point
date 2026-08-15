@@ -23,7 +23,7 @@ public class OperationSchedule {
         this.crawlServiceRepository = crawlServiceRepository;
     }
 
-    @Scheduled(fixedRate = 120000) // 120 seconds
+    @Scheduled(fixedRate = 60000) // 60 seconds
     @Transactional
     public void runUpdateOperations() {
         if(isServiceActive("fs-ua")) {

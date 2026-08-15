@@ -13,6 +13,7 @@ import java.util.UUID;
 public interface FiredepartmentService {
     List<Firedepartment> getList();
     Page<Firedepartment> getList(String query, Integer limit, Integer page);
+    Page<Firedepartment> getFromUuids(List<UUID> uuids, Integer limit, Integer page);
     Firedepartment getByUuid(UUID uuid);
     Firedepartment getByNameId(String nameId);
     Unit assignAsUnit(Firedepartment firedepartment);
