@@ -28,9 +28,6 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     @Async("statisticsExecutor")
     public Void setStat() {
-        System.out.print(request.getHeaderNames());
-        System.out.print("Address: " + request.getRemoteAddr());
-        System.out.print("User: " + request.getRemoteUser());
         Statistic stat = generateBaseObject();
         statisticRepository.save(stat);
         return null;
