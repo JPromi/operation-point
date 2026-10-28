@@ -7,7 +7,8 @@ COPY gradle gradle
 RUN chmod +x gradlew && ./gradlew --no-daemon dependencies > /dev/null
 
 COPY src src
-RUN ./gradlew --no-daemon bootJar -x test \
+ARG APP_VERSION=
+RUN ./gradlew --no-daemon bootJar -x test ${APP_VERSION:+-PappVersion=$APP_VERSION} \
     && find build/libs -name '*.jar' ! -name '*-plain.jar' -exec cp {} app.jar \;
 
 # --- Runtime stage ---
