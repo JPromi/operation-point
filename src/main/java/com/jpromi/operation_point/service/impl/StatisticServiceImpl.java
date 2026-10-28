@@ -28,6 +28,9 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     @Async("statisticsExecutor")
     public Void setStat() {
+        System.out.print(request.getHeaderNames());
+        System.out.print("Address: " + request.getRemoteAddr());
+        System.out.print("User: " + request.getRemoteUser());
         Statistic stat = generateBaseObject();
         statisticRepository.save(stat);
         return null;
@@ -47,6 +50,8 @@ public class StatisticServiceImpl implements StatisticService {
                 .appVersion(request.getHeader("X-Fw-Version"))
                 .platform(request.getHeader("X-Fw-Platform"))
                 .userAgent(request.getHeader("User-Agent"))
+                .requestOrigin(request.getHeader("Origin"))
+                .requestReferer(request.getHeader("Referer"))
                 .path(request.getRequestURI())
                 .build();
     }
