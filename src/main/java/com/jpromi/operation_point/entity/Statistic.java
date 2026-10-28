@@ -25,6 +25,8 @@ public class Statistic {
     private String platform;
     private String userAgent;
     private String path;
+    private String requestOrigin;
+    private String requestReferer;
     private String objectType; // vehicle, firedepartment, operation,...
     private UUID objectUuid;
 
