@@ -1,0 +1,9 @@
+.git
+.github
+.gradle
+.idea
+build
+data
+.env
+src/main/resources/application.properties
+db

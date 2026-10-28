@@ -39,3 +39,5 @@ out/
 ### Software ###
 /src/main/resources/application.properties
 /data/*
+.env
+/db/

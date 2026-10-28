@@ -1,11 +1,13 @@
 package com.jpromi.operation_point.controller;
 
+import com.jpromi.operation_point.annotations.Statistic;
 import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.mapper.LocationStatisticResponseMapper;
 import com.jpromi.operation_point.mapper.OperationResponseMapper;
 import com.jpromi.operation_point.model.LocationStatisticResponse;
 import com.jpromi.operation_point.model.OperationResponse;
 import com.jpromi.operation_point.service.OperationService;
+import com.jpromi.operation_point.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,14 +28,21 @@ public class OperationController {
     private final OperationService operationService;
     private final OperationResponseMapper operationResponseMapper;
     private final LocationStatisticResponseMapper locationStatisticResponseMapper;
+    private final StatisticService statisticService;
 
     @Autowired
-    public OperationController(OperationService operationService, OperationResponseMapper operationResponseMapper, LocationStatisticResponseMapper locationStatisticResponseMapper) {
+    public OperationController(
+            OperationService operationService,
+            OperationResponseMapper operationResponseMapper,
+            LocationStatisticResponseMapper locationStatisticResponseMapper,
+            StatisticService statisticService) {
         this.operationService = operationService;
         this.operationResponseMapper = operationResponseMapper;
         this.locationStatisticResponseMapper = locationStatisticResponseMapper;
+        this.statisticService = statisticService;
     }
 
+    @Statistic
     @GetMapping(value = "list", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getList() {
         List<Operation> operations = operationService.getActiveOperations();
@@ -46,6 +55,7 @@ public class OperationController {
         return ResponseEntity.ok(count);
     }
 
+    @Statistic
     @GetMapping(value = "list/statistic", produces = {"application/json"})
     public ResponseEntity<List<LocationStatisticResponse>> getStatistic() {
         List<Operation> operations = operationService.getActiveOperations();
@@ -58,6 +68,7 @@ public class OperationController {
         return ResponseEntity.ok(statisticResponses);
     }
 
+    @Statistic
     @GetMapping(value = "list/{federalState}", produces = {"application/json"})
     public ResponseEntity<List<OperationResponse>> getListByFederalState(@PathVariable String federalState, @RequestParam(required = false) String district) {
         List<Operation> operations;
@@ -70,12 +81,14 @@ public class OperationController {
         return OperationService.BuildResponseFromOperations(operations, operationResponseMapper);
     }
 
+    @Statistic
     @GetMapping(value = "list/{federalState}/count", produces = {"application/json"})
     public ResponseEntity<Long> getCountByFederalState(@PathVariable String federalState) {
         Long count = operationService.getActiveOperationsByFederalStateCount(federalState);
         return ResponseEntity.ok(count);
     }
 
+    @Statistic
     @GetMapping(value = "list/{federalState}/statistic", produces = {"application/json"})
     public ResponseEntity<List<LocationStatisticResponse>> getStatisticByFederalState(@PathVariable String federalState) {
         List<Operation> operations = operationService.getActiveOperationsByFederalState(federalState);
@@ -92,6 +105,7 @@ public class OperationController {
         if (operation == null) {
             return ResponseEntity.notFound().build();
         } else {
+            statisticService.setStatForDetail("operation", operation.getUuid());
             OperationResponse response = operationResponseMapper.fromOperation(operation);
             return ResponseEntity.ok(response);
         }

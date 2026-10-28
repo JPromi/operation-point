@@ -1,5 +1,6 @@
 package com.jpromi.operation_point.controller;
 
+import com.jpromi.operation_point.annotations.Statistic;
 import com.jpromi.operation_point.entity.Firedepartment;
 import com.jpromi.operation_point.entity.Operation;
 import com.jpromi.operation_point.mapper.FiredepartmentResponseMapper;
@@ -9,6 +10,7 @@ import com.jpromi.operation_point.model.OperationResponse;
 import com.jpromi.operation_point.repository.OperationRepository;
 import com.jpromi.operation_point.service.FiredepartmentService;
 import com.jpromi.operation_point.service.OperationService;
+import com.jpromi.operation_point.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,15 +35,24 @@ public class FiredepartmentController {
     private final FiredepartmentResponseMapper firedepartmentResponseMapper;
     private final OperationResponseMapper operationResponseMapper;
     private final OperationRepository operationRepository;
+    private final StatisticService statisticService;
 
     @Autowired
-    public FiredepartmentController(FiredepartmentService firedepartmentService, FiredepartmentResponseMapper firedepartmentResponseMapper, OperationResponseMapper operationResponseMapper, OperationRepository operationRepository) {
+    public FiredepartmentController(
+            FiredepartmentService firedepartmentService,
+            FiredepartmentResponseMapper firedepartmentResponseMapper,
+            OperationResponseMapper operationResponseMapper,
+            OperationRepository operationRepository,
+            StatisticService statisticService
+    ) {
         this.firedepartmentService = firedepartmentService;
         this.firedepartmentResponseMapper = firedepartmentResponseMapper;
         this.operationResponseMapper = operationResponseMapper;
         this.operationRepository = operationRepository;
+        this.statisticService = statisticService;
     }
 
+    @Statistic
     @GetMapping(value = "list", produces = {"application/json"})
     public ResponseEntity<Page<FiredepartmentResponse>> getList(
             @RequestParam(required = false, value = "q") String query,
@@ -75,6 +86,7 @@ public class FiredepartmentController {
         if (firedepartment == null) {
             return ResponseEntity.notFound().build();
         }
+        statisticService.setStatForDetail("firedepartment", firedepartment.getUuid());
         FiredepartmentResponse response = firedepartmentResponseMapper.fromFiredepartment(firedepartment);
         return ResponseEntity.ok(response);
     }
