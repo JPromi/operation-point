@@ -168,11 +168,16 @@ public class ApiOperationServiceImpl implements ApiOperationService {
 
             // get data from API
             String json = webClient.get()
-                    .uri("https://einsatzuebersicht.lfv.steiermark.at/einsatzkarte/data/public_current.json")
+                    .uri("https://einsatzkarte.lfvstmk.at/data/public_current.json")
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
+
+            // Remove weird first char
+            if (json != null && json.startsWith("\uFEFF")) {
+                json = json.substring(1);
+            }
 
             ObjectMapper objectMapper = new ObjectMapper();
             ApiOperationStyriaResponse result = objectMapper.readValue(json, ApiOperationStyriaResponse.class);
