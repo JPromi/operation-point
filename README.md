@@ -23,6 +23,10 @@ Nachdem jedes Bundesland eine eigene Art hat, haben wir ein einheitliches Format
 Bei manchen Einsätzen kann es vorkommen, dass die Daten nicht vollständig sind oder fehler enthalten. Ebenso kann es passieren das Gerätschaften/Fahrzeuge oder Feuerwehren in die falsche Tabelle eingetragen werden. Das liegt daran, dass es nicht immer eindeutig erkennbar ist, ob es sich für eine Feuerwehr oder eine Gerätschaft/Fahrzeug handelt.\
 Diese Daten können in der Datenbank korrigiert werden.
 
+### Wichtige Informationen !!!
+#### Niederösterreich
+Die Daten aus Niederöstrreich stellen in der Regel die Zeiten der einzelnen Ressourcen (Fahrzeuge, Feuerwehren) nur in einer Genauigkeit von 10 Minuten bereite (hh:mX:XX = 07:4x:xx), damit Operation Point diese Zeiten trotzdem als normales Datum erkennt, werden die Platzhalter (x) mit 0 ersetzt. Wichtig ist in Öffentlichen Anwendungen, wieder Platzhalter einzufügen oder die letzten Stellen anders unkenntlich zu machen damit es nicht zu falsch Informationen kommt.
+
 ### Ideen
 - Abfrage der Einsätze in einem bestimmten Zeitraum
 - Abfrage der Einsätze nach einem bestimmten Ort
@@ -34,7 +38,7 @@ Diese Daten können in der Datenbank korrigiert werden.
 |------------------|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Niederösterreich | Reverse Engineering der Wastl Mobile, GRISU app | [Wastl Modile](https://infoscreen.florian10.info/ows/wastlmobileweb/), [GRISU APP](https://github.com/Grisu-NOE/mobile-app) |
 | Oberösterreich   | Öffentliche Publizierung                        | [OÖLFV Dokumentation](https://einsaetze.ooelfv.at/publikationsformen)                                                       |
-| Steiermark       | Reverse Engineering der Einsatzkarte            | [Einsatzkarte](https://einsatzuebersicht.lfv.steiermark.at/lfvasp/einsatzkarte/karte_app_public.html)                       |
+| Steiermark       | Reverse Engineering der Einsatzkarte            | [Einsatzkarte](https://einsatzkarte.lfvstmk.at/karte_app_public.html)                                                       |
 | Tirol            | Reverse Engineering der Einsatz App Tirol       | [Aktuelle Einsätze Tirol](https://play.google.com/store/apps/details?id=alarmierung.lfv.his.alarmierungen&hl=de)            |
 | Burgenland       | Reverse Engineering der Einsatzkarte            | [Feurwehreinsatzkarte Burgenland](https://www.lsz-b.at/fuer-einsatzorganisationen/feuerwehr-einsatzkarte/)                  |
 
@@ -42,7 +46,7 @@ Für Wien, Salzburg, Kärnten und Vorarlberg gibt es keine öffentliche Schnitts
 
 ### Datenquellen
 - Tirol: https://fastapi.feuerwehr.tirol/extAlarmsTirol/{token}/data
-- Steiermark: https://einsatzuebersicht.lfv.steiermark.at/einsatzkarte/data/public_current.json
+- Steiermark: https://einsatzkarte.lfvstmk.at/data/public_current.json
 - Oberösterreich: https://cf-einsaetze.ooelfv.at/webext2/rss/json_laufend.txt
 - Niederösterreich: https://infoscreen.florian10.info/OWS/wastlMobile/getEinsatzAktiv.ashx
 - Burgenland: https://www.lsz-b.at/fuer-einsatzorganisationen/feuerwehr-einsatzkarte/?tx_lszoperations_operations[action]=bgldData&tx_lszoperations_operations[controller]=Operations
@@ -59,7 +63,7 @@ Für Wien, Salzburg, Kärnten und Vorarlberg gibt es keine öffentliche Schnitts
 4. Um die Abfrage von Datenquellen zu bearbeiten, gehe in die Datenbank und ändere dort die Tabelle `crawl_service`.
 
 ### Swagger
-Die Swagger-Dokumentation kann unter [`/swagger-ui/index.html`](http://localhost:8080/swagger-ui/index.html) erreicht werden.
+Die Swagger-Dokumentation kann unter [`/swagger-ui/index.html`](httsp://api.operation-point.jpromi.com/swagger-ui/index.html) erreicht werden.
 
 ### Daten
 
