@@ -26,10 +26,7 @@ import reactor.netty.http.client.HttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -61,13 +58,11 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     public void getOperationListBurgenland() {
         try {
             // get data from API
-            WebClient webClient = WebClient.create();
-            ApiOperationBurgenlandResponse result = webClient.get()
-                    .uri("https://www.lsz-b.at/fuer-einsatzorganisationen/feuerwehr-einsatzkarte/?tx_lszoperations_operations[action]=bgldData&tx_lszoperations_operations[controller]=Operations")
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(ApiOperationBurgenlandResponse.class)
-                    .block();
+            ApiOperationBurgenlandResponse result = fetchClient(
+                    "https://www.lsz-b.at/fuer-einsatzorganisationen/feuerwehr-einsatzkarte/?tx_lszoperations_operations[action]=bgldData&tx_lszoperations_operations[controller]=Operations",
+                    ApiOperationBurgenlandResponse.class,
+                    MediaType.APPLICATION_JSON
+            );
 
             // build operation
             List<Operation> operationList = new ArrayList<>();
@@ -90,13 +85,11 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     public void getOperationListLowerAustria() {
         try {
             // get data from API
-            WebClient webClient = WebClient.create();
-            ApiOperationLowerAustriaListResponse result = webClient.get()
-                    .uri("https://infoscreen.florian10.info/OWS/wastlMobile/getEinsatzAktiv.ashx")
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(ApiOperationLowerAustriaListResponse.class)
-                    .block();
+            ApiOperationLowerAustriaListResponse result = fetchClient(
+                    "https://infoscreen.florian10.info/OWS/wastlMobile/getEinsatzAktiv.ashx",
+                    ApiOperationLowerAustriaListResponse.class,
+                    MediaType.APPLICATION_JSON
+            );
 
             // build operation
             List<Operation> operationList = new ArrayList<>();
@@ -125,13 +118,11 @@ public class ApiOperationServiceImpl implements ApiOperationService {
     public void getOperationListUpperAustria() {
         try {
             // get data from API
-            WebClient webClient = WebClient.create();
-            ApiOperationUpperAustriaXmlResponse result = webClient.get()
-                    .uri("https://cf-einsaetze.ooelfv.at/webext2/rss/webext2_laufend.xml")
-                    .accept(MediaType.APPLICATION_XML, MediaType.TEXT_XML)
-                    .retrieve()
-                    .bodyToMono(ApiOperationUpperAustriaXmlResponse.class)
-                    .block();
+            ApiOperationUpperAustriaXmlResponse result = fetchClient(
+                    "https://cf-einsaetze.ooelfv.at/webext2/rss/webext2_laufend.xml",
+                    ApiOperationUpperAustriaXmlResponse.class,
+                    MediaType.APPLICATION_XML
+            );
 
             System.out.println(result);
 
@@ -167,12 +158,10 @@ public class ApiOperationServiceImpl implements ApiOperationService {
                     .build();
 
             // get data from API
-            String json = webClient.get()
-                    .uri("https://einsatzkarte.lfvstmk.at/data/public_current.json")
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
+            String json = fetchClient("https://einsatzkarte.lfvstmk.at/data/public_current.json",
+                    String.class,
+                    MediaType.APPLICATION_JSON
+            );
 
             // Remove weird first char
             if (json != null && json.startsWith("\uFEFF")) {
@@ -204,12 +193,11 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         try {
             // get data from API
             WebClient webClient = WebClient.create();
-            ApiOperationTyrolResponse data = webClient.get()
-                    .uri("https://fastapi.feuerwehr.tirol/extAlarmsTirol/" + crawlerTyrolAuthentication + "/data")
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(ApiOperationTyrolResponse.class)
-                    .block();
+            ApiOperationTyrolResponse data = fetchClient(
+                    "https://fastapi.feuerwehr.tirol/extAlarmsTirol/" + crawlerTyrolAuthentication + "/data",
+                    ApiOperationTyrolResponse.class,
+                    MediaType.APPLICATION_JSON
+            );
 
             // build operation
             List<Operation> operationList = new ArrayList<>();
@@ -852,15 +840,11 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         if(laWastlPubId != null) {
             try {
                 // get data from API
-                WebClient webClient = WebClient.create();
-                ResponseEntity<ApiOperationLowerAustriaResponse> response = webClient.get()
-                        .uri("https://infoscreen.florian10.info/OWS/wastlMobile/geteinsatzdata.ashx?id=" + laWastlPubId)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .retrieve()
-                        .toEntity(ApiOperationLowerAustriaResponse.class)
-                        .block();
-
-                return response.getBody();
+                return fetchClient(
+                        "https://infoscreen.florian10.info/OWS/wastlMobile/geteinsatzdata.ashx?id=" + laWastlPubId,
+                        ApiOperationLowerAustriaResponse.class,
+                        MediaType.APPLICATION_JSON
+                );
             } catch (Exception e) {
                 throw new RuntimeException("Error fetching operation by ID from Lower Austria API", e);
             }
@@ -1106,5 +1090,15 @@ public class ApiOperationServiceImpl implements ApiOperationService {
         } else {
             return null;
         }
+    }
+
+    // API Fetch
+    private <T> T fetchClient(String url, Class<T> responseType, MediaType mediaType) {
+        return WebClient.create()
+                .get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(responseType)
+                .block(Duration.ofSeconds(60));
     }
 }
